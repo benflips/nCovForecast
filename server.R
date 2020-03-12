@@ -22,6 +22,8 @@ library(shiny)
 
 ## source files
 source("getData.R")
+# Variables for drop-down menus
+source("defineMenus.R")
 ## ---------------------------
 
 
@@ -76,4 +78,18 @@ shinyServer(function(input, output) {
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     detRate(yI, yD)
   })
+  
+  output$tablePreds <- renderTable({
+    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
+    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    dRate <- detRate(yI, yD)
+    lDat <- projSimple(yA, dates)
+    nowThen <- c(tail(yA, 1), tail(lDat$y[,"fit"],1))
+    nowThenTrue <- nowThen/dRate
+    outTab<-rbind(nowThen, nowThenTrue)
+    colnames(outTab)<-c("Now", "Ten days")
+    row.names(outTab)<-c("Confirmed cases", "Possible true number")
+    outTab
+  }, rownames = TRUE, digits = 0)
 })

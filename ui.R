@@ -22,11 +22,12 @@ library(shiny)
 ## ---------------------------
 
 ## load up our functions into memory
-
-## ---------------------------
-
+## source files
+source("getData.R")
 # Variables for drop-down menus
 source("defineMenus.R")
+## ---------------------------
+## ---------------------------
 
 
 # Define UI for application that draws a histogram
@@ -47,9 +48,11 @@ shinyUI(fluidPage(
       selectInput(inputId = "detection",
                   label = "Account for imperfect detection:",
                   choices = c("Yes" = TRUE, "No" = FALSE),
-                  selected = "Yes"),
+                  selected = "No"),
       h5("Proportion of cases detected"),
-      textOutput(outputId = "detRate")
+      textOutput(outputId = "detRate"),
+      titlePanel("Number of active cases"),
+      tableOutput(outputId = "tablePreds")
     ),
     
     # Show a plot of the generated distribution
