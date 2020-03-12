@@ -23,8 +23,8 @@
 ## function definitions
 
 # estimates detection rate based on assumptions about cfr, ttd
-detRate<-function(inf, deaths, cfr = 0.025, ttd=17, window=5){
-  obs<-c(rep(NA, window), diff(inf, window)) # observed new cases
+detRate<-function(infd, deaths, cfr = 0.025, ttd=17, window=5){
+  obs<-c(rep(NA, window), diff(infd, window)) # observed new cases
   deathDiff<-diff(deaths, window) # observed new deaths
   expd<-deathDiff/cfr #expected new cases given cfr
   expd<-expd[-(1:(ttd-window))]
@@ -33,6 +33,7 @@ detRate<-function(inf, deaths, cfr = 0.025, ttd=17, window=5){
   detRate[detRate==0]<-NA
   detRate[is.infinite(detRate)]<-NA
   out<-mean(detRate, na.rm = TRUE)
+  if (is.nan(out)) return(NA)
   if (out>1) out<-1
   out
 }

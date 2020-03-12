@@ -48,11 +48,13 @@ shinyUI(fluidPage(
       selectInput(inputId = "detection",
                   label = "Account for imperfect detection:",
                   choices = c("Yes" = TRUE, "No" = FALSE),
-                  selected = "No"),
-      h5("Proportion of cases detected"),
+                  selected = FALSE),
+      h5("Estimated proportion of cases detected"),
       textOutput(outputId = "detRate"),
       titlePanel("Number of active cases"),
-      tableOutput(outputId = "tablePreds")
+      tableOutput(outputId = "tablePreds"),
+      h5(p("For more information, see", 
+           a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
     ),
     
     # Show a plot of the generated distribution
