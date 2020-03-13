@@ -28,7 +28,7 @@ source("defineMenus.R")
 
 
 
-# Define server logic required to draw a histogram
+# Define server logic 
 shinyServer(function(input, output) {
   
   output$rawPlot <- renderPlot({
@@ -92,4 +92,32 @@ shinyServer(function(input, output) {
     row.names(outTab)<-c("Confirmed cases", "Possible true number")
     outTab
   }, rownames = TRUE, digits = 0)
+  
+  
+  output$cfi <- renderPlot({
+    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryFinderCFI)
+    pDat <- pDat[rev(order(pDat[,ncol(pDat)-1])),] # order to match menu order
+    pMat<-as.matrix(log(pDat[,-1]))
+    row.names(pMat)<-pDat$Country
+    cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
+    cfiDat[!is.finite(cfiDat)]<-0
+    clrs<-hcl.colors(length(input$countryFinderCFI))
+    dateSub<-3:length(dates) # date subset
+    plot(cfiDat[,1]~dates[dateSub], 
+         type = "n", 
+         ylim = range(c(-1.2,1.2)*sd(cfiDat)),
+         bty = "l",
+         xlab = "Date",
+         ylab = "Curve-flatenning index")
+    abline(a = 0, b = 0, lty = 2)
+    for (cc in 1:ncol(cfiDat)){
+      cfiSmooth<-loess(cfiDat[,cc]~as.numeric(dates[dateSub]))
+      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc])
+    }
+    legend("topleft", 
+           legend = input$countryFinderCFI, 
+           lty = 1, 
+           col = clrs,
+           bty = "n")
+  })
 })

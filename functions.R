@@ -22,6 +22,21 @@
 
 ## function definitions
 
+# aggregates results to country
+countryAgg<-function(x){
+  xSelect<-x[, dCols]
+  aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
+}
+
+
+# calculates the curve flatenning index.
+  # it is the second derivative of logA wrt t (the change in growth rate) divided by first differential (the current growth rate).
+cfi <- function(active){
+  cfiInd <- -diff(diff(active))/abs(diff(active)[-1])#*ifelse(diff(active)[-1]>0, -1, 1)
+  cfiInd["2/12/20"]<-0 # change in diagnosis criteria in China
+  cfiInd
+}
+
 # estimates detection rate based on assumptions about cfr, ttd
 detRate<-function(infd, deaths, cfr = 0.025, ttd=17, window=5){
   obs<-c(rep(NA, window), diff(infd, window)) # observed new cases

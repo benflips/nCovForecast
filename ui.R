@@ -30,37 +30,63 @@ source("defineMenus.R")
 ## ---------------------------
 
 
-# Define UI for application that draws a histogram
+# Define UI
 shinyUI(fluidPage(
   
   # Application title
   titlePanel("Coronavirus 10-day forecast"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      titlePanel("Location selector"),
-       selectInput(inputId = "countryFinder",
-                          label = "Select Country/Region:",
-                          choices = ddReg, 
-                          selected = ddNames[1]),
-      titlePanel("Detection"),
-      selectInput(inputId = "detection",
-                  label = "Account for imperfect detection:",
-                  choices = c("Yes" = TRUE, "No" = FALSE),
-                  selected = FALSE),
-      h5("Estimated proportion of cases detected"),
-      textOutput(outputId = "detRate"),
-      titlePanel("Number of active cases"),
-      tableOutput(outputId = "tablePreds"),
-      h5(p("For more information, see", 
-           a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("rawPlot"),
-       plotOutput("logPlot")
-    )
+  navbarPage("Navigation bar",
+      tabPanel("10-day forecast",
+             # Sidebar 
+             sidebarLayout(
+               sidebarPanel(
+                 titlePanel("Location selector"),
+                 selectInput(inputId = "countryFinder",
+                             label = "Select Country/Region:",
+                             choices = ddReg, 
+                             selected = ddNames[1]),
+                 titlePanel("Detection"),
+                 selectInput(inputId = "detection",
+                             label = "Account for imperfect detection:",
+                             choices = c("Yes" = TRUE, "No" = FALSE),
+                             selected = FALSE),
+                 h5("Estimated proportion of cases detected"),
+                 textOutput(outputId = "detRate"),
+                 titlePanel("Number of active cases"),
+                 tableOutput(outputId = "tablePreds"),
+                 h5(p("For more information, see", 
+                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+               ),
+               
+               # Show a plot of the generated distribution
+               mainPanel(
+                 plotOutput("rawPlot"),
+                 plotOutput("logPlot")
+               )
+             )
+      ),
+      tabPanel("Curve-flattening index",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   checkboxGroupInput(inputId = "countryFinderCFI",
+                                      label = "Select Country/Region:",
+                                      choices = ddReg, 
+                                      selected = ddNames[1:3])
+                 ),
+                 mainPanel(
+                   plotOutput("cfi"),
+                   h5("This is a measure of how well a country is flattening the pandemic curve.  Positive values are good, and China is an excellent reference series."),
+                   h5("The index is sensitive to changes in screening/reporting.  
+                      It's only as good as the data. 
+                      I have removed the changed case-criteria in China, but other issues remain: 
+                      for example, the big spike in flattening index in the US in late Feb 
+                      is probably just a reporting issue."),
+                   h5(p("For more details see", 
+                        a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+                 )
+               )
+      )
   )
 ))
