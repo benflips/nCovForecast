@@ -65,7 +65,7 @@ projSimple<-function(rawN, rawTime, inWindow=10){
   lnN <- log(rawN[ss])
   tIn <- rawTime[ss]
   mFit <- lm(lnN~tIn)
-  extFit <- predict(mFit, newdata = list(tIn = x), interval = "prediction")
+  extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
   list(x=x, y=y)
 }
