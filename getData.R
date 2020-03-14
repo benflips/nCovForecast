@@ -55,3 +55,4 @@ matA<-matI - matD - matR
 tsA <- cbind(tsI[,!dCols], matA) # active cases
 
 tsACountry <- countryAgg(tsA) # aggregated to country
+
