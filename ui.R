@@ -50,6 +50,7 @@ shinyUI(fluidPage(
                  textOutput(outputId = "detRate"),
                  titlePanel("Number of active cases"),
                  tableOutput(outputId = "tablePreds"),
+                 h5("Active cases are total number of infections minus deaths and recoveries."),
                  h5(p("For more information, see", 
                       a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
                ),
@@ -73,12 +74,9 @@ shinyUI(fluidPage(
                  ),
                  mainPanel(
                    plotOutput("cfi"),
-                   h5("This is a measure of how well a country is flattening the pandemic curve.  Positive values are good, and China is an excellent reference series."),
+                   h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values are good, and China is an excellent reference series."),
                    h5("The index is sensitive to changes in screening/reporting.  
-                      It's only as good as the data. 
-                      I have removed the changed case-criteria in China, but other issues remain: 
-                      for example, the big spike in flattening index in the US in late Feb 
-                      is probably just a reporting issue."),
+                      It's only as good as the data."),
                    h5(p("For more details see", 
                         a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
                  )

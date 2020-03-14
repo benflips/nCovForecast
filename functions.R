@@ -33,7 +33,7 @@ countryAgg<-function(x){
   # it is the second derivative of logA wrt t (the change in growth rate) divided by first differential (the current growth rate).
 cfi <- function(active){
   cfiInd <- -diff(diff(active))/abs(diff(active)[-1])#*ifelse(diff(active)[-1]>0, -1, 1)
-  cfiInd["2/12/20"]<-0 # change in diagnosis criteria in China
+  cfiInd[abs(cfiInd)>10]<-NA # remove crazy values associated with changed test/diagnosis
   cfiInd
 }
 
