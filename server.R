@@ -33,12 +33,9 @@ shinyServer(function(input, output) {
   
   output$rawPlot <- renderPlot({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    if (input$detection) yA<-yA/detRate(yI, yD)
     lDat <- projSimple(yA, dates)
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
-    yTxt <- if (input$detection) "Estimated active cases" else "Confirmed active cases"
+    yTxt <- "Confirmed active cases"
     plot(yA~dates, 
          xlim = c(min(dates), max(lDat$x)),
          ylim = c(0, yMax),
@@ -54,12 +51,9 @@ shinyServer(function(input, output) {
   
   output$logPlot <- renderPlot({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    if (input$detection) yA<-yA/detRate(yI, yD)
     lDat <- projSimple(yA, dates)
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
-    yTxt <- if (input$detection) "log(Estimated active cases)" else "log(Confirmed active cases)"
+    yTxt <- "log(Confirmed active cases)"
     plot(log(yA)~dates, 
          xlim = c(min(dates), max(lDat$x)),
          ylim = c(0, log(yMax)),
