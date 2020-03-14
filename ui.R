@@ -35,7 +35,7 @@ shinyUI(fluidPage(
   
   # Application title
   titlePanel("Coronavirus 10-day forecast"),
-  navbarPage("Navigation bar",
+  navbarPage(p("As of", format(dates[length(dates)], "%d %b")),
       tabPanel("10-day forecast",
              # Sidebar 
              sidebarLayout(
