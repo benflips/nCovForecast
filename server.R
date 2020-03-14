@@ -82,9 +82,11 @@ shinyServer(function(input, output) {
     lDat <- projSimple(yA, dates)
     nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
     nowThenTrue <- nowThen/dRate
+    nowThen <- c(nowThen[1], paste(round(nowThen[2],0), "-", round(nowThen[3],0)))
+    nowThenTrue <- c(nowThenTrue[1], paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
     outTab<-rbind(nowThen, nowThenTrue)
-    colnames(outTab)<-c("Now", "In 10 days (min)", "In 10 days (max)")
-    row.names(outTab)<-c("Confirmed cases", "Possible true number")
+    colnames(outTab)<-c("Now", "In 10 days (min-max)")
+    row.names(outTab)<-c("Confirmed", "Possible")
     outTab
   }, rownames = TRUE, digits = 0)
   
