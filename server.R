@@ -76,7 +76,8 @@ shinyServer(function(input, output) {
   output$detRate <- renderText({
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    detRate(yI, yD)
+    dR<-detRate(yI, yD)
+    if (is.na(dR)) "Insufficient data for estimation" else dR
   })
   
   output$tablePreds <- renderTable({
@@ -88,7 +89,7 @@ shinyServer(function(input, output) {
     nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"fit"],1))
     nowThenTrue <- nowThen/dRate
     outTab<-rbind(nowThen, nowThenTrue)
-    colnames(outTab)<-c("Now", "Ten days")
+    colnames(outTab)<-c("Now", "In 10 days")
     row.names(outTab)<-c("Confirmed cases", "Possible true number")
     outTab
   }, rownames = TRUE, digits = 0)
