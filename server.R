@@ -104,10 +104,10 @@ shinyServer(function(input, output) {
          bty = "l",
          xlab = "Date",
          ylab = "Curve-flatenning index")
-    abline(a = 0, b = 0, lty = 2)
+    abline(a = 0, b = 0, lty = 2, lwd = 2)
     for (cc in 1:ncol(cfiDat)){
       cfiSmooth<-loess(cfiDat[,cc]~as.numeric(dates[dateSub]))
-      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc])
+      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=2)
     }
     legend("topleft", 
            legend = input$countryFinderCFI, 
