@@ -26,6 +26,6 @@ regSum <-regSum[regSum>9] # remove regions with fewer than ten active cases
 
 ddNames <- names(regSum)
 ddReg <- ddNames
-names(ddReg) <- paste0(ddNames, " (", regSum, ")")
+names(ddReg) <- ddNames
 #ddReg <- paste(ddReg, collapse = ", ") # menu specifier
 
