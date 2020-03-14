@@ -80,10 +80,10 @@ shinyServer(function(input, output) {
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     dRate <- detRate(yI, yD)
     lDat <- projSimple(yA, dates)
-    nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"fit"],1))
+    nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
     nowThenTrue <- nowThen/dRate
     outTab<-rbind(nowThen, nowThenTrue)
-    colnames(outTab)<-c("Now", "In 10 days")
+    colnames(outTab)<-c("Now", "In 10 days (min)", "In 10 days (max)")
     row.names(outTab)<-c("Confirmed cases", "Possible true number")
     outTab
   }, rownames = TRUE, digits = 0)
