@@ -118,8 +118,8 @@ shinyServer(function(input, output) {
            bty = "n")
   })
   
-  output$growthrate <- renderPlot({
-    pDat <- subset(tsICountry, tsICountry$Country %in% input$countryGrowthRate)
+  output$growthRate <- renderPlot({
+    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
     clrs<-hcl.colors(length(input$countryGrowthRate))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]
@@ -131,6 +131,6 @@ shinyServer(function(input, output) {
             beside=TRUE,
             col = clrs,
             legend = input$countryGrowthRate,
-            args.legend = list(bty = "n", x = "top"))
+            args.legend = list(bty = "n", x = "topleft"))
   })
 })

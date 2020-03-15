@@ -93,7 +93,7 @@ shinyUI(fluidPage(
                                       selected = ddNames[1:3])
                  ),
                  mainPanel(
-                   plotOutput("growthrate"),
+                   plotOutput("growthRate"),
                    h5("This is the growth rate of the number of cases for the last 10 days.")
                  )
                )

@@ -30,6 +30,7 @@ growthRate <- function(cases, inWindow=10){
   rate[ss] <- (cases[ss] - cases[ss-1]) / cases[ss-1]
 }
 
+
 # aggregates results to country
 countryAgg<-function(x){
   xSelect<-x[, dCols]
