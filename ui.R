@@ -78,7 +78,7 @@ shinyUI(fluidPage(
                  mainPanel(
                    plotOutput("growthRate"),
                    h5("This is the growth rate of the number of active cases for the last 10 days."),
-                   h5("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time.")
+                   h5("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.")
                  )
                )
       ),
