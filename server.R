@@ -22,8 +22,7 @@ library(shiny)
 
 ## source files
 source("getData.R")
-# Variables for drop-down menus
-source("defineMenus.R")
+
 ## ---------------------------
 
 

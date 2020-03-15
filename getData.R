@@ -2,7 +2,7 @@
 ##
 ## Script name: getData.R
 ##
-## Purpose of script: Scrape data from googleSheets established to track nCov20
+## Purpose of script: Scrape data from gitHub repository established to track nCov20
 ##
 ## Author: Ben Phillips
 ##
@@ -55,4 +55,13 @@ matA<-matI - matD - matR
 tsA <- cbind(tsI[,!dCols], matA) # active cases
 
 tsACountry <- countryAgg(tsA) # aggregated to country
+tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] # ordered from most to least active cases
+
+## Define menus
+# get region names with 20 or more cases as of yesterday
+ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
+ddReg <- ddNames
+names(ddReg) <- ddNames
+#ddReg <- paste(ddReg, collapse = ", ") # menu specifier
+
 
