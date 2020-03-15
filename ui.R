@@ -35,6 +35,7 @@ shinyUI(fluidPage(
   # Application title
   titlePanel("Coronavirus 10-day forecast"),
   navbarPage(p("As of", format(dates[length(dates)], "%d %b")),
+##### 10-day forecast #####             
       tabPanel("10-day forecast",
              # Sidebar 
              sidebarLayout(
@@ -44,11 +45,13 @@ shinyUI(fluidPage(
                              label = "Select Country/Region:",
                              choices = ddReg, 
                              selected = ddNames[1]),
+                 titlePanel("Confirmed active cases:"),
+                 tableOutput(outputId = "tablePredConf"),
                  titlePanel("Detection"),
-                 h5("Estimated proportion of cases detected"),
+                 h5("Estimated proportion of cases confirmed:"),
                  textOutput(outputId = "detRate"),
-                 titlePanel("Number of active cases"),
-                 tableOutput(outputId = "tablePreds"),
+                 h5("Possible true number of cases given imperfect detection:"),
+                 tableOutput(outputId = "tablePredTrue"),
                  h5("Active cases are total number of infections minus deaths and recoveries."),
                  h5(p("For more information, see", 
                       a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
@@ -61,6 +64,7 @@ shinyUI(fluidPage(
                )
              )
       ),
+##### Growth Rate ##### 
       tabPanel("Growth rate",
                # Sidebar
                sidebarLayout(
@@ -78,6 +82,7 @@ shinyUI(fluidPage(
                  )
                )
       ),
+##### CFI ##### 
       tabPanel("Curve-flattening index",
                # Sidebar
                sidebarLayout(

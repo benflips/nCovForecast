@@ -29,7 +29,7 @@ source("getData.R")
 
 # Define server logic 
 shinyServer(function(input, output) {
-  
+##### Raw plot #####  
   output$rawPlot <- renderPlot({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     lDat <- projSimple(yA, dates)
@@ -48,6 +48,7 @@ shinyServer(function(input, output) {
     lines(lDat$y[, "upr"]~lDat$x, lty = 2)
   })
   
+##### Log plot #####    
   output$logPlot <- renderPlot({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     lDat <- projSimple(yA, dates)
@@ -66,6 +67,7 @@ shinyServer(function(input, output) {
     lines(log(lDat$y[, "upr"])~lDat$x, lty = 2)
   })
   
+##### Detection rate #####    
   output$detRate <- renderText({
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
@@ -73,7 +75,19 @@ shinyServer(function(input, output) {
     if (is.na(dR)) "Insufficient data for estimation" else dR
   })
   
-  output$tablePreds <- renderTable({
+##### Prediction table confirmed #####    
+  output$tablePredConf <- renderTable({
+    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    lDat <- projSimple(yA, dates)
+    nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
+    nowThen <- c(nowThen[1], paste(round(nowThen[2],0), "-", round(nowThen[3],0)))
+    dim(nowThen) <- c(1, 2)
+    colnames(nowThen)<-c("Now", "In 10 days (min-max)")
+    nowThen
+  }, rownames = FALSE)
+  
+##### Prediction table true #####    
+  output$tablePredTrue <- renderTable({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
@@ -81,18 +95,15 @@ shinyServer(function(input, output) {
     lDat <- projSimple(yA, dates)
     nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
     nowThenTrue <- nowThen/dRate
-    nowThen <- c(nowThen[1], paste(round(nowThen[2],0), "-", round(nowThen[3],0)))
     nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
-    outTab<-rbind(nowThen, nowThenTrue)
-    colnames(outTab)<-c("Now", "In 10 days (min-max)")
-    row.names(outTab)<-c("Confirmed", "Possible")
-    outTab
-  }, rownames = TRUE, digits = 0)
+    dim(nowThenTrue) <- c(1, 2)
+    colnames(nowThenTrue)<-c("Now", "In 10 days (min-max)")
+    nowThenTrue
+  }, rownames = FALSE)
   
-  
+##### Curve-flattenning #####    
   output$cfi <- renderPlot({
     pDat <- subset(tsACountry, tsACountry$Country %in% input$countryFinderCFI)
-    pDat <- pDat[rev(order(pDat[,ncol(pDat)-1])),] # order to match menu order
     pMat<-as.matrix(log(pDat[,-1]))
     row.names(pMat)<-pDat$Country
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
@@ -116,7 +127,7 @@ shinyServer(function(input, output) {
            col = clrs,
            bty = "n")
   })
-  
+##### Growth rate #####    
   output$growthRate <- renderPlot({
     pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     gRate <- as.matrix(growthRate(pDat))

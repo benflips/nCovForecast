@@ -68,6 +68,7 @@ projSimple<-function(rawN, rawTime, inWindow=10){
   ss <- (nn-inWindow+1):nn
   x <- c(rawTime[ss], rawTime[nn]+1:inWindow)
   lnN <- log(rawN[ss])
+  lnN[is.infinite(lnN)]<-NA
   tIn <- rawTime[ss]
   mFit <- lm(lnN~tIn)
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")

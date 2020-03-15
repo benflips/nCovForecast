@@ -59,7 +59,7 @@ tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] # ordere
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday
-ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
+ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>29]
 ddReg <- ddNames
 names(ddReg) <- ddNames
 #ddReg <- paste(ddReg, collapse = ", ") # menu specifier
