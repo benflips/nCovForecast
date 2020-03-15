@@ -22,12 +22,19 @@
 
 ## function definitions
 
+# growth rate
+growthRate <- function(cases, inWindow=10){
+  nn <- length(cases)
+  ss <- (nn - inWindow + 1):nn
+  rate <- numeric(length(ss))
+  rate[ss] <- (cases[ss] - cases[ss-1]) / cases[ss-1]
+}
+
 # aggregates results to country
 countryAgg<-function(x){
   xSelect<-x[, dCols]
   aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
 }
-
 
 # calculates the curve flatenning index.
   # it is the second derivative of logA wrt t (the change in growth rate) divided by first differential (the current growth rate).
@@ -52,9 +59,6 @@ detRate<-function(infd, deaths, cfr = 0.025, ttd=17, window=5){
   if (out>1) out<-1
   out
 }
-
-
-
 
 # Simple projection based on growth over last inWindow days
   # returns extended plotting data

@@ -81,6 +81,22 @@ shinyUI(fluidPage(
                         a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
                  )
                )
-      )
+      ),
+      tabPanel("Growth rate",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   checkboxGroupInput(inputId = "countryGrowthRate",
+                                      label = "Select Country/Region:",
+                                      choices = ddReg,
+                                      selected = ddNames[1:3])
+                 ),
+                 mainPanel(
+                   plotOutput("growthrate"),
+                   h5("This is the growth rate of the number of cases for the last 10 days.")
+                 )
+               )
+               )
   )
 ))
