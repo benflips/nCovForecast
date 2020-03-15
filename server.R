@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
     nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
     nowThenTrue <- nowThen/dRate
     nowThen <- c(nowThen[1], paste(round(nowThen[2],0), "-", round(nowThen[3],0)))
-    nowThenTrue <- c(nowThenTrue[1], paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
+    nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
     outTab<-rbind(nowThen, nowThenTrue)
     colnames(outTab)<-c("Now", "In 10 days (min-max)")
     row.names(outTab)<-c("Confirmed", "Possible")
@@ -116,5 +116,21 @@ shinyServer(function(input, output) {
            lty = 1, 
            col = clrs,
            bty = "n")
+  })
+  
+  output$growthRate <- renderPlot({
+    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+    gRate <- as.matrix(growthRate(pDat))
+    clrs<-hcl.colors(length(input$countryGrowthRate))
+    dates10 <- dates[(length(pDat)-10+1):length(pDat)]
+    counts <- table(gRate)
+    barplot(gRate,
+            main="Growth rate",
+            xlab="Date", 
+            ylab="Growth rate",
+            beside=TRUE,
+            col = clrs,
+            legend = input$countryGrowthRate,
+            args.legend = list(bty = "n", x = "topleft"))
   })
 })
