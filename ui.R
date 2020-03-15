@@ -61,6 +61,23 @@ shinyUI(fluidPage(
                )
              )
       ),
+      tabPanel("Growth rate",
+               # Sidebar
+               sidebarLayout(
+                 sidebarPanel(
+                   titlePanel("Location selector"),
+                   checkboxGroupInput(inputId = "countryGrowthRate",
+                                      label = "Select Country/Region:",
+                                      choices = ddReg,
+                                      selected = ddNames[1:3])
+                 ),
+                 mainPanel(
+                   plotOutput("growthRate"),
+                   h5("This is the growth rate of the number of active cases for the last 10 days."),
+                   h5("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time.")
+                 )
+               )
+      ),
       tabPanel("Curve-flattening index",
                # Sidebar
                sidebarLayout(
@@ -80,22 +97,7 @@ shinyUI(fluidPage(
                         a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
                  )
                )
-      ),
-      tabPanel("Growth rate",
-               # Sidebar
-               sidebarLayout(
-                 sidebarPanel(
-                   titlePanel("Location selector"),
-                   checkboxGroupInput(inputId = "countryGrowthRate",
-                                      label = "Select Country/Region:",
-                                      choices = ddReg,
-                                      selected = ddNames[1:3])
-                 ),
-                 mainPanel(
-                   plotOutput("growthRate"),
-                   h5("This is the growth rate of the number of cases for the last 10 days.")
-                 )
-               )
-               )
+      )
+      
   )
 ))
