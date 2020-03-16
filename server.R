@@ -37,7 +37,7 @@ shinyServer(function(input, output) {
     yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
     nn <-length(yI)
     if (is.na(yA[nn])) nn <- nn-1
-    out <- as.integer(c(yI[nn], yR[nn], yR[nn]))
+    out <- as.integer(c(yI[nn], yR[nn], yD[nn]))
     dim(out) <-c(1,3)
     colnames(out) <- c("Total", "Recovered", "Deaths")
     format(out, big.mark = ",")
