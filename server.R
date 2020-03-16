@@ -53,18 +53,19 @@ shinyServer(function(input, output) {
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     lDat <- projSimple(yA, dates)
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
-    yTxt <- "log(Confirmed active cases)"
-    plot(log(yA)~dates, 
+    yTxt <- "Confirmed active cases (log scale)"
+    plot((yA+0.1)~dates, 
          xlim = c(min(dates), max(lDat$x)),
-         ylim = c(0, log(yMax)),
+         ylim = c(1, yMax),
+         log = "y",
          pch = 19, 
          bty = "l", 
          xlab = "Date", 
          ylab = yTxt,
          main = input$countryFinder)
-    lines(log(lDat$y[, "fit"])~lDat$x)
-    lines(log(lDat$y[, "lwr"])~lDat$x, lty = 2)
-    lines(log(lDat$y[, "upr"])~lDat$x, lty = 2)
+    lines(lDat$y[, "fit"]~lDat$x)
+    lines(lDat$y[, "lwr"]~lDat$x, lty = 2)
+    lines(lDat$y[, "upr"]~lDat$x, lty = 2)
   })
   
 ##### Detection rate #####    
