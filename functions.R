@@ -46,7 +46,7 @@ cfi <- function(active){
 }
 
 # estimates detection rate based on assumptions about cfr, ttd
-detRate<-function(infd, deaths, cfr = 0.025, ttd=17, window=5){
+detRate<-function(infd, deaths, cfr = 0.033, ttd=17, window=5){
   obs<-c(rep(NA, window), diff(infd, window)) # observed new cases
   deathDiff<-diff(deaths, window) # observed new deaths
   expd<-deathDiff/cfr #expected new cases given cfr

@@ -29,6 +29,20 @@ options(scipen=9)
 
 # Define server logic 
 shinyServer(function(input, output) {
+  ##### Raw stats #####  
+  output$rawStats <- renderTable({
+    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
+    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
+    nn <-length(yI)
+    if (is.na(yA[nn])) nn <- nn-1
+    out <- as.integer(c(yI[nn], yR[nn], yR[nn]))
+    dim(out) <-c(1,3)
+    colnames(out) <- c("Total", "Recovered", "Deaths")
+    format(out, big.mark = ",")
+  }, rownames = FALSE)
+  
 ##### Raw plot #####  
   output$rawPlot <- renderPlot({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
@@ -80,27 +94,27 @@ shinyServer(function(input, output) {
   output$tablePredConf <- renderTable({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     lDat <- projSimple(yA, dates)
-    nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
-    nowThen <- c(nowThen[1], paste(round(nowThen[2],0), "-", round(nowThen[3],0)))
+    nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))), big.mark = ",")
+    nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
     dim(nowThen) <- c(1, 2)
     colnames(nowThen)<-c("Now", "In 10 days (min-max)")
     nowThen
   }, rownames = FALSE)
   
 ##### Prediction table true #####    
-  output$tablePredTrue <- renderTable({
+  output$tablePredTrue <- renderText({
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     dRate <- detRate(yI, yD)
     lDat <- projSimple(yA, dates)
-    nowThen <- c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))
-    nowThenTrue <- nowThen/dRate
-    nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
-    dim(nowThenTrue) <- c(1, 2)
-    colnames(nowThenTrue)<-c("Now", "In 10 days (min-max)")
-    nowThenTrue
-  }, rownames = FALSE)
+    now <- tail(yA[!is.na(yA)], 1)
+    nowTrue <- format(round(now/dRate, 0), big.mark = ",")
+    #nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
+    #dim(nowThenTrue) <- c(1, 2)
+    #colnames(nowThenTrue)<-c("Now", "In 10 days (min-max)")
+    nowTrue
+  })
   
 ##### Curve-flattenning #####    
   output$cfi <- renderPlot({
