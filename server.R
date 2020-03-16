@@ -24,7 +24,7 @@ library(shiny)
 source("getData.R")
 
 ## ---------------------------
-
+options(scipen=9)
 
 
 # Define server logic 

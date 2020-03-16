@@ -27,7 +27,7 @@ source("getData.R")
 
 ## ---------------------------
 ## ---------------------------
-
+options(scipen=9)
 
 # Define UI
 shinyUI(fluidPage(
@@ -52,9 +52,13 @@ shinyUI(fluidPage(
                  textOutput(outputId = "detRate"),
                  h5("Possible true number of cases given imperfect detection:"),
                  tableOutput(outputId = "tablePredTrue"),
-                 h5("Active cases are total number of infections minus deaths and recoveries."),
-                 h5(p("For more information, see", 
-                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+                 p("Take these last numbers with a grain of salt.  There are many assumptions and no mechanism, 
+                      but low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there are more cases than are reported).  
+                      We are working to build a better predictive tool",
+                      a("here.", href = "https://alhill.shinyapps.io/COVID19seir/", target="_blank")),
+                 p("Active cases are total number of infections minus deaths and recoveries."),
+                 p("For more information, see", 
+                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
                ),
                
                # Show a plot of the generated distribution
