@@ -32,4 +32,5 @@ popDat <- popDat %>% filter(grepl(pattern = "\\d", x = popDat$Series.Code)) %>%
     spread(key = Series.Code, value = X2018, ) %>%
     mutate(totalN = SP.POP.0014.TO + SP.POP.1564.TO + SP.POP.65UP.TO)
 colnames(popDat)[grepl(pattern = "SP", x = colnames(popDat))]<-c("x0014", "x1564", "x65UP")
-       
+
+save(popDat, file = "dat/popData.RData")
