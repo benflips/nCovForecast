@@ -57,8 +57,7 @@ shinyUI(fluidPage(
                 # tableOutput(outputId = "tablePredTrue"),
                  hr(),
                  p("Take this last number with a grain of salt.  There are many assumptions, 
-                      but low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there are more cases than are reported).  
-                      We are working to feed these data to a better predictive tool"),
+                      but low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there are more cases than are reported)."),
                  p("Active cases are total number of infections minus deaths and recoveries."),
                  p("For more information, see", 
                       a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
