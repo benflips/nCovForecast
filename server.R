@@ -53,10 +53,11 @@ shinyServer(function(input, output) {
          xlim = c(min(dates), max(lDat$x)),
          ylim = c(0, yMax),
          pch = 19, 
-         bty = "l", 
+         bty = "u", 
          xlab = "Date", 
          ylab = yTxt,
          main = input$countryFinder)
+    axis(side = 4)
     lines(lDat$y[, "fit"]~lDat$x)
     lines(lDat$y[, "lwr"]~lDat$x, lty = 2)
     lines(lDat$y[, "upr"]~lDat$x, lty = 2)
@@ -73,10 +74,11 @@ shinyServer(function(input, output) {
          ylim = c(1, yMax),
          log = "y",
          pch = 19, 
-         bty = "l", 
+         bty = "u", 
          xlab = "Date", 
          ylab = yTxt,
          main = input$countryFinder)
+    axis(side=4)
     lines(lDat$y[, "fit"]~lDat$x)
     lines(lDat$y[, "lwr"]~lDat$x, lty = 2)
     lines(lDat$y[, "upr"]~lDat$x, lty = 2)
