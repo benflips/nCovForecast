@@ -164,8 +164,7 @@ shinyServer(function(input, output) {
 ##### Doubling time ##### 
   output$doubTime <- renderText({
     pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
-    dTime <- doubTime(pDat, inWindow = 5)
-    round(mean(dTime), 1)
+    dTime <- round(doubTime(pDat, dates), 1)
   })
   
 ##### Doubling time plot #####    

@@ -23,9 +23,9 @@
 ## function definitions
 
 # calculates doubling time over the last inWindow days.
-doubTime <- function(cases, inWindow = 10){
-  lgRate <- log(growthRate(cases, inWindow)+1)
-  log(2)/lgRate
+doubTime <- function(cases, time, inWindow = 10){
+  r <- projSimpleSlope(cases, time)[2]
+  log(2)/r
 }
 
 
@@ -81,6 +81,19 @@ projSimple<-function(rawN, rawTime, inWindow=10){
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
   list(x=x, y=y)
+}
+
+# Simple projection based on growth over last inWindow days
+# returns coefficients
+projSimpleSlope<-function(rawN, rawTime, inWindow=10){
+  nn <- length(rawN)
+  ss <- (nn-inWindow+1):nn
+  x <- c(rawTime[ss], rawTime[nn]+1:inWindow)
+  lnN <- log(rawN[ss])
+  lnN[is.infinite(lnN)]<-NA
+  tIn <- rawTime[ss]
+  mFit <- lm(lnN~tIn)
+  coefficients(mFit)
 }
 
 
