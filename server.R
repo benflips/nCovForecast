@@ -164,7 +164,25 @@ shinyServer(function(input, output) {
 ##### Doubling time ##### 
   output$doubTime <- renderText({
     pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
-    dTime <- doubTime(pDat)
+    dTime <- doubTime(pDat, inWindow = 5)
     round(mean(dTime), 1)
+  })
+  
+##### Doubling time plot #####    
+  output$doubTimePlot <- renderPlot({
+    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+    dTime <- as.matrix(doubTime(pDat))
+    dTime[!is.finite(dTime)]<-NA
+    clrs<-hcl.colors(length(input$countryGrowthRate))
+    dates10 <- dates[(length(pDat)-10+1):length(pDat)]
+    counts <- table(dTime)
+    barplot(dTime,
+            main="Doubling time",
+            xlab="Date", 
+            ylab="Doubling time (days)",
+            beside=TRUE,
+            col = clrs,
+            legend = input$countryGrowthRate,
+            args.legend = list(bty = "n", x = "topleft"))
   })
 })
