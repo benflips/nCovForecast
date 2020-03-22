@@ -58,7 +58,6 @@ shinyUI(fluidPage(
                  textOutput(outputId = "tablePredTrue"),
                  hr(),
                  p("Low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there are more cases than are reported)."),
-                 p("Very low detection (below 0.02) may indicate testing is insufficient to keep pace with cases, so growth rates, doubling times etc are suspect"),
                  p("Active cases are total number of infections minus deaths and recoveries."),
                  p("For more information, see", 
                       a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
