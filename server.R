@@ -160,4 +160,11 @@ shinyServer(function(input, output) {
             legend = input$countryGrowthRate,
             args.legend = list(bty = "n", x = "topleft"))
   })
+  
+##### Doubling time ##### 
+  output$doubTime <- renderText({
+    pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
+    dTime <- doubTime(pDat)
+    round(mean(dTime), 1)
+  })
 })

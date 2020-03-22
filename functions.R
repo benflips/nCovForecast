@@ -22,6 +22,13 @@
 
 ## function definitions
 
+# calculates doubling time over the last inWindow days.
+doubTime <- function(cases, inWindow = 5){
+  lgRate <- log(growthRate(cases, inWindow)+1)
+  log(2)/lgRate
+}
+
+
 # growth rate
 growthRate <- function(cases, inWindow=10){
   nn <- length(cases)
