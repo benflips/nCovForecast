@@ -31,11 +31,11 @@ source("functions.R")
 ## Get data
 tsConf <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
 tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-#tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
+tsTesting <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_testing_global.csv"
 
 tsI<-read_csv(file = tsConf)
 tsD<-read_csv(file = tsDeath)
-tsR<-read_csv(file = tsRec)
+#tsT<-read_csv(file = tsTesting)
 
 ## get Date range
 dCols<-dateCols(tsI)
@@ -44,12 +44,14 @@ dates<-as.Date(colnames(tsI)[dCols], format = "%m/%d/%y")
 ## Tidy up names
 names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
-names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
+#names(tsT)[!dCols] <- make.names(names(tsT)[!dCols])
 
 ## add recovery lag -- assumes confirmed cases are all tracked to recovery/death
 matI<-as.matrix(tsI[, dCols])
 matD<-as.matrix(tsD[, dCols])
-matR<-as.matrix(tsR[, dCols])
+matR<-as.matrix(tsI[, dCols])
+  matR <- cbind(matrix(0, nrow = nrow(matR), ncol = 22), matR[, -((ncol(matR)-21):ncol(matR))])
+  matR <- matR-matD
 matA<-matI - matD - matR
 
 tsA <- cbind(tsI[,!dCols], matA) # active cases

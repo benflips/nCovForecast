@@ -23,7 +23,7 @@ library(shiny)
 
 ## load up our functions into memory
 ## source files
-source("getDataLocal.R")
+source("getDataNew.R")
 
 ## ---------------------------
 ## ---------------------------
