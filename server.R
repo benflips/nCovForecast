@@ -21,7 +21,7 @@ library(shiny)
 ## ---------------------------
 
 ## source files
-source("getData.R")
+source("getDataLocal.R")
 
 ## ---------------------------
 options(scipen=9)
@@ -34,12 +34,12 @@ shinyServer(function(input, output) {
     yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
+    #yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
     nn <-length(yI)
     if (is.na(yA[nn])) nn <- nn-1
-    out <- as.integer(c(yI[nn], yR[nn], yD[nn]))
-    dim(out) <-c(1,3)
-    colnames(out) <- c("Total", "Recovered", "Deaths")
+    out <- as.integer(c(yI[nn], yD[nn]))
+    dim(out) <-c(1,2)
+    colnames(out) <- c("Total", "Deaths")
     format(out, big.mark = ",")
   }, rownames = FALSE)
   

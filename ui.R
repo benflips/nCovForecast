@@ -23,7 +23,7 @@ library(shiny)
 
 ## load up our functions into memory
 ## source files
-source("getData.R")
+source("getDataLocal.R")
 
 ## ---------------------------
 ## ---------------------------
@@ -83,8 +83,9 @@ shinyUI(fluidPage(
                  ),
                  mainPanel(
                    plotOutput("growthRate"),
-                   h5("This is the growth rate of the number of active cases for the last 10 days."),
-                   h5("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.")
+                   p("This is the growth rate of the number of active cases for the last 10 days."),
+                   p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
+                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.")
                  )
                )
       ),

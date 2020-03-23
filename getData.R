@@ -64,4 +64,6 @@ ddReg <- ddNames
 names(ddReg) <- ddNames
 #ddReg <- paste(ddReg, collapse = ", ") # menu specifier
 
+#save(tsI, tsD, tsR, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/cacheData", format(Sys.Date(), format = "%m%d"), ".RData"))
+
 
