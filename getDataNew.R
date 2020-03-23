@@ -46,12 +46,11 @@ names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 #names(tsT)[!dCols] <- make.names(names(tsT)[!dCols])
 
-## add recovery lag -- assumes confirmed cases are all tracked to recovery/death
+## add recovery lag -- assumes all cases recover at 22 days
 matI<-as.matrix(tsI[, dCols])
 matD<-as.matrix(tsD[, dCols])
-matR<-as.matrix(tsI[, dCols])
-  matR <- cbind(matrix(0, nrow = nrow(matR), ncol = 22), matR[, -((ncol(matR)-21):ncol(matR))])
-  matR <- matR-matD
+matA<-matI-matD #remove deaths
+  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
 matA<-matI - matD - matR
 
 tsA <- cbind(tsI[,!dCols], matA) # active cases
