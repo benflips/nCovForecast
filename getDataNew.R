@@ -51,7 +51,7 @@ matI<-as.matrix(tsI[, dCols])
 matD<-as.matrix(tsD[, dCols])
 matA<-matI-matD #remove deaths
   matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
-matA<-matI - matR
+matA <- matA - matR
 
 tsA <- cbind(tsI[,!dCols], matA) # active cases
 
