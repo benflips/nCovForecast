@@ -102,7 +102,7 @@ shinyUI(fluidPage(
                  ),
                  mainPanel(
                    plotOutput("cfi"),
-                   h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values are good, and China is an excellent reference series."),
+                   h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
                    h5("The index is sensitive to changes in screening/reporting.  
                       It's only as good as the data."),
                    h5(p("For more details see", 
