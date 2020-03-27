@@ -29,9 +29,19 @@ options(scipen=9)
 
 # Define server logic 
 shinyServer(function(input, output) {
+#### Reactive expressions ####
+  yAfCast <-reactive({ # subset country for forecast page
+    tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+  })
+  
+  projfCast <- reactive({ # projection for forecast
+    yA <- yAfCast()
+    projSimple(yA, dates)
+  })
+  
   ##### Raw stats #####  
   output$rawStats <- renderTable({
-    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    yA <- yAfCast()
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     #yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
@@ -45,8 +55,8 @@ shinyServer(function(input, output) {
   
 ##### Raw plot #####  
   output$rawPlot <- renderPlot({
-    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    lDat <- projSimple(yA, dates)
+    yA <- yAfCast()
+    lDat <- projfCast()
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
     yTxt <- "Confirmed active cases"
     plot(yA~dates, 
@@ -65,8 +75,8 @@ shinyServer(function(input, output) {
   
 ##### Log plot #####    
   output$logPlot <- renderPlot({
-    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    lDat <- projSimple(yA, dates)
+    yA <- yAfCast()
+    lDat <- projfCast()
     yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
     yTxt <- "Confirmed active cases (log scale)"
     plot((yA+0.1)~dates, 
@@ -94,8 +104,8 @@ shinyServer(function(input, output) {
   
 ##### Prediction table confirmed #####    
   output$tablePredConf <- renderTable({
-    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    lDat <- projSimple(yA, dates)
+    yA <- yAfCast()
+    lDat <- projfCast()
     nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))), big.mark = ",")
     nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
     dim(nowThen) <- c(1, 2)
@@ -105,11 +115,11 @@ shinyServer(function(input, output) {
   
 ##### Prediction table true #####    
   output$tablePredTrue <- renderText({
-    yA <- tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    yA <- yAfCast()
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     dRate <- detRate(yI, yD)
-    lDat <- projSimple(yA, dates)
+    lDat <- projfCast()
     now <- tail(yA[!is.na(yA)], 1)
     nowTrue <- format(round(now/dRate, 0), big.mark = ",")
     #nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
