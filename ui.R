@@ -71,7 +71,7 @@ shinyUI(fluidPage(
              )
       ),
 ##### Growth Rate ##### 
-      tabPanel("Growth rate",
+      tabPanel("Growth rate and curve-flattening",
                # Sidebar
                sidebarLayout(
                  sidebarPanel(
@@ -82,34 +82,41 @@ shinyUI(fluidPage(
                                       selected = ddNames[1:3])
                  ),
                  mainPanel(
-                   plotOutput("growthRate"),
-                   p("This is the growth rate of the number of active cases for the last 10 days."),
+                   h5("Growth rate"),
+                   p("This is the growth rate of the number of active cases for the last 10 days.  It can be though of as the interest rate, compounded daily."),
                    p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
-                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.")
-                 )
-               )
-      ),
-##### CFI ##### 
-      tabPanel("Curve-flattening index",
-               # Sidebar
-               sidebarLayout(
-                 sidebarPanel(
-                   titlePanel("Location selector"),
-                   checkboxGroupInput(inputId = "countryFinderCFI",
-                                      label = "Select Country/Region:",
-                                      choices = ddReg, 
-                                      selected = ddNames[1:3])
-                 ),
-                 mainPanel(
+                   p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day."),
+                   plotOutput("growthRate"),
+                   hr(),
+                   h5("Curve flattening index"),
+                   p("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
                    plotOutput("cfi"),
-                   h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
-                   h5("The index is sensitive to changes in screening/reporting.  
-                      It's only as good as the data."),
-                   h5(p("For more details see", 
-                        a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+                   p("For more details see", 
+                        a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
                  )
                )
       )
+##### CFI ##### 
+      # tabPanel("Curve-flattening index",
+      #          # Sidebar
+      #          sidebarLayout(
+      #            sidebarPanel(
+      #              titlePanel("Location selector"),
+      #              checkboxGroupInput(inputId = "countryFinderCFI",
+      #                                 label = "Select Country/Region:",
+      #                                 choices = ddReg, 
+      #                                 selected = ddNames[1:3])
+      #            ),
+      #            mainPanel(
+      #              plotOutput("cfi"),
+      #              h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
+      #              h5("The index is sensitive to changes in screening/reporting.  
+      #                 It's only as good as the data."),
+      #              h5(p("For more details see", 
+      #                   a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
+      #            )
+      #          )
+      # )
       
   )
 ))

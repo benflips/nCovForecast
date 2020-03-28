@@ -29,7 +29,7 @@ options(scipen=9)
 
 # Define server logic 
 shinyServer(function(input, output) {
-#### Reactive expressions ####
+#### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
     tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
   })
@@ -128,14 +128,18 @@ shinyServer(function(input, output) {
     nowTrue
   })
   
+##### Reactive expressions for growth page #####    
+  growthSub <- reactive({
+    subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+  })
 ##### Curve-flattenning #####    
   output$cfi <- renderPlot({
-    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryFinderCFI)
+    pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     pMat<-as.matrix(log(pDat[,-1]))
     row.names(pMat)<-pDat$Country
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
-    clrs<-hcl.colors(length(input$countryFinderCFI))
+    clrs<-hcl.colors(length(input$countryGrowthRate))
     dateSub<-3:length(dates) # date subset
     plot(cfiDat[,1]~dates[dateSub], 
          type = "n", 
@@ -146,17 +150,17 @@ shinyServer(function(input, output) {
     abline(a = 0, b = 0, lty = 2, lwd = 2)
     for (cc in 1:ncol(cfiDat)){
       cfiSmooth<-loess(cfiDat[,cc]~as.numeric(dates[dateSub]))
-      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=2)
+      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=3)
     }
     legend("topleft", 
-           legend = input$countryFinderCFI, 
+           legend = input$countryGrowthRate, 
            lty = 1, 
            col = clrs,
            bty = "n")
   })
 ##### Growth rate #####    
   output$growthRate <- renderPlot({
-    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+    pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
     clrs<-hcl.colors(length(input$countryGrowthRate))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]
@@ -164,7 +168,7 @@ shinyServer(function(input, output) {
     barplot(gRate,
             main="Growth rate",
             xlab="Date", 
-            ylab="Growth rate",
+            ylab="Growth rate (% per day)",
             beside=TRUE,
             col = clrs,
             legend = input$countryGrowthRate,

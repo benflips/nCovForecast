@@ -34,7 +34,7 @@ growthRate <- function(cases, inWindow=10){
   nn <- length(cases)
   ss <- (nn - inWindow + 1):nn
   rate <- numeric(length(ss))
-  rate[ss] <- (cases[ss] - cases[ss-1]) / cases[ss-1]
+  rate[ss] <- 100 * (cases[ss] - cases[ss-1]) / cases[ss-1]
 }
 
 
