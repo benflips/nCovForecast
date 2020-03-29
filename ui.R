@@ -23,7 +23,9 @@ library(shiny)
 
 ## load up our functions into memory
 ## source files
+source("functions.R")
 source("getDataNew.R")
+#load("dat/menuData.RData")
 
 ## ---------------------------
 ## ---------------------------
@@ -96,27 +98,6 @@ shinyUI(fluidPage(
                  )
                )
       )
-##### CFI ##### 
-      # tabPanel("Curve-flattening index",
-      #          # Sidebar
-      #          sidebarLayout(
-      #            sidebarPanel(
-      #              titlePanel("Location selector"),
-      #              checkboxGroupInput(inputId = "countryFinderCFI",
-      #                                 label = "Select Country/Region:",
-      #                                 choices = ddReg, 
-      #                                 selected = ddNames[1:3])
-      #            ),
-      #            mainPanel(
-      #              plotOutput("cfi"),
-      #              h5("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
-      #              h5("The index is sensitive to changes in screening/reporting.  
-      #                 It's only as good as the data."),
-      #              h5(p("For more details see", 
-      #                   a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank")))
-      #            )
-      #          )
-      # )
-      
+
   )
 ))

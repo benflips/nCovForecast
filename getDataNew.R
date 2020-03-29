@@ -23,7 +23,7 @@ library("readr")
 
 ## ---------------------------
 ## load up functions
-source("functions.R")
+
 
 ## ---------------------------
 
@@ -65,6 +65,7 @@ ddReg <- ddNames
 names(ddReg) <- ddNames
 #ddReg <- paste(ddReg, collapse = ", ") # menu specifier
 
+#save(ddReg, ddNames, file = "dat/menuData.RData")
 #save(tsI, tsD, tsR, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/cacheData", format(Sys.Date(), format = "%m%d"), ".RData"))
 
 
