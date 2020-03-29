@@ -46,7 +46,7 @@ shinyUI(fluidPage(
                  selectInput(inputId = "countryFinder",
                              label = "Select Country/Region:",
                              choices = ddReg, 
-                             selected = ddNames[1]),
+                             selected = ddNames[119]),
                  h5("Raw case numbers:"),
                  tableOutput(outputId = "rawStats"),
                  h5("Active cases:"),
