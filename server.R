@@ -30,11 +30,7 @@ options(scipen=9)
 
 # Define server logic 
 shinyServer(function(input, output) {
-#### reactively update data ##### (Doesn't actually work yet..)
-  timeCheck <-reactive({format(Sys.time(), "%M")=="00"})
-  observe({
-    if (timeCheck()==TRUE) source("getDataNew.R")
-  })
+
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
     tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
