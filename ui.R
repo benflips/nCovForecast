@@ -78,10 +78,11 @@ shinyUI(fluidPage(
                sidebarLayout(
                  sidebarPanel(
                    titlePanel("Location selector"),
-                   checkboxGroupInput(inputId = "countryGrowthRate",
+                   selectInput(inputId = "countryGrowthRate",
                                       label = "Select Country/Region:",
                                       choices = ddReg,
-                                      selected = ddNames[1:3])
+                                      selected = ddNames[1:3],
+                                      multiple = TRUE)
                  ),
                  mainPanel(
                    h5("Growth rate"),
