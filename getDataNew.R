@@ -50,18 +50,20 @@ names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 matI<-as.matrix(tsI[, dCols])
 matD<-as.matrix(tsD[, dCols])
 matA<-matI-matD #remove deaths
-  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
+matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
 matA <- matA - matR
 
 tsA <- cbind(tsI[,!dCols], matA) # active cases
 
 tsACountry <- countryAgg(tsA) # aggregated to country
-tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] # ordered from most to least active cases
+
+# This would order from most to least active cases - but lets leave it alphabetical
+# tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] 
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday
 ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
-ddNames<-sort(ddNames)
+
 ddReg <- ddNames
 names(ddReg) <- ddNames
 #ddReg <- paste(ddReg, collapse = ", ") # menu specifier
