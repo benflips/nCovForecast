@@ -86,7 +86,7 @@ shinyUI(fluidPage(
                  ),
                  mainPanel(
                    h5("Growth rate"),
-                   p("This is the growth rate of the number of active cases for the last 10 days.  It can be though of as the interest rate, compounded daily."),
+                   p("This is the growth rate of the number of active cases for the last 10 days.  It can be thought of as the interest rate, compounded daily."),
                    p("Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory."),
                    p("Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day."),
                    plotOutput("growthRate"),

@@ -42,11 +42,11 @@ Not all cases are detected and so the reported number of active cases is almost 
 
 The large number of assumptions behind this method for estimating detection mean we should be very cautious with it, but it suffices to show that detection probability in some countries is very high (near 1), while in others it is very low indeed.  In countries with low detection, there are many more deaths than there should be given reported case numbers.  One obvious source of bias in this estimate is imported cases.  When there is movement between countries and large differences in caseload, countries with small numbers of cases will have a large proportion of imported cases.  These will bias detection probability downwards.
 
-Detection is our weakest estimate in this app; please take it as indicative only.
+Detection is our weakest estimate in this app; please take it as indicative only.  We are working on a much improved model and hope to have it implemented soon.
 
 ### Growth rate
 
-Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rate and curve-flattening" tab shows this rate as a percentage -- $100\times G_t$ -- expressing population growth in more broadly understood terms; as a compound interest rate.
+Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rate and curve-flattening" tab shows this rate as a percentage --- $100\times G_t$ --- expressing population growth in more broadly understood terms; as a compound interest rate.
 
 ### Curve flatenning
 
@@ -63,9 +63,9 @@ The denominator in this index does make it very sensitive as growth rates come c
 
 ## Acknowledgements
 
-First, to the people on the front line who are collecting these data.  You are a legion of brave and selfless people.  I hope this work has in some diffuse way made your job easier.  Second, a big thanks to the team at John Hopkins University.  Their early decision to make these data open access, and their ongoing commitment to curating a large dynamic dataset has provided a critical resource for helping the world understand and manage this pandemic.
+First, to the people on the front line who are collecting these data.  You are a legion of brave and selfless people.  We hope this work has in some diffuse way made your job easier.  Second, a big thanks to the team at John Hopkins University.  Their early decision to make these data open access, and their ongoing commitment to curating a large dynamic dataset has provided a critical resource for helping the world understand and manage this pandemic.
 
-The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab, and a suite of people on the internet who are too numerous to name (but thanks anyway).
+The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but thanks anyway).
 
 
 
