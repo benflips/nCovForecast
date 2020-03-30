@@ -1,4 +1,4 @@
----
+﻿---
 title: "About"
 author: "Ben Phillips"
 date: "30/03/2020"
@@ -9,7 +9,7 @@ This app was built to give people a sense of how the coronavirus epidemic is pro
 
 As action is taken, the app gives us a sense of how well our actions are working.  Difficult decisions have been made at all levels, from the individual to the nation, and it is important that we get feedback on those decisions as soon as possible.
 
-Given how fast the epidemic was progressing, the app was built in a hurry by Ben Phillips at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contibutions/suggestions are welcome.
+Given how fast the epidemic was progressing, the app was built in a hurry by Ben Phillips at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contributions/suggestions are welcome.
 
 The app relies on relatively simple heuristics rather than comprehensive analyses.  The emphasis has been on speed, and continually updated data, rather than sophisticated analyses.  Sophisticated analyses will likely come in time.
 
@@ -21,14 +21,14 @@ Our data come from the [John Hopkins University dataset](https://gisanddata.maps
 
 ### Current active cases
 
-Acive cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU were no longer able to keep track of recoveries.  As a consequence, we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
+Active cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU were no longer able to keep track of recoveries.  As a consequence, we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
 
 ### Growth model and forecast of active cases
 
 We are interested in knowing how the number of active cases is going to change in the near term.  We assume that active cases follow an exponential growth model such that $E(A_t) = A_0e^{rt}$.  In reality, the growth dynamics are much more complex than this, but for short time periods the exponential model may provide a reasonable approximation.  
 To fit this model, we take the natural logarithm of both sides, yielding $\ln A_t = rt + \ln A_0$ showing us that we can fit a simple linear regression of $\ln A_t$ against $t$.  The slope of this fit is an estimate of the intrinsic growth rate, $r$.  
 
-We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten day into the future from now.  Fititng and extrapolation is effected with the log-transformaed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.
+We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten day into the future from now.  Fitting and extrapolation is effected with the log-transformed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.
 
 ### Doubling time
 
@@ -48,7 +48,7 @@ Detection is our weakest estimate in this app; please take it as indicative only
 
 Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rate and curve-flattening" tab shows this rate as a percentage -- $100\times G_t$ -- expressing population growth in more broadly understood terms; as a compound interest rate.
 
-### Curve flatenning
+### Curve flattening
 
 To capture the idea of "flattening the curve", we made an index ($C_t$) that captures how growth rate changes over time.  Conceptually, we were thinking of the second differential of $\ln A_t$ (scaled against the first differential), but the resultant index is a bit of a mouthful:
 $$
@@ -56,7 +56,7 @@ C_t = -\frac{(\ln A_t-\ln A_{t-1}) - (\ln A_{t-1}-\ln A_{t-2})}{\sqrt{(\ln A_{t-
 $$
 Which could be simplified, but has been written so as to help you see that it is the change in growth rate divided by the magnitude of the growth rate, and then the whole multiplied by negative 1 so that positive values are "good", negative values "bad".  It should rightly be thought of as an index of "suppression" rather than an index of "curve-flattening".
 
-The second plot on the "Growth rate and curve-flattening" tab places a loess smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
+The second plot on the "Growth rate and curve-flattening" tab places a smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
