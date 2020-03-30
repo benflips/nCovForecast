@@ -46,7 +46,7 @@ shinyUI(fluidPage(
                  selectInput(inputId = "countryFinder",
                              label = "Select Country/Region:",
                              choices = ddReg, 
-                             selected = ddNames[119]),
+                             selected = "US"),
                  h5("Raw case numbers:"),
                  tableOutput(outputId = "rawStats"),
                  h5("Active cases:"),
@@ -81,7 +81,7 @@ shinyUI(fluidPage(
                    selectInput(inputId = "countryGrowthRate",
                                       label = "Select Country/Region:",
                                       choices = ddReg,
-                                      selected = ddNames[1:3],
+                                      selected = c("US", "Italy", "Australia", "China"),
                                       multiple = TRUE)
                  ),
                  mainPanel(
@@ -93,6 +93,7 @@ shinyUI(fluidPage(
                    hr(),
                    h5("Curve flattening index"),
                    p("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
+                   p("Note, this last plot covers the entire time period of the pandemic, not just the last ten days."),
                    plotOutput("cfi"),
                    p("For more details see", 
                         a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))

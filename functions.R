@@ -40,7 +40,7 @@ growthRate <- function(cases, inWindow=10){
 
 # aggregates results to country
 countryAgg<-function(x){
-  xSelect<-x[, dCols]
+  xSelect<-x[, dateCols(x)]
   aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
 }
 

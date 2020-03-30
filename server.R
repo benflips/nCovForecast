@@ -155,7 +155,7 @@ shinyServer(function(input, output) {
       lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=3)
     }
     legend("topleft", 
-           legend = input$countryGrowthRate, 
+           legend = pDat$Country, 
            lty = 1, 
            col = clrs,
            bty = "n")
@@ -173,8 +173,8 @@ shinyServer(function(input, output) {
             ylab="Growth rate (% per day)",
             beside=TRUE,
             col = clrs,
-            legend = input$countryGrowthRate,
-            args.legend = list(bty = "n", x = "topleft"))
+            legend = pDat$Country,
+            args.legend = list(bty = "n", x = "topright"))
   })
   
 ##### Doubling time ##### 

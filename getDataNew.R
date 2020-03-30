@@ -58,7 +58,7 @@ tsA <- cbind(tsI[,!dCols], matA) # active cases
 tsACountry <- countryAgg(tsA) # aggregated to country
 
 # This would order from most to least active cases - but lets leave it alphabetical
-# tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] 
+#tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] 
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday
