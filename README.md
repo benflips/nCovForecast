@@ -9,8 +9,8 @@ Takes data amalgamated for the John Hopkins nCov tracker, breaks it down by coun
 
 ## To run in development mode
 
-1. Install R on your machine.  This app needs at least version 3.6.0.
-2. `git clone https://github.com/benflips/nCovForecast.git`
+1. Install R on your machine.  This app needs at least version 3.6.0.  Check your R version with `R --version`
+2. Get the application files: `git clone https://github.com/benflips/nCovForecast.git`
 3. cd to your new folder `nCovForecast`
 4. Run it by typing "R" in a terminal
 5. Install some packages:
@@ -18,7 +18,6 @@ Takes data amalgamated for the John Hopkins nCov tracker, breaks it down by coun
 install.packages('shiny')
 install.packages('readr')
 install.packages('markdown')
-install.packages('')
+```
 6. `library(shiny)`
 7. `runApp('.')`  This should automatically open your browser and display the app.
-8. To close, run `q()`
