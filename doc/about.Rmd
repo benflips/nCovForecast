@@ -1,4 +1,4 @@
-﻿---
+---
 title: "About"
 author: "Ben Phillips"
 date: "30/03/2020"
@@ -25,10 +25,13 @@ Active cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumu
 
 ### Growth model and forecast of active cases
 
-We are interested in knowing how the number of active cases is going to change in the near term.  We assume that active cases follow an exponential growth model such that $E(A_t) = A_0e^{rt}$.  In reality, the growth dynamics are much more complex than this, but for short time periods the exponential model may provide a reasonable approximation.  
+We are interested in knowing how the number of active cases is going to change in the near term.  We assume that active cases follow an exponential growth model such that $E(A_t) = A_0e^{rt}$.  In reality, the growth dynamics are much more complex than this, but for short time periods the exponential model may provide a reasonable approximation. 
+
 To fit this model, we take the natural logarithm of both sides, yielding $\ln A_t = rt + \ln A_0$ showing us that we can fit a simple linear regression of $\ln A_t$ against $t$.  The slope of this fit is an estimate of the intrinsic growth rate, $r$.  
 
-We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten day into the future from now.  Fitting and extrapolation is effected with the log-transformed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.
+We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten days into the future from now.  Fitting and extrapolation is effected with the log-transformed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.  
+
+When public health interventions are rapidly changing the growth rate, this can be seen as deviations from the expected straight line on the log-plot.  In these situations, when growth rate is declining rapidly (the curve is flattening), forecasts from this exponential model (averaging growth over the last ten days) will be biased upwards.  We will introduce a slider shortly allowing you to adjust the window over which growth rate is averaged, so you can get a sense of how recent shifts might affect the forecast.
 
 ### Doubling time
 
