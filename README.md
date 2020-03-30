@@ -21,3 +21,5 @@ install.packages('markdown')
 ```
 6. `library(shiny)`
 7. `runApp('.')`  This should automatically open your browser and display the app.
+
+After you have installed and run this for the first time, only steps 3, 4, 6, and 7 will be required.
