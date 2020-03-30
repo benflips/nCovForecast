@@ -47,7 +47,8 @@ countryAgg<-function(x){
 # calculates the curve flatenning index.
   # it is the second derivative of logA wrt t (the change in growth rate) divided by first differential (the current growth rate).
 cfi <- function(active){
-  cfiInd <- -diff(diff(active))/abs(diff(active)[-1])#*ifelse(diff(active)[-1]>0, -1, 1)
+  lnact <-log(active)
+  cfiInd <- -diff(diff(lnact))/abs(diff(lnact)[-1])
   cfiInd[abs(cfiInd)>10]<-NA # remove crazy values associated with changed test/diagnosis
   cfiInd
 }

@@ -99,7 +99,11 @@ shinyUI(fluidPage(
                         a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
                  )
                )
-      )
-
+      ),
+      tabPanel("About", br(),
+               fluidRow(column(12,
+                               withMathJax(),
+                               includeMarkdown("doc/about.Rmd")
+               )))
   )
 ))
