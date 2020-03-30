@@ -3,6 +3,6 @@
 .RData
 .Ruserdata
 /rsconnect
-riskCorona.Rproj
-.gitignore
+*.Rproj
 .DS_Store
+dat/~$*
