@@ -56,7 +56,7 @@ C_t = -\frac{(\ln A_t-\ln A_{t-1}) - (\ln A_{t-1}-\ln A_{t-2})}{\sqrt{(\ln A_{t-
 $$
 Which could be simplified, but has been written so as to help you see that it is the change in growth rate divided by the magnitude of the growth rate, and then the whole multiplied by negative 1 so that positive values are "good", negative values "bad".  It should rightly be thought of as an index of "suppression" rather than an index of "curve-flattening".
 
-The second plot on the "Growth rate and curve-flattening" tab places a loess smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
+The second plot on the "Growth rate and curve-flattening" tab places a smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
