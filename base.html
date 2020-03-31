@@ -168,9 +168,14 @@
 
 
       <h3>Raw case numbers:</h3>
-{{ tableOutput(outputId = "rawStats") }}
+      {{ tableOutput(outputId = "rawStats") }}
+
       <h3>Active cases:</h3>
+      {{ tableOutput(outputId = "tablePredConf") }}
+
       <h3>Doubling time (days):</h3>
+      {{ textOutput(outputId = "doubTime") }}
+
       <h3>Detection:</h3>
       <h3>Estimated proportion of cases detected:</h3>
       <h3>Possible true number of cases now given imperfect detection:</h3>
