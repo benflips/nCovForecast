@@ -31,5 +31,11 @@ source("getDataNew.R")
 ## ---------------------------
 options(scipen=9)
 
-htmlTemplate('base.html', as_of_date=format(dates[length(dates)], "%d %B %Y"))
+htmlTemplate('base.html', asOfDate           = format(dates[length(dates)], "%d %B %Y"),
+                          selectInputCountry = selectInput(inputId  = "countryFinder",
+                                                           label    = "Select Country/Region:",
+                                                           choices  = ddReg,
+                                                           selected = "US"),
+                          tableRawStates     = tableOutput(outputId = "rawStats")
+                           )
 
