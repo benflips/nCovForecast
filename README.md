@@ -18,6 +18,7 @@ Takes data amalgamated for the John Hopkins nCov tracker, breaks it down by coun
 install.packages('shiny')
 install.packages('readr')
 install.packages('markdown')
+install.packages('curl')
 ```
 6. `library(shiny)`
 7. `runApp('.')`  This should automatically open your browser and display the app.
