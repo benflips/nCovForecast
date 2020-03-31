@@ -33,7 +33,7 @@ options(scipen=9)
 
 # Define UI
 shinyUI(fluidPage(
-  
+  tags$head(includeHTML(("google-analytics.html"))),  
   # Application title
   titlePanel("Coronavirus 10-day forecast"),
   navbarPage(p("As of", format(dates[length(dates)], "%d %b")),
