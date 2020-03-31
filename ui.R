@@ -59,10 +59,9 @@ shinyUI(fluidPage(
                  h5("Possible true number of cases now given imperfect detection:"),
                  textOutput(outputId = "tablePredTrue"),
                  hr(),
-                 p("Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported)."),
+                 p("Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there may be more cases than are reported)."),
                  p("Active cases are total number of infections minus deaths and recoveries."),
-                 p("For more information, see", 
-                      a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
+                 p("For more information, see the 'About' tab.") 
                ),
                
                # Show a plot of the generated distribution
@@ -92,11 +91,10 @@ shinyUI(fluidPage(
                    plotOutput("growthRate"),
                    hr(),
                    h5("Curve flattening index"),
-                   p("This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
+                   p("This is a measure of how well a country is flattening the epidemic curve at any point in time.  Positive values mean growth rates are declining at that point in time."),
                    p("Note, this last plot covers the entire time period of the pandemic, not just the last ten days."),
                    plotOutput("cfi"),
-                   p("For more details see", 
-                        a("here.", href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank"))
+                   p("For more information, see the 'About' tab.") 
                  )
                )
       ),
