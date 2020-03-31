@@ -9,6 +9,7 @@
   <script src="shared/shiny.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
   <link rel="stylesheet" href="https://d2h9b02ioca40d.cloudfront.net/v8.0.1/uom.css">
+  <script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 
 </head>
@@ -159,9 +160,7 @@
 <option value="Zambia">Zambia</option>
 </select>
 </div>
-                    <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
-
-
+      <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
 
       <h3>Raw case numbers:</h3>
       {{ tableOutput(outputId = "rawStats") }}
@@ -173,8 +172,10 @@
       {{ textOutput(outputId = "doubTime") }}
 
       <h3>Detection:</h3>
-      <h3>Estimated proportion of cases detected:</h3>
-      <h3>Possible true number of cases now given imperfect detection:</h3>
+
+      <p>Estimated proportion of cases detected: {{ textOutput(outputId = "detRate") }}</p>
+
+      <p>Possible true number of cases now given imperfect detection: {{ textOutput(outputId = "tablePredTrue") }}</p>
       <p>Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported).</p>
       <p>Active cases are total number of infections minus deaths and recoveries.</p>
       <p>For more information, see <a target="_blank" href="https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast">here</a></p>
