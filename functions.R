@@ -24,7 +24,7 @@
 
 # calculates doubling time over the last inWindow days.
 doubTime <- function(cases, time, inWindow = 10){
-  r <- projSimpleSlope(cases, time)[2]
+  r <- projSimpleSlope(cases, time, inWindow = inWindow)[2]
   log(2)/r
 }
 
@@ -71,10 +71,10 @@ detRate<-function(infd, deaths, cfr = 0.033, ttd=17, window=5){
 
 # Simple projection based on growth over last inWindow days
   # returns extended plotting data
-projSimple<-function(rawN, rawTime, inWindow=10){
+projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10){
   nn <- length(rawN)
   ss <- (nn-inWindow+1):nn
-  x <- c(rawTime[ss], rawTime[nn]+1:inWindow)
+  x <- c(rawTime[ss], rawTime[nn]+1:extWindow)
   lnN <- log(rawN[ss])
   lnN[is.infinite(lnN)]<-NA
   tIn <- rawTime[ss]

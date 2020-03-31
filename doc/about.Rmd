@@ -31,7 +31,7 @@ To fit this model, we take the natural logarithm of both sides, yielding $\ln A_
 
 We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten days into the future from now.  Fitting and extrapolation is effected with the log-transformed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.  
 
-When public health interventions are rapidly changing the growth rate, this can be seen as deviations from the expected straight line on the log-plot.  In these situations, when growth rate is declining rapidly (the curve is flattening), forecasts from this exponential model (averaging growth over the last ten days) will be biased upwards.  We will introduce a slider shortly allowing you to adjust the window over which growth rate is averaged, so you can get a sense of how recent shifts might affect the forecast.
+When public health interventions are rapidly changing the growth rate, this can be seen as deviations from the expected straight line on the log-plot.  In these situations, when growth rate is declining rapidly (the curve is flattening), forecasts from this exponential model (averaging growth over the last ten days) will be biased upwards.  We now provide a slider allowing you to adjust the window over which growth rate is averaged, so you can get a sense of how recent shifts are affecting the forecast.
 
 ### Doubling time
 

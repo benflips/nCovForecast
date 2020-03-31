@@ -38,7 +38,7 @@ shinyServer(function(input, output) {
   
   projfCast <- reactive({ # projection for forecast
     yA <- yAfCast()
-    projSimple(yA, dates)
+    projSimple(yA, dates, inWindow = input$fitWinSlider)
   })
   
   ##### Raw stats #####  
@@ -180,13 +180,13 @@ shinyServer(function(input, output) {
 ##### Doubling time ##### 
   output$doubTime <- renderText({
     pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
-    dTime <- round(doubTime(pDat, dates), 1)
+    dTime <- round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1)
   })
   
 ##### Doubling time plot #####    
   output$doubTimePlot <- renderPlot({
     pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
-    dTime <- as.matrix(doubTime(pDat))
+    dTime <- as.matrix(doubTime(pDat, dates, inWindow = input$fitWinSlider))
     dTime[!is.finite(dTime)]<-NA
     clrs<-hcl.colors(length(input$countryGrowthRate))
     dates10 <- dates[(length(pDat)-10+1):length(pDat)]
