@@ -22,7 +22,9 @@ library(shiny)
 
 ## source files
 source("functions.R")
-source("getDataNew.R")
+load("dat/cacheData.RData")
+load("dat/menuData.RData")
+load("estGlobal.RData")
 
 ## ---------------------------
 options(scipen=9)
