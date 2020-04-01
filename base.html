@@ -10,6 +10,7 @@
   <script src="https://d2h9b02ioca40d.cloudfront.net/v8.0.1/uom.js"></script>
   <script src="shared/shiny.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
   <script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
@@ -34,6 +35,7 @@
   <div class="tab" id="10-day-forecast" role="tabpanel">
     <section>
       <div class="left-panel">
+        <h2>Location</h2>
         <div class="form-group shiny-input-container">
           {{ selectInput(inputId  = "countryFinder",
                          label    = "Select Country/Region:",
@@ -53,7 +55,7 @@
         <h3>Doubling time (days):</h3>
         {{ textOutput(outputId = "doubTime") }}
 
-        <h3>Detection:</h3>
+        <h2>Detection</h2>
 
         <p>Estimated proportion of cases detected: {{ textOutput(outputId = "detRate") }}</p>
 
@@ -70,50 +72,36 @@
     </section>
   </div>
 
-<style>
-section {
-  width: 90%;
-  margin: auto;
-}
-
-.left-panel {
-  max-width: 49%!important;
-  background: #F0F0F0;
-  float: left;
-  padding: 20px;
-}
-
-.right-panel {
-  max-width: 49%!important;
-  width: 100%;
-  float: right;
-}
-</style>
-
   <div class="tab" id="growth-rate-and-curve-flattening" role="tabpanel">
     <section>
-      <div class="form-group shiny-input-container">
-        {{ selectInput(inputId  = "countryGrowthRate",
-                       label    = "Select Country/Region:",
-                       choices  = ddReg,
-                       selected = c("US", "Italy", "Australia", "China"),
-                       multiple = TRUE) }}
-         <script type="application/json" data-for="countryGrowthRate">{}</script>
-       </div>
+      <div class="left-panel">
+        <h2>Location</h2>
+        <div class="form-group shiny-input-container">
+          {{ selectInput(inputId  = "countryGrowthRate",
+                         label    = "Select Country/Region:",
+                         choices  = ddReg,
+                         selected = c("US", "Italy", "Australia", "China"),
+                         multiple = TRUE) }}
+          <script type="application/json" data-for="countryGrowthRate">{}</script>
+        </div>
+        <p></p>
 
-       <script>$('#countryGrowthRate').chosen({max_selected_options: 10})</script>
+        <script>$('#countryGrowthRate').chosen({max_selected_options: 10})</script>
+      </div>
 
-       <h3>Growth rate</h3>
-       <p>This is the growth rate of the number of active cases for the last 10 days.  It can be though of as the interest rate, compounded daily.</p>
-       <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
-       <p>Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.</p>
-       {{ plotOutput("growthRate") }}
+      <div class="right-panel">
+        <h3>Growth rate</h3>
+        <p>This is the growth rate of the number of active cases for the last 10 days.  It can be though of as the interest rate, compounded daily.</p>
+        <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
+        <p>Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.</p>
+        {{ plotOutput("growthRate") }}
 
-       <h3>Curve flattening index</h3>
-       <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
-       <p>Note, this last plot covers the entire time period of the pandemic, not just the last ten days.</p>
-       {{ plotOutput("cfi") }}
-       <p>For more details see <a href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank">here</a>.</p>
+        <h3>Curve flattening index</h3>
+        <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
+        <p>Note, this last plot covers the entire time period of the pandemic, not just the last ten days.</p>
+        {{ plotOutput("cfi") }}
+        <p>For more details see <a href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank">here</a>.</p>
+      </div>
     </section>
   </div>
 
@@ -128,55 +116,5 @@ section {
       </div>
     </div>
   </div>
-
-<style>
-  .styled-select     { display:none;   }
-  .styled-select.alt { display:block;  }
-
-  .chosen-choices {
-    border-color: rgb(9, 65, 131)!important;
-    border-radius: 3px;
-    background-image:none!important;
-  }
-
-  .chosen-single {
-    border-color: rgb(9, 65, 131)!important;
-    background-image:none!important;
-    height:43px!important;
-  }
-
-  .chosen-single > span {
-    font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    color: rgb(9, 65, 131)!important;
-    font-size: 18px;
-    margin-top: 7px;
-  }
-
-  .chosen-choices:hover {
-    background-color: #f2f5f9;
-  }
-
-    .chosen-search-input.default {
-      color: rgb(9, 65, 131)!important;
-      font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    }
-
-    .search-choice {
-      border-color: rgb(9, 65, 131)!important;
-      box-shadow:none;
-      background-image:none!important;
-      background-color:white!important;
-    }
-
-    .search-choice > span {
-      color: rgb(9, 65, 131);
-    }
-
-    .active-result {
-      color: rgb(9, 65, 131);
-    }
-
-</style>
-
 </body>
 </html>
