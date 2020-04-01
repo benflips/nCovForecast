@@ -50,12 +50,28 @@
         <h2>As of  {{ format(dates[length(dates)], "%d %B %Y") }} </h2>
 
 
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tab");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
 <div class="tabbed-nav" data-tabbed="" id="nav">
   <div class="full-width">
     <nav role="tablist">
-      <a href="#10-day-forecast" role="tab">10-day forecast</a>
-      <a href="#growth-rate-and-curve-flattening" role="tab">Growth rate and curve-flattening</a>
-      <a href="#about" role="tab">About</a>
+      <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
+      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rate and curve-flattening</a>
+      <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
     </nav>
   </div>
   <div class="tab" id="10-day-forecast" role="tabpanel">
