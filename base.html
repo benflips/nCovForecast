@@ -117,7 +117,7 @@ function openTab(evt, tabName) {
 
   <div class="tab" id="growth-rate-and-curve-flattening" role="tabpanel">
     <section>
-      <div class="left-panel">
+      <div class="left-panel" style="width:700px!important;">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
           {{ selectInput(inputId  = "countryGrowthRate",
@@ -131,6 +131,10 @@ function openTab(evt, tabName) {
 
         <script>$('#countryGrowthRate').chosen({max_selected_options: 10})</script>
       </div>
+
+      <style>
+        #countryGrowthRate_chosen { display:none; }
+      </style>
 
       <div class="right-panel">
         <h3>Growth rate</h3>
