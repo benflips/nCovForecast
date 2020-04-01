@@ -26,7 +26,7 @@ library("readr")
 library("addreg")
 
 #functions for estimation and projection
-source("estFunctions.R")
+source("detection/estFunctions.R")
 
 #download cumulative diagnosis counts for all countries/regions from gitHub repository
 tsConf <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
