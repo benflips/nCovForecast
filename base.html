@@ -16,8 +16,6 @@
   </script>
   {{ headContent() }}
   <script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
 </head>
 
 <body>
@@ -129,12 +127,8 @@ function openTab(evt, tabName) {
         </div>
         <p></p>
 
-        <script>$('#countryGrowthRate').chosen({max_selected_options: 10})</script>
       </div>
 
-      <style>
-        #countryGrowthRate_chosen { display:none; }
-      </style>
 
       <div class="right-panel">
         <h3>Growth rate</h3>
@@ -178,54 +172,7 @@ section {
   float: right;
 }
 
-
-  .styled-select     { display:none;   }
-  .styled-select.alt { display:block;  }
-
-  .chosen-choices {
-    border-color: rgb(9, 65, 131)!important;
-    border-radius: 3px;
-    background-image:none!important;
-  }
-
-  .chosen-single {
-    border-color: rgb(9, 65, 131)!important;
-    background-image:none!important;
-    height:43px!important;
-  }
-
-  .chosen-single > span {
-    font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    color: rgb(9, 65, 131)!important;
-    font-size: 18px;
-    margin-top: 7px;
-  }
-
-  .chosen-choices:hover {
-    background-color: #f2f5f9;
-  }
-
-    .chosen-search-input.default {
-      color: rgb(9, 65, 131)!important;
-      font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    }
-
-    .search-choice {
-      border-color: rgb(9, 65, 131)!important;
-      box-shadow:none;
-      background-image:none!important;
-      background-color:white!important;
-    }
-
-    .search-choice > span {
-      color: rgb(9, 65, 131);
-    }
-
-    .active-result {
-      color: rgb(9, 65, 131);
-    }
-
-    div.shiny-input-container {width:100%!important;}
+div.shiny-input-container {width:100%!important;}
 
 </style>
 
