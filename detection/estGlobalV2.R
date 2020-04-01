@@ -23,16 +23,13 @@
 ## --------------------------
 
 #packages for reading data and implementing non-negative linear Poisson regression
-library("readr")
 library("addreg")
 
 #functions for estimation and projection
-source("estFunctionsV2.R")
+source("detection/estFunctionsV2.R")
 
-#download cumulative diagnosis counts for all countries/regions from gitHub repository
-tsConf <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-tsI<-read_csv(file = tsConf)
-cases.all <- t(tsI)[-c(1:4),]
+# organise case data by country
+cases.all <- t(tsICountry)[-1,]
 T<-dim(cases.all)[1]
 
 #incubation distribution: discretised version of a logNormal with mean 5.2 days and 95% percentile 12.5 days
@@ -54,10 +51,10 @@ designF<-design(T,inc.dist)
 
 #produce cumulative infection estimates for each country/region
 infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
-cumulative.infections<-cbind(tsI[,1:4],t(infect.total))
-colnames(cumulative.infections)<-colnames(tsI)
+cumulative.infections<-cbind(tsICountry[,1],t(infect.total))
+colnames(cumulative.infections)<-colnames(tsICountry)
 
-save(cumulative.infections,file="estGlobal.RData")
+save(cumulative.infections,file="dat/estGlobal.RData")
 
 #The following currently disabled code can be used to
 #produce cumulative projections and append them to the cumulative observed cases
