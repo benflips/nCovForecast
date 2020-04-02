@@ -5,11 +5,13 @@ date: "30/03/2020"
 output: html_document
 ---
 
+## About
+
 This app was built to give people a sense of how the coronavirus epidemic is progressing in each country.  The initial impetus was to move the conversation past daily updates on case numbers, and towards the near future.  The hope was that doing so might help move us past the paralysis of daily shock, and towards important action.  
 
 As action is taken, the app gives us a sense of how well our actions are working.  Difficult decisions have been made at all levels, from the individual to the nation, and it is important that we get feedback on those decisions as soon as possible.
 
-Given how fast the epidemic was progressing, the app was built in a hurry by Ben Phillips at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contributions/suggestions are welcome.
+Given how fast the epidemic was progressing, the app was built in a hurry by Ben Phillips at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contibutions/suggestions are welcome.
 
 The app relies on relatively simple heuristics rather than comprehensive analyses.  The emphasis has been on speed, and continually updated data, rather than sophisticated analyses.  Sophisticated analyses will likely come in time.
 
@@ -21,17 +23,13 @@ Our data come from the [John Hopkins University dataset](https://gisanddata.maps
 
 ### Current active cases
 
-Active cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU were no longer able to keep track of recoveries.  As a consequence, we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
+Acive cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU were no longer able to keep track of recoveries.  As a consequence, we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
 
 ### Growth model and forecast of active cases
 
-We are interested in knowing how the number of active cases is going to change in the near term.  We assume that active cases follow an exponential growth model such that $E(A_t) = A_0e^{rt}$.  In reality, the growth dynamics are much more complex than this, but for short time periods the exponential model may provide a reasonable approximation. 
+We are interested in knowing how the number of active cases is going to change in the near term.  We assume that active cases follow an exponential growth model such that $E(A_t) = A_0e^{rt}$.  In reality, the growth dynamics are much more complex than this, but for short time periods the exponential model may provide a reasonable approximation.  To fit this model, we take the natural logarithm of both sides, yielding $\ln A_t = rt + \ln A_0$ showing us that we can fit a simple linear regression of $\ln A_t$ against $t$.  The slope of this fit is an estimate of the intrinsic growth rate, $r$.  
 
-To fit this model, we take the natural logarithm of both sides, yielding $\ln A_t = rt + \ln A_0$ showing us that we can fit a simple linear regression of $\ln A_t$ against $t$.  The slope of this fit is an estimate of the intrinsic growth rate, $r$.  
-
-We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten days into the future from now.  Fitting and extrapolation is effected with the log-transformed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.  
-
-When public health interventions are rapidly changing the growth rate, this can be seen as deviations from the expected straight line on the log-plot.  In these situations, when growth rate is declining rapidly (the curve is flattening), forecasts from this exponential model (averaging growth over the last ten days) will be biased upwards.  We now provide a slider allowing you to adjust the window over which growth rate is averaged, so you can get a sense of how recent shifts are affecting the forecast.
+We fit this model to the last ten days of $A_t$ data and extrapolate the fitted model to capture ten day into the future from now.  Fititng and extrapolation is effected with the log-transformaed model (lower plot on "10-day forecast" tab, with 95% confidence intervals) and the log of expected active case numbers is back-transformed to the original scale to produce the top plot on the "10-day forecast" tab.
 
 ### Doubling time
 
@@ -39,19 +37,26 @@ The doubling time ($t_d$) is an intuitive measure of how fast a population is gr
 
 ### Detection 
 
-One of the key sources of uncertainty in this pandemic has been undetected cases.  Covid-19 has been quite a sneaky pathogen, and surveillance has often not been adequate, often resulting in a large number of infections in a country before it is noticed.  We were interested to know how bad this problem might be for each country; deaths will be a function of the true number of cases, not the reported number.
+One of the key sources of uncertainty in this pandemic has been undetected cases. Covid-19 has been quite a sneaky pathogen, and surveillance has often not been adequate, often resulting in a large number of infections in a country before it is noticed.  We were interested to know how bad this problem might be for each country; deaths will be a function of the true number of cases, not the reported number.
 
-Not all cases are detected and so the reported number of active cases is almost always lower than the true number of cases.  A heuristic for detection probability can be made by assuming: that deaths do not go undetected, that there is community transmission (and a closed population), that there is a case fatality rate for symptomatic cases (here assumed to be quite high 3.3%; lower numbers will cause our detection estimate to be lower), that detection is constant, and that there is a fixed time (here assumed to be 17 days) between onset and death.  Observed new cases in the five days to time $t$ are calculated as $N_t = A_t-A_{t-5}$, and under the previous assumptions, the expected number of new cases $\hat{N_t} = (D_{t+17}-D_{t+12})/0.033$.  We then estimate detection probability, $p$, as the mean over $t$ of $N_t/\hat{N_t}$.  Once we have detection we can define "true" number of active cases as $T_t = A_t/p$.  Our choice of a five day window for making this estimate reflects our interest in estimating detection early, when there are still few cases.  A five-day window typically catches at least one death.
+Not all cases are detected and so the reported number of active cases is almost always lower than the true number of cases. There are two classes of non-detected cases: 
 
-The large number of assumptions behind this method for estimating detection mean we should be very cautious with it, but it suffices to show that detection probability in some countries is very high (near 1), while in others it is very low indeed.  In countries with low detection, there are many more deaths than there should be given reported case numbers.  One obvious source of bias in this estimate is imported cases.  When there is movement between countries and large differences in caseload, countries with small numbers of cases will have a large proportion of imported cases.  These will bias detection probability downwards.
+1. Those that will be diagnosed soon ("Undiagnosed").  Individuals that are infected but yet to present symptoms, and;
+2. Those that will never be diagnosed ("Undetected").  Individuals that present with mild symptoms, or are missed by surveillance.
 
-Detection is our weakest estimate in this app; please take it as indicative only.  We are working on a much improved model and hope to have it implemented soon.
+The first class is caused by a delay between infection and diagnosis. However, if we know something about the length of this delay then we can use this information to inflate the observed case numbers to produce estimates of the number of undiagnosed cases. The most important determinant of the delay is the incubation period of the infection. This is known to be highly variable but can be modelled using a probability distribution, which is called the incubation distribution.  Information about the incubation distribution exists from external sources. It is known that the average incubation period is 5-6 days and that 95% of infections have an incubation period of no more than 12-13 days. In our model, a log-normal distribution incorporating these features is used to model the incubation distribution. Given this model for the incubation distribution, the daily diagnosis counts reflect a larger and unknown number of Covid-19 infections in the population, aggregated with the incubation distribution. Using the observed diagnosis counts, we can therefore estimate the unknown number of Covid-19 infections by disaggregating the infection numbers from the incubation distribution. This process is known as statistical deconvolution, also called back-projection or back-calculation. From a technical perspective, the method is a non-negatively constrained linear Poisson regression analysis, where the $y$-variable is the observed diagnosis counts and the linear model is the linear convolution of the mean infection numbers and the incubation distribution. This is a non-standard analysis but reliable model fitting algorithms exist and are incorporated here.  We use these to estimate undiagnosed cases, $U_t$.
+
+The second class of non-detections, "Undetected" cases, are cases that are completely missed by surveillance.  To estimate these, we use a heuristic that assumes: that deaths do not go undetected, that there is community transmission (and a closed population), that there is a case fatality rate for symptomatic cases (here assumed to be quite high 3.3%; lower numbers will cause our detection estimate to be lower), that detection is constant, and that there is a fixed time (here assumed to be 17 days) between onset and death.  Observed new cases in the five days to time $t$ are calculated as $N_t = A_t-A_{t-5}$, and under the previous assumptions, the expected number of new cases $\hat{N_t} = (D_{t+17}-D_{t+12})/0.033$ (Our choice of a five day window for making this estimate reflects our interest in estimating detection early, when there are still few cases.  A five-day window typically catches at least one death.)  We then estimate detection probability, $p$, as the mean over $t$ of $N_t/\hat{N_t}$.  Once we have detection we can define the total number of active symptomatic cases as $T_t = A_t/p$.  
+
+The large number of assumptions behind this last method for estimating detection mean we should be very cautious with it, but it suffices to show that detection probability in some countries is very high (i.e. relatively few undetected cases), while in others it is very low indeed (many undetected cases).  In countries with many undetected cases, there are many more deaths than there should be given reported case numbers.  One obvious source of bias in both estimates is imported cases.  When there is movement between countries and large differences in caseload, countries with small numbers of cases will have a large proportion of imported cases.  These will cause us to estimate a larger number of non-detections than there are.
+
+Detection is our weakest estimate in this app; please take it as indicative only. You can expect the estimates to have large uncertainty ranges, however, they do provide working estimates that give a sense of scale. At present we have not included uncertainty ranges such as confidence intervals but may consider this in future implementations if feasible. It would require computationally intensive methods such as bootstrapping. We note also that the estimates of undiagnosed infections can also be used as an alternative way to forecast new cases, since future diagnoses depend on past infections. This is another area of possible future development. 
 
 ### Growth rate
 
 Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rate and curve-flattening" tab shows this rate as a percentage --- $100\times G_t$ --- expressing population growth in more broadly understood terms; as a compound interest rate.
 
-### Curve flattening
+### Curve flatenning
 
 To capture the idea of "flattening the curve", we made an index ($C_t$) that captures how growth rate changes over time.  Conceptually, we were thinking of the second differential of $\ln A_t$ (scaled against the first differential), but the resultant index is a bit of a mouthful:
 $$
@@ -59,7 +64,7 @@ C_t = -\frac{(\ln A_t-\ln A_{t-1}) - (\ln A_{t-1}-\ln A_{t-2})}{\sqrt{(\ln A_{t-
 $$
 Which could be simplified, but has been written so as to help you see that it is the change in growth rate divided by the magnitude of the growth rate, and then the whole multiplied by negative 1 so that positive values are "good", negative values "bad".  It should rightly be thought of as an index of "suppression" rather than an index of "curve-flattening".
 
-The second plot on the "Growth rate and curve-flattening" tab places a smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
+The second plot on the "Growth rate and curve-flattening" tab places a loess smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
@@ -68,7 +73,7 @@ The denominator in this index does make it very sensitive as growth rates come c
 
 First, to the people on the front line who are collecting these data.  You are a legion of brave and selfless people.  We hope this work has in some diffuse way made your job easier.  Second, a big thanks to the team at John Hopkins University.  Their early decision to make these data open access, and their ongoing commitment to curating a large dynamic dataset has provided a critical resource for helping the world understand and manage this pandemic.
 
-The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but thanks anyway).
+The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Ian Marschner (University of Sydney) provided deconvolution code for estimating undiagnosed infection numbers. Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but thanks anyway).
 
 
 

@@ -118,19 +118,21 @@ server <- function(input, output) {
   }, rownames = FALSE)
   
 ##### Prediction table true #####    
-  output$tablePredTrue <- renderText({
+  output$tablePredTrue <- renderTable({
     yA <- yAfCast()
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     dRate <- detRate(yI, yD)
     lDat <- projfCast()
-    now <- tail(yA[!is.na(yA)], 1)
-    nowTrue <- format(round(now/dRate, 0), big.mark = ",")
-    #nowThenTrue <- c(round(nowThenTrue[1],0), paste(round(nowThenTrue[2],0), "-", round(nowThenTrue[3],0)))
-    #dim(nowThenTrue) <- c(1, 2)
-    #colnames(nowThenTrue)<-c("Now", "In 10 days (min-max)")
-    nowTrue
-  })
+    nowDiag <- tail(yA[!is.na(yA)], 1)
+    nowUndet <- nowDiag/dRate - nowDiag
+    nowUndiag <- as.integer(cumulative.infections[cumulative.infections[,1]==input$countryFinder, ncol(cumulative.infections)])
+    nowTotal <- nowDiag+nowUndiag+nowUndet
+    nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
+    dim(nowTable) <- c(4, 1)
+    rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
+    nowTable
+  }, rownames = TRUE, colnames = FALSE)
   
 ##### Reactive expressions for growth page #####    
   growthSub <- reactive({

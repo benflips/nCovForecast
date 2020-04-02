@@ -30,11 +30,14 @@ source('functions.R')
 
 
 ## Get data
-tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" 
-tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" 
-## if you are drawing data directly over internet, use url alternatives:
-#tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-#tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+server <- TRUE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
+if (server){
+  tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" 
+  tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" 
+} else {  
+  tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+}
 
 
 tsI<-read_csv(file = tsConf)
@@ -69,9 +72,9 @@ ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
 ddReg <- ddNames
 names(ddReg) <- ddNames
 
+## run deconvolution to estimate undiagnosed cases
+source("detection/estGlobalV2.R")
+
 ## write data caches out
 save(ddReg, ddNames, file = "dat/menuData.RData")
 save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/cacheData.RData"))
-
-## run deconvolution to estimate undiagnosed cases
-source("detection/estGlobalV2.R")
