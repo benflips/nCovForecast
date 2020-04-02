@@ -16,24 +16,60 @@
   </script>
   {{ headContent() }}
   <script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
 </head>
 
 <body>
+  <div class="uomcontent" id="top">
+    <header style="background:#094183;">
+      <nav class="" aria-label="breadcrumbs">
+        <a class="page-header-logo" href="https://www.unimelb.edu.au"><img src="https://d2h9b02ioca40d.cloudfront.net/v8.0.1/assets/logo-105a9.svg" width="117" height="117" alt="The University of Melbourne homepage"></a>
+<!--        <a href="/" title="Home" itemprop="item" style="color:white;text-decoration:none;vertical-align:middle;">
+          <span itemprop="name" style="vertical-align:middle;">
+            <span data-icon="home" data-bound-iconhelper="ck8hroqvj0001315vhnfr2bie">
+              <svg class="icon" role="img" focusable="false">
+                <use xlink:href="#icon-home">
+                  <svg id="icon-home" viewBox="0 0 48 48" width="18px" length="auto" style="color:white;">
+                    <path d="M20 41V29h8v12h10V25h6L24 7 4 25h6v16h10z"></path>
+                  </svg>
+                </use>
+              </svg>
+            </span>
+            Coronavirus 10-day forecast
+          </span>
+        </a>-->
+      </nav>
+    </header>
+  </div>
+
   <div class="uomcontent">
-    <div class="page-inner">
+    <div class="page-inner" style="padding-top:0px!important;">
       <div role="main">
-        <h1>Coronavirus 10-day forecast</h1>
+        <h1 style="padding-top:40px;">Coronavirus 10-day forecast</h1>
         <h2>As of  {{ format(dates[length(dates)], "%d %B %Y") }} </h2>
 
+
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tab");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
 
 <div class="tabbed-nav" data-tabbed="" id="nav">
   <div class="full-width">
     <nav role="tablist">
-      <a href="#10-day-forecast" role="tab">10-day forecast</a>
-      <a href="#growth-rate-and-curve-flattening" role="tab">Growth rate and curve-flattening</a>
-      <a href="#about" role="tab">About</a>
+      <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
+      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rate and curve-flattening</a>
+      <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
     </nav>
   </div>
   <div class="tab" id="10-day-forecast" role="tabpanel">
@@ -47,8 +83,6 @@
                          selected = "US") }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
-
-        <script>$('#countryFinder').chosen()</script>
 
         <h3>Raw case numbers:</h3>
         {{ tableOutput(outputId = "rawStats") }}
@@ -81,7 +115,7 @@
 
   <div class="tab" id="growth-rate-and-curve-flattening" role="tabpanel">
     <section>
-      <div class="left-panel">
+      <div class="left-panel" style="width:700px!important;">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
           {{ selectInput(inputId  = "countryGrowthRate",
@@ -93,8 +127,8 @@
         </div>
         <p></p>
 
-        <script>$('#countryGrowthRate').chosen({max_selected_options: 10})</script>
       </div>
+
 
       <div class="right-panel">
         <h3>Growth rate</h3>
@@ -138,54 +172,7 @@ section {
   float: right;
 }
 
-
-  .styled-select     { display:none;   }
-  .styled-select.alt { display:block;  }
-
-  .chosen-choices {
-    border-color: rgb(9, 65, 131)!important;
-    border-radius: 3px;
-    background-image:none!important;
-  }
-
-  .chosen-single {
-    border-color: rgb(9, 65, 131)!important;
-    background-image:none!important;
-    height:43px!important;
-  }
-
-  .chosen-single > span {
-    font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    color: rgb(9, 65, 131)!important;
-    font-size: 18px;
-    margin-top: 7px;
-  }
-
-  .chosen-choices:hover {
-    background-color: #f2f5f9;
-  }
-
-    .chosen-search-input.default {
-      color: rgb(9, 65, 131)!important;
-      font-family: 'Source Sans Pro', 'Gill Sans', 'Trebuchet MS', Arial, sans-serif!important;
-    }
-
-    .search-choice {
-      border-color: rgb(9, 65, 131)!important;
-      box-shadow:none;
-      background-image:none!important;
-      background-color:white!important;
-    }
-
-    .search-choice > span {
-      color: rgb(9, 65, 131);
-    }
-
-    .active-result {
-      color: rgb(9, 65, 131);
-    }
-
-    div.shiny-input-container {width:100%!important;}
+div.shiny-input-container {width:100%!important;}
 
 </style>
 
