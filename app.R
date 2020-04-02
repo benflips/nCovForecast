@@ -31,7 +31,7 @@ options(scipen=9)
 
 
 # Define server logic 
-shinyServer(function(input, output) {
+server <- function(input, output) {
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
@@ -202,4 +202,7 @@ shinyServer(function(input, output) {
             legend = input$countryGrowthRate,
             args.legend = list(bty = "n", x = "topleft"))
   })
-})
+}
+
+shinyApp(ui = htmlTemplate('base.html'), server)
+
