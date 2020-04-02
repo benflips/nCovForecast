@@ -6,3 +6,7 @@
 *.Rproj
 .DS_Store
 dat/~$*
+
+dat/cacheData.RData
+dat/estGlobal.RData
+dat/menuData.RData
