@@ -24,7 +24,7 @@ library(shiny)
 source("functions.R")
 load("dat/cacheData.RData")
 load("dat/menuData.RData")
-load("estGlobal.RData")
+load("dat/estGlobal.RData")
 
 ## ---------------------------
 options(scipen=9)
