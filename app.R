@@ -126,7 +126,7 @@ server <- function(input, output) {
     lDat <- projfCast()
     nowDiag <- tail(yA[!is.na(yA)], 1)
     nowUndet <- nowDiag/dRate - nowDiag
-    nowUndiag <- as.integer(cumulative.infections[cumulative.infections[,1]==input$countryFinder, ncol(cumulative.infections)])
+    nowUndiag <- as.integer(cumulative.infections[cumulative.infections[,1]==input$countryFinder, ncol(cumulative.infections)]) - nowDiag
     nowTotal <- nowDiag+nowUndiag+nowUndet
     nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
     dim(nowTable) <- c(4, 1)
