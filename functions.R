@@ -31,7 +31,9 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22)
   matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
   matA <- matA - matR
   
-  data.frame(infections[,!datCols], matA) # active cases
+  out <- data.frame(infections[,!datCols], matA) # active cases
+  colnames(out) <- colnames(infections)
+  out
 }
 
 # calculates doubling time over the last inWindow days.
