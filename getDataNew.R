@@ -24,14 +24,21 @@ library("readr")
 ## ---------------------------
 ## load up functions
 
+source('functions.R')
 
 ## ---------------------------
 
 
 ## Get data
-tsConf <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-tsTesting <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_testing_global.csv"
+server <- TRUE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
+if (server){
+  tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" 
+  tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" 
+} else {  
+  tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+}
+
 
 tsI<-read_csv(file = tsConf)
 tsD<-read_csv(file = tsDeath)
@@ -47,18 +54,12 @@ names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 #names(tsT)[!dCols] <- make.names(names(tsT)[!dCols])
 
 ## add recovery lag -- assumes all cases recover at 22 days
-matI<-as.matrix(tsI[, dCols])
-matD<-as.matrix(tsD[, dCols])
-matA<-matI-matD #remove deaths
-matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
-matA <- matA - matR
+tsA <- recLag(tsI, tsD)
 
-tsA <- cbind(tsI[,!dCols], matA) # active cases
 
-tsACountry <- countryAgg(tsA) # aggregated to country
-
-# This would order from most to least active cases - but lets leave it alphabetical
-#tsACountry <- tsACountry[rev(order(tsACountry[[ncol(tsACountry)-1]])),] 
+tsICountry <- countryAgg(tsI) # aggregated to country
+tsACountry <- countryAgg(tsA) 
+tsDCountry <- countryAgg(tsD)
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday
@@ -66,9 +67,10 @@ ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
 
 ddReg <- ddNames
 names(ddReg) <- ddNames
-#ddReg <- paste(ddReg, collapse = ", ") # menu specifier
 
-#save(ddReg, ddNames, file = "dat/menuData.RData")
-#save(tsI, tsD, tsR, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/cacheData", format(Sys.Date(), format = "%m%d"), ".RData"))
+## run deconvolution to estimate undiagnosed cases
+source("detection/estGlobalV2.R")
 
-
+## write data caches out
+save(ddReg, ddNames, file = "dat/menuData.RData")
+save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/cacheData.RData"))

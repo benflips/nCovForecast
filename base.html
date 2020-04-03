@@ -89,7 +89,8 @@ function openTab(evt, tabName) {
 
         <h3>Active cases:</h3>
         {{ tableOutput(outputId = "tablePredConf") }}
-
+        <p>Active cases are total number of infections minus deaths and recoveries.</p>
+        
         <h3>Doubling time (days):</h3>
         {{ textOutput(outputId = "doubTime") }}
 
@@ -98,12 +99,10 @@ function openTab(evt, tabName) {
 
         <h2>Detection</h2>
 
-        <p>Estimated proportion of cases detected: {{ textOutput(outputId = "detRate") }}</p>
-
-        <p>Possible true number of cases now given imperfect detection: {{ textOutput(outputId = "tablePredTrue") }}</p>
-        <p>Take this last number with a grain of salt; it is rough.  But low detection indicates that there are many more deaths in the country than there should be given reported case numbers (so there must be more cases than are reported).</p>
-        <p>Active cases are total number of infections minus deaths and recoveries.</p>
-        <p>For more information, see <a target="_blank" href="https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast">here</a></p>
+        <p>Possible number of cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
+        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases).</p>
+        
+        <p>For more information, see 'About' tab.</p>
       </div>
 
       <div class="right-panel">
@@ -141,7 +140,7 @@ function openTab(evt, tabName) {
         <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
         <p>Note, this last plot covers the entire time period of the pandemic, not just the last ten days.</p>
         {{ plotOutput("cfi") }}
-        <p>For more details see <a href = "https://blphillipsresearch.wordpress.com/2020/03/12/coronavirus-forecast/", target="_blank">here</a>.</p>
+        <p>For more details see the 'About' tab.</p>
       </div>
     </section>
   </div>
