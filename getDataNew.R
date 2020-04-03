@@ -8,7 +8,6 @@
 ##
 ## Date Created: 2020-02-07
 ##
-## Copyright (c) Ben Phillips, 2020
 ## Email: phillipsb@unimelb.edu.au
 ##
 ## ---------------------------
