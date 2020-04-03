@@ -153,23 +153,40 @@ function openTab(evt, tabName) {
 </div>
 
 <style>
+
 section {
-  width: 90%;
+  width: 95%;
   margin: auto;
 }
 
 .left-panel {
-  max-width: 49%!important;
   background: #F0F0F0;
-  float: left;
-  padding: 20px;
 }
 
 .right-panel {
-  max-width: 49%!important;
   width: 100%;
-  float: right;
 }
+
+@media(min-width: 10px) {
+  .left-panel {
+    max-width: 100%!important;
+  }
+  .right-panel {
+    max-width: 100%!important;
+  }
+}
+@media(min-width: 768px) {
+  .left-panel {
+    max-width: 49%!important;
+    float: left;
+    padding: 20px;
+  }
+  .right-panel {
+    max-width: 49%!important;
+    float: right;
+  }
+}
+
 
 div.shiny-input-container {width:100%!important;}
 
