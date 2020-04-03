@@ -177,6 +177,7 @@ server <- function(input, output) {
             beside=TRUE,
             col = clrs,
             legend = pDat$Country,
+            names.arg = format(as.Date(colnames(gRate), format = "%m/%d/%y"), format = "%b %d"),
             args.legend = list(bty = "n", x = "topright"))
   })
   
