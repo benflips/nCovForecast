@@ -14,7 +14,7 @@
 ## ---------------------------
 ##
 
-#design matrix for linear Poisson regression
+#design matrix for linear Poisson regression to back-project cases numbers
 design <- function(T,inc.dist) {
 	prob.inc<-inc.dist[,2]
 	I.max<-length(prob.inc)-1
@@ -23,9 +23,20 @@ design <- function(T,inc.dist) {
 	for (d in 1:T.days) {
 		start<-max(0,(d-I.max))+1
 		length.f<-length(c(start:d))
-		F[d,c(start:d)]<-rev(prob.inc[1:length.f])
+		F[d,c(start:d)]<-prob.inc[length.f:1]
 	}
 	F
+}
+
+#design matrix for linear Poisson regression to estimate distribution between case and death
+#cases is a series of cumulative daily diagnosis counts
+design.dist <- function(cases,max.d=length(cases)) {
+  Cases<-diff(c(0,as.numeric(cases))) # daily new cases
+  Cases[Cases<0]<-0
+  T<-length(Cases)
+  F<-matrix(0,T,max.d)
+  for (d in 1:max.d) F[,d]<-c(rep(0,(d-1)),Cases[1:(T-d+1)])
+  F
 }
 
 #estimate of cumulative number of infections
@@ -44,6 +55,21 @@ infect.est <- function(cases,inc.dist,F,min.cases=0) {
 		if (res$conv)inf.est<-round(cumsum(res$coef))[-c(1:I.max)]
 	}
 	inf.est
+}
+
+#estimate of distribution of time between diagnosis and death
+#cases and deaths are series of cumulative daily counts
+death.est <- function(deaths,Fd,min.deaths=0) {
+  T<-length(deaths)
+  Deaths<-diff(c(0,as.numeric(deaths))) # daily new deaths
+  Deaths[Deaths<0]<-0
+  Death.dist<-rep(0,T)
+  if (sum(Deaths)>=min.deaths) {
+    Death.dist<-rep(-1,T)
+    res<-nnpois(Deaths,Fd,rep(1,T),rep(0,T),rep(0.1,T),control=addreg.control(epsilon=1e-07,maxit=1000000))
+    if (res$conv) Death.dist<-(cumsum(res$coef))
+  }
+  Death.dist
 }
 
 #projections
@@ -183,19 +209,11 @@ nnpois.smooth <- function (y, x, standard, offset, start, control = addreg.contr
 
 #---------------------------------------------------------------
 # Smoothing step:
-# Simple moving average of width 9 (4 in each direction)
-# At later times the moving average downweights the final time
-# (because the estimate at the final time is the most unstable)
+# Simple moving average of width 7 (1 week smoothing window)
+# Smoothing window can be changed using parameter width
 #---------------------------------------------------------------
-coefnew1 <- c(coefnew[2:(length(coefnew)-1)],rep(coefnew[(length(coefnew)-1)],2))
-coefnew2 <- c(coefnew[1],coefnew[1:(length(coefnew)-1)])
-coefnew3 <- c(coefnew[3:(length(coefnew)-2)],rep(coefnew[(length(coefnew)-2)],4))
-coefnew4 <- c(rep(coefnew[1],2),coefnew[1:(length(coefnew)-2)])
-coefnew5 <- c(coefnew[4:(length(coefnew)-3)],rep(coefnew[(length(coefnew)-3)],6))
-coefnew6 <- c(rep(coefnew[1],3),coefnew[1:(length(coefnew)-3)])
-coefnew7 <- c(coefnew[5:(length(coefnew)-4)],rep(coefnew[(length(coefnew)-4)],8))
-coefnew8 <- c(rep(coefnew[1],4),coefnew[1:(length(coefnew)-4)])
-coefnew<-colMeans(rbind(coefnew,coefnew1,coefnew2,coefnew3,coefnew4,coefnew5,coefnew6,coefnew7,coefnew8))
+
+coefnew<-masmth(coefnew)
 
 #------------------------------------
     names(coefnew) <- xnames
@@ -221,5 +239,15 @@ coefnew<-colMeans(rbind(coefnew,coefnew1,coefnew2,coefnew3,coefnew4,coefnew5,coe
         boundary = boundary, loglik = -res$value.objfn[1], nn.design = x)
 }
 
-# end of nnpois.smooth
+# simple moving average smoother
+# width means the half width of the smoothing window 
+# e.g. width=3 means +/- 3 so the smoothing window is 7
+masmth <- function(coef,width=3) {
+  p<-length(coef)
+  coefn<-0
+  for (i in (width+1):(p-width)) coefn[i]<-mean(coef[(i-width):(i+width)])
+  for (i in 1:width) coefn[i]<-mean(coef[1:(i+width)])
+  for (i in (p-width+1):p) coefn[i]<-mean(coef[(i-width):p])
+coefn
+}
 

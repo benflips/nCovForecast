@@ -26,23 +26,22 @@
 library("addreg")
 
 #functions for estimation and projection
-source("detection/estFunctionsV2.R")
+source("detection/estFunctionsV3.R")
 
 # organise case data by country
 cases.all <- t(tsICountry)[-1,]
 T<-dim(cases.all)[1]
 
-#incubation distribution: discretised version of a logNormal with mean 5.2 days and 95% percentile 12.5 days
+#incubation distribution: discretised version of a logNormal(mean=5.2 days, 95% percentile=12.5 days)
 #Li et al. (2020) NEJM DOI:10.1056/NEJMoa2001316
 #maximum incubation period is assumed to be 25 days
 
 inc.dist<-cbind(c(0:25),
-c(0.0007824485, 0.0634008850, 0.1604242496, 0.1754661346, 0.1490412449,
-0.1153347953, 0.0860250431, 0.0633235540, 0.0465104972, 0.0342707375,
-0.0254009386, 0.0189623563, 0.0142655551, 0.0108167723, 0.0082656861,
-0.0063641086, 0.0049357206, 0.0038546201, 0.0030303317, 0.0023973807,
-0.0019080376, 0.0015272519, 0.0012290953, 0.0009942508, 0.0008082266,
-0.0006600780))
+                c(0.0167216581, 0.1209939502, 0.1764151755, 0.1645457302, 0.1319862874, 0.0998480498,
+                  0.0738430769, 0.0542463417, 0.0398885964, 0.0294712744, 0.0219198648, 0.0164263561,
+                  0.0124063530, 0.0094438368, 0.0072440676, 0.0055980247, 0.0043568666, 0.0034139852,
+                  0.0026925052, 0.0021365915, 0.0017053915, 0.0013687946, 0.0011044472, 0.0008956368,
+                  0.0007297832, 0.0005973546))
 
 colnames(inc.dist)=c("days","probability")
 
