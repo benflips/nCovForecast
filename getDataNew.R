@@ -54,16 +54,12 @@ names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 #names(tsT)[!dCols] <- make.names(names(tsT)[!dCols])
 
 ## add recovery lag -- assumes all cases recover at 22 days
-matI<-as.matrix(tsI[, dCols])
-matD<-as.matrix(tsD[, dCols])
-matA<-matI-matD #remove deaths
-matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
-matA <- matA - matR
+tsA <- recLag(tsI, tsD)
 
-tsA <- cbind(tsI[,!dCols], matA) # active cases
 
 tsICountry <- countryAgg(tsI) # aggregated to country
 tsACountry <- countryAgg(tsA) 
+tsDCountry <- countryAgg(tsD)
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday

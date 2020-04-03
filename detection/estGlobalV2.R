@@ -50,10 +50,14 @@ designF<-design(T,inc.dist)
 
 #produce cumulative infection estimates for each country/region
 infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
-cumulative.infections<-cbind(tsICountry[,1],t(infect.total))
+cumulative.infections<-data.frame(tsICountry[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(tsICountry)
 
-save(cumulative.infections,file="dat/estGlobal.RData")
+active.cases <- recLag(cumulative.infections, tsDCountry)
+colnames(active.cases)<- colnames(cumulative.infections)
+
+
+save(cumulative.infections,active.cases, file="dat/estGlobal.RData")
 
 #The following currently disabled code can be used to
 #produce cumulative projections and append them to the cumulative observed cases

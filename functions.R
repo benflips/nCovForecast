@@ -22,6 +22,19 @@
 
 ## function definitions
 
+# Adjusts cumulative infections to get active cases
+  # cumulative infections and deaths, ttr = time to recovery
+recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22){
+  browser()
+  matI<-as.matrix(infections[, datCols])
+  matD<-as.matrix(deaths[, datCols])
+  matA<-matI-matD #remove deaths
+  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
+  matA <- matA - matR
+  
+  cbind(infections[,!datCols], matA) # active cases
+}
+
 # calculates doubling time over the last inWindow days.
 doubTime <- function(cases, time, inWindow = 10){
   r <- projSimpleSlope(cases, time, inWindow = inWindow)[2]
