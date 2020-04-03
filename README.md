@@ -19,18 +19,22 @@ install.packages('shiny')
 install.packages('readr')
 install.packages('markdown')
 install.packages('curl')
+install.packages('addreg')
 ```
-6. `library(shiny)`
-7. `runApp('.')`  This should automatically open your browser and display the app.
+6. Generate cached data (see below)
+7. `library(shiny)`
+8. `runApp('.')`  This should automatically open your browser and display the app.
 
-After you have installed and run this for the first time, only steps 3, 4, 6, and 7 will be required.
+After you have installed and run this for the first time, only steps 3, 4, and 7-8 will be required.  Data can be updated by running step 6.
 
-## To generate cached data
+## To generate cached data (step 6)
 
 If you are on the main server, simply run:
 
 `Rscript getDataNew.R`
 
-Otherwise, go into getDataNew.R, comment out the first two lines for the variables `tsConf` and `tsDeath`, and uncomment out the second two lines for the variables `tsConf` and `tsDeath`.  This will obtain those data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  Then, run:
+Otherwise, go into getDataNew.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  Then, run:
 
 `Rscript getDataNew.R`
+
+Which will take about 20 minutes to run.
