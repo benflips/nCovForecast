@@ -183,7 +183,7 @@ server <- function(input, output) {
 ##### Doubling time ##### 
   output$doubTime <- renderText({
     pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
-    dTime <- round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1)
+    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
   
 ##### Doubling time plot #####    
