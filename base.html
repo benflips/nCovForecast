@@ -62,15 +62,12 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
-$(document).ready(function() {
-  $('#10-day-forecast-tab').click();
-});
 </script>
 
 <div class="tabbed-nav" data-tabbed="" id="nav">
   <div class="full-width">
     <nav role="tablist">
-      <a id="10-day-forecast-tab" href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
+      <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
       <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rate and curve-flattening</a>
       <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
     </nav>
@@ -177,7 +174,14 @@ section {
 
 div.shiny-input-container {width:100%!important;}
 
+.tablinks.active {
+  border-bottom-color: rgb(173, 205, 240)!important;
+  border-bottom-width: 6px;
+  border-bottom-style: solid;
+}
+
 </style>
+
 
       </div>
     </div>
