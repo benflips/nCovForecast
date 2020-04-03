@@ -92,7 +92,7 @@ function openTab(evt, tabName) {
         <p>Active cases are total number of infections minus deaths and recoveries.</p>
         
         <h3>Doubling time:</h3>
-        <center>{{ textOutput(outputId = "doubTime") }}</center>
+        <div class="center">{{ textOutput(outputId = "doubTime") }}</div>
 
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, label = "Fit window:", post = "days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
