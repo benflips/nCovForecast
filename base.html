@@ -99,6 +99,9 @@ function openTab(evt, tabName) {
 
         <h2>Detection</h2>
 
+       <p>Detection rate:</p>
+        <div class="center">{{ textOutput(outputId = "detRate") }}</div>
+
         <p>Possible number of cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
         <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases).</p>
         
