@@ -100,8 +100,8 @@ server <- function(input, output) {
   output$detRate <- renderText({
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    dR<-round(detRate(yI, yD), 4)
-    if (is.na(dR)) "Insufficient data for estimation" else dR
+    dR<-round(detRate(yI, yD), 4)*100
+    if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
   })
   
 ##### Prediction table confirmed #####    
