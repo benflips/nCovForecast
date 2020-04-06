@@ -58,6 +58,16 @@ countryAgg<-function(x){
   aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
 }
 
+# calculates a nation aggregate and appends to dataframe
+natAgg <-function(tsDF){
+  cAgg <- tsSub(tsDF, subset = tsDF$Country.Region==tsDF$Country.Region[1])
+  dim(cAgg)<-c(1, length(cAgg))
+  cAgg<-data.frame(tsI[1, !dCols], cAgg)
+  cAgg$Province.State <- "National aggregate"
+  colnames(cAgg)<-colnames(tsDF)
+  rbind(cAgg, tsDF)
+}
+
 # calculates the curve flatenning index.
   # it is the second derivative of logA wrt t (the change in growth rate) divided by first differential (the current growth rate).
 cfi <- function(active){
