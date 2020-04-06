@@ -74,15 +74,34 @@ server <- function(input, output) {
       fig <- fig %>% layout(showlegend = FALSE, 
                             yaxis = list(range = list(0, yMax),
                                          title = list(text = "Confirmed active cases")),
-                            xaxis = list(title = list(text = "Date")),
                             title = list(text = input$countryFinder)
                             )
-    #fig
   })
   
-
+##### Log plot #####
+  output$logPlot <- renderPlotly({
+    yA <- yAfCast()
+    yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
+    lDat <- projfCast()
+    pDat <- merge(yA, lDat, all = TRUE)
+    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)
+    clrDark<-"#273D6E"
+    clrLight<-"#B2C3D5"
+    #yTxt <- "Confirmed active cases"
+    fig <- plot_ly(pDat, x = ~dates)
+    fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
+    fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
+    fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
+    fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
+    fig <- fig %>% layout(showlegend = FALSE, 
+                          yaxis = list(type = "log",
+                                       range = list(log10(0.1), log10(yMax)),
+                                       title = list(text = "Confirmed active cases (log scale)")),
+                          xaxis = list(title = list(text = "Date"))
+                    )
+  })
 ##### Log plot #####    
-  output$logPlot <- renderPlot({
+  output$logPlot2 <- renderPlot({
     yA <- yAfCast()
     lDat <- projfCast()
     yMax <- max(c(lDat$fit, yA), na.rm = TRUE)
