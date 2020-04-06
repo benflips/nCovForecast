@@ -100,26 +100,7 @@ server <- function(input, output) {
                           xaxis = list(title = list(text = "Date"))
                     )
   })
-##### Log plot #####    
-  output$logPlot2 <- renderPlot({
-    yA <- yAfCast()
-    lDat <- projfCast()
-    yMax <- max(c(lDat$fit, yA), na.rm = TRUE)
-    yTxt <- "Confirmed active cases (log scale)"
-    plot((yA+0.1)~dates, 
-         xlim = c(min(dates), max(lDat$dates)),
-         ylim = c(1, yMax),
-         log = "y",
-         pch = 19, 
-         bty = "u", 
-         xlab = "Date", 
-         ylab = yTxt,
-         main = input$countryFinder)
-    axis(side=4)
-    lines(lDat$fit~lDat$dates)
-    lines(lDat$lwr~lDat$dates, lty = 2)
-    lines(lDat$upr~lDat$dates, lty = 2)
-  })
+
   
 ##### Detection rate #####    
   output$detRate <- renderText({
@@ -133,7 +114,7 @@ server <- function(input, output) {
   output$tablePredConf <- renderTable({
     yA <- yAfCast()
     lDat <- projfCast()
-    nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$y[,"lwr"],1), tail(lDat$y[,"upr"],1))), big.mark = ",")
+    nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
     nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
     dim(nowThen) <- c(1, 2)
     colnames(nowThen)<-c("Now", "In 10 days (min-max)")
@@ -146,7 +127,6 @@ server <- function(input, output) {
     yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
     yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     dRate <- detRate(yI, yD)
-    lDat <- projfCast()
     nowDiag <- tail(yA[!is.na(yA)], 1)
     nowUndet <- nowDiag/dRate - nowDiag
     nowUndiag <- active.cases[active.cases$Country==input$countryFinder, ncol(active.cases)] - nowDiag
