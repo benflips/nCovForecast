@@ -30,7 +30,7 @@ options(scipen=9)
 
 
 # Define server logic 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
