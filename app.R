@@ -18,6 +18,7 @@
 ## --------------------------
 ## load up the packages we will need 
 library(shiny)
+library(plotly)
 ## ---------------------------
 
 ## source files
@@ -55,34 +56,39 @@ server <- function(input, output) {
     format(out, big.mark = ",")
   }, rownames = FALSE)
   
-##### Raw plot #####  
-  output$rawPlot <- renderPlot({
+##### Raw plot #####
+  output$rawPlot <- renderPlotly({
     yA <- yAfCast()
+    yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
     lDat <- projfCast()
-    yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
-    yTxt <- "Confirmed active cases"
-    plot(yA~dates, 
-         xlim = c(min(dates), max(lDat$x)),
-         ylim = c(0, yMax),
-         pch = 19, 
-         bty = "u", 
-         xlab = "Date", 
-         ylab = yTxt,
-         main = input$countryFinder)
-    axis(side = 4)
-    lines(lDat$y[, "fit"]~lDat$x)
-    lines(lDat$y[, "lwr"]~lDat$x, lty = 2)
-    lines(lDat$y[, "upr"]~lDat$x, lty = 2)
+    pDat <- merge(yA, lDat, all = TRUE)
+    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)
+    clrDark<-"#273D6E"
+    clrLight<-"#B2C3D5"
+    #yTxt <- "Confirmed active cases"
+    fig <- plot_ly(pDat, x = ~dates)
+      fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
+      fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
+      fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
+      fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
+      fig <- fig %>% layout(showlegend = FALSE, 
+                            yaxis = list(range = list(0, yMax),
+                                         title = list(text = "Confirmed active cases")),
+                            xaxis = list(title = list(text = "Date")),
+                            title = list(text = input$countryFinder)
+                            )
+    #fig
   })
   
+
 ##### Log plot #####    
   output$logPlot <- renderPlot({
     yA <- yAfCast()
     lDat <- projfCast()
-    yMax <- max(c(lDat$y[,"fit"], yA), na.rm = TRUE)
+    yMax <- max(c(lDat$fit, yA), na.rm = TRUE)
     yTxt <- "Confirmed active cases (log scale)"
     plot((yA+0.1)~dates, 
-         xlim = c(min(dates), max(lDat$x)),
+         xlim = c(min(dates), max(lDat$dates)),
          ylim = c(1, yMax),
          log = "y",
          pch = 19, 
@@ -91,9 +97,9 @@ server <- function(input, output) {
          ylab = yTxt,
          main = input$countryFinder)
     axis(side=4)
-    lines(lDat$y[, "fit"]~lDat$x)
-    lines(lDat$y[, "lwr"]~lDat$x, lty = 2)
-    lines(lDat$y[, "upr"]~lDat$x, lty = 2)
+    lines(lDat$fit~lDat$dates)
+    lines(lDat$lwr~lDat$dates, lty = 2)
+    lines(lDat$upr~lDat$dates, lty = 2)
   })
   
 ##### Detection rate #####    
