@@ -74,8 +74,10 @@ server <- function(input, output) {
       fig <- fig %>% layout(showlegend = FALSE, 
                             yaxis = list(range = list(0, yMax),
                                          title = list(text = "Confirmed active cases")),
+                            xaxis = list(range = as.list(range(yA$dates[yA$yA>20])+c(0, 10)),
+                                         title = list(text = "")),
                             title = list(text = input$countryFinder)
-                            )
+                      )
   })
   
 ##### Log plot #####
@@ -97,10 +99,24 @@ server <- function(input, output) {
                           yaxis = list(type = "log",
                                        range = list(log10(0.1), log10(yMax)),
                                        title = list(text = "Confirmed active cases (log scale)")),
-                          xaxis = list(title = list(text = "Date"))
+                          xaxis = list(range = as.list(range(yA$dates[yA$yA>20])+c(0, 10)),
+                                       title = list(text = ""))
                     )
   })
 
+##### New cases ##### 
+  output$newCases <- renderPlotly({
+    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    yA <- yAfCast()
+    newCases <- diff(yI)
+    newCases <- data.frame(dates = as.Date(names(newCases), format = "%m/%d/%y"), newCases)
+    fig <- plot_ly(newCases, x = ~dates, y = ~newCases, type = "bar", showlegend = FALSE)
+    fig <- fig %>% layout(xaxis = list(range = as.list(range(newCases$dates[yA[-1]>20])+c(0, 10)),
+                                      title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Number of new cases"))
+                    )
+  })
+  
   
 ##### Detection rate #####    
   output$detRate <- renderText({
