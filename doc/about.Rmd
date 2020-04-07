@@ -11,7 +11,7 @@ This app was built to give people a sense of how the coronavirus epidemic is pro
 
 As action is taken, the app gives us a sense of how well our actions are working.  Difficult decisions have been made at all levels, from the individual to the nation, and it is important that we get feedback on those decisions as soon as possible.
 
-Given how fast the epidemic was progressing, the app was built in a hurry by Ben Phillips at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contributions/suggestions are welcome.
+Given how fast the epidemic was progressing, the app was built in a hurry by [Ben Phillips](https://findanexpert.unimelb.edu.au/profile/652103-ben-phillips) at the University of Melbourne on the 12 March 2020.  It has been continually refined since then, and work continues (see acknowledgements).  The code is available [here](https://github.com/benflips/nCovForecast) and contributions/suggestions are welcome.
 
 The app relies on relatively simple heuristics rather than comprehensive analyses.  The emphasis has been on speed, and continually updated data, rather than sophisticated analyses.  Sophisticated analyses will likely come in time.
 
