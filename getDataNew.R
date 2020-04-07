@@ -32,13 +32,16 @@ server <- FALSE ## if you are drawing data directly over internet, set this to F
 if (server){
   tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" 
   tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" 
+  tsRec <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
 } else {  
   tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
 tsI<-read_csv(file = tsConf)
 tsD<-read_csv(file = tsDeath)
+tsR<-read_csv(file = tsRec)
 
 ## get Date range
 dCols<-dateCols(tsI)
@@ -47,6 +50,7 @@ dates<-as.Date(colnames(tsI)[dCols], format = "%m/%d/%y")
 ## Tidy up names
 names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
+names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
 
 ## add recovery lag -- assumes all cases recover at 22 days
 tsA <- recLag(tsI, tsD)
