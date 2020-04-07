@@ -171,28 +171,31 @@ server <- function(input, output) {
   growthSub <- reactive({
     subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
   })
-##### Curve-flattenning #####    
-  output$cfi <- renderPlotly({
-    pDat <- growthSub()
+  ##### Curve-flattenning #####    
+  output$cfi <- renderPlot({
+    pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     pMat<-as.matrix(log(pDat[,-1]))
     row.names(pMat)<-pDat$Country
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
-    cfiDat <- data.frame(dates = as.Date(row.names(cfiDat), format = "%m/%d/%y"), cfiDat)
     clrs<-hcl.colors(length(input$countryGrowthRate))
     dateSub<-3:length(dates) # date subset
-    fig <- plot_ly(cfiDat, type = "scatter", mode = "none", x = ~dates[dateSub])
-    for (cc in 2:ncol(cfiDat)){
-      cfiSmooth <- loess(cfiDat[,cc]~as.numeric(cfiDat$dates))
-      cfiDat[,cc]<-predict(cfiSmooth, newdata = as.numeric(cfiDat$dates))
-      fig <- fig %>% add_trace(y = ~cfiDat[,cc])
+    plot(cfiDat[,1]~dates[dateSub], 
+         type = "n", 
+         ylim = range(c(-1.2,1.2)*sd(cfiDat)),
+         bty = "l",
+         xlab = "Date",
+         ylab = "Curve-flatenning index")
+    abline(a = 0, b = 0, lty = 2, lwd = 2)
+    for (cc in 1:ncol(cfiDat)){
+      cfiSmooth<-loess(cfiDat[,cc]~as.numeric(dates[dateSub]))
+      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=3)
     }
-    fig <- fig %>% layout(showlegend = TRUE, 
-                          yaxis = list(title = list(text = "Curve-flattening"),
-                                       fixedrange = TRUE),
-                          xaxis = list(title = list(text = "Date"),
-                                       fixedrange = TRUE)
-                    )
+    legend("topleft", 
+           legend = pDat$Country, 
+           lty = 1, 
+           col = clrs,
+           bty = "n")
   })
   
 ##### Growth rate #####    
