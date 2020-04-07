@@ -43,11 +43,17 @@ output$global_or_country <- renderText({
 })
 
 output$the_great_list <- renderText({
+  print('in this bit')
   global_or_country <- input$global_or_country
   load(paste0("dat/",global_or_country,"/menuData.RData"))
+  updateSelectizeInput(session, "countryFinder", choices = ddReg)
   ddReg
 })
 
+observe({
+  print('in observe')
+  updateSelectizeInput(session, "countryFinder", choices = ddReg)
+})
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
