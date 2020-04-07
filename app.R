@@ -305,7 +305,11 @@ server <- function(input, output, session) {
   
 ##### Doubling time ##### 
   output$doubTime <- renderText({
-    pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
+    if (input$global_or_country == 'Global') {
+      pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
+    } else {
+      pDat <- yAfCast()
+    }
     dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
   
