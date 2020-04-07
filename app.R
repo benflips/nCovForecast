@@ -42,6 +42,15 @@ server <- function(input, output) {
     projSimple(yA, dates, inWindow = input$fitWinSlider)
   })
   
+  plotRange <- reactive({ # get date range to plot
+    yA <- yAfCast()
+    dFrame <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
+    if (max(dFrame$yA)>200) {minDate <- min(dFrame$dates[dFrame$yA>20]); maxDate <- max(dFrame$dates)+10} else {
+      minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
+    }
+    list(minDate, maxDate)
+  })
+  
   ##### Raw stats #####  
   output$rawStats <- renderTable({
     yA <- yAfCast()
@@ -66,7 +75,7 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, x = ~dates)
+    fig <- plot_ly(pDat, type = "scatter", x = ~dates)
       fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
       fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
       fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
@@ -74,7 +83,7 @@ server <- function(input, output) {
       fig <- fig %>% layout(showlegend = FALSE, 
                             yaxis = list(range = list(0, yMax),
                                          title = list(text = "Confirmed active cases")),
-                            xaxis = list(range = as.list(range(yA$dates[yA$yA>20])+c(0, 10)),
+                            xaxis = list(range = plotRange(),
                                          title = list(text = "")),
                             title = list(text = input$countryFinder)
                       )
@@ -90,8 +99,8 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, x = ~dates)
-    fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
+    fig <- plot_ly(pDat, type = "scatter")
+    fig <- fig %>% add_trace(x = ~dates, y = ~fit, mode = "lines", line = list(color = clrDark))
     fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
     fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
     fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
@@ -99,7 +108,7 @@ server <- function(input, output) {
                           yaxis = list(type = "log",
                                        range = list(log10(0.1), log10(yMax)),
                                        title = list(text = "Confirmed active cases (log scale)")),
-                          xaxis = list(range = as.list(range(yA$dates[yA$yA>20])+c(0, 10)),
+                          xaxis = list(range = plotRange(),
                                        title = list(text = ""))
                     )
   })
@@ -111,7 +120,7 @@ server <- function(input, output) {
     newCases <- diff(yI)
     newCases <- data.frame(dates = as.Date(names(newCases), format = "%m/%d/%y"), newCases)
     fig <- plot_ly(newCases, x = ~dates, y = ~newCases, type = "bar", showlegend = FALSE)
-    fig <- fig %>% layout(xaxis = list(range = as.list(range(newCases$dates[yA[-1]>20])+c(0, 10)),
+    fig <- fig %>% layout(xaxis = list(range = plotRange(),
                                       title = list(text = "Date")),
                           yaxis = list(title = list(text = "Number of new cases"))
                     )
