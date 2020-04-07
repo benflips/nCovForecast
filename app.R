@@ -165,7 +165,14 @@ server <- function(input, output) {
     yA <- yAfCast()
     newCases <- diff(yI)
     newCases <- data.frame(dates = as.Date(names(newCases), format = "%m/%d/%y"), newCases)
-    fig <- plot_ly(newCases, x = ~dates, y = ~newCases, type = "bar", showlegend = FALSE, name = "New cases")
+    fig <- plot_ly(newCases, 
+                   x = ~dates, 
+                   y = ~newCases, 
+                   type = "bar", 
+                   showlegend = FALSE, 
+                   name = "New cases",
+                   hoverinfo = "text+name", 
+                   text = paste(format(newCases$dates, "%b %d"), format(round(newCases$newCases, 0), big.mark = ",")))
     fig <- fig %>% layout(xaxis = list(range = plotRange(),
                                       title = list(text = "Date")),
                           yaxis = list(title = list(text = "Number of new cases"))
