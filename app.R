@@ -31,13 +31,20 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-something <- reactive({first_word_in_url <- unlist(strsplit(session$clientData$url_hostname,"\\."))[1]
-if(first_word_in_url=='covid19') {
-  world_or_country <- 'world'
-} else {
-  world_or_country <- 'country'
-  the_country      <- first_word_in_url
-}
+reactive({
+  global_or_country <- input$global_or_country
+  load(paste("dat/",global_or_country,"/cacheData.RData"))
+  load(paste("dat/",global_or_country,"/menuData.RData"))
+})
+
+output$global_or_country <- renderText({
+  input$global_or_country
+})
+
+output$the_great_list <- renderText({
+  global_or_country <- input$global_or_country
+  load(paste0("dat/",global_or_country,"/menuData.RData"))
+  ddReg
 })
 
 
