@@ -65,6 +65,13 @@ function openTab(evt, tabName) {
 }
 </script>
 
+<fieldset>
+  {{ selectInput(inputId = "world_or_country",
+                 label   = "Select world or country",
+                 choices = c("World","Australia","Canada","China","Denmark","France","Netherlands","United Kingdom"),
+                 selected = "World") }}
+</fieldset>
+
 <div class="tabbed-nav" data-tabbed="" id="nav">
   <div class="full-width">
     <nav role="tablist">
