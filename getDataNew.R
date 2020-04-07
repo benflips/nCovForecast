@@ -69,8 +69,8 @@ tsA <- recLag(tsI, tsD)
   source("detection/estGlobalV2.R")
 
   ## write data caches out
-  save(ddReg, ddNames,                                   file = "dat/Global/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = "dat/Global/cacheData.RData")
+  save(ddReg, ddNames,                   file = "dat/Global/menuData.RData")
+  save(tsI, tsD, tsA, tsACountry, dates, file = "dat/Global/cacheData.RData")
 
 
 
@@ -96,7 +96,7 @@ tsA <- recLag(tsI, tsD)
     names(ddReg) <- ddNames
 
     ## write data caches out
-    save(ddReg, ddNames,                                                                          file = paste0("dat/",focusCountry,"/menuData.RData"))
-    save(tsI_specific_country, tsD_specific_country, tsA_specific_country, dates, ddNames, ddReg, file = paste0("dat/",focusCountry,"/cacheData.RData"))
+    save(ddReg, ddNames,                                                          file = paste0("dat/",focusCountry,"/menuData.RData"))
+    save(tsI_specific_country, tsD_specific_country, tsA_specific_country, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
 
   }
