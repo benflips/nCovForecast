@@ -82,9 +82,11 @@ server <- function(input, output) {
       fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
       fig <- fig %>% layout(showlegend = FALSE, 
                             yaxis = list(range = list(0, yMax),
-                                         title = list(text = "Confirmed active cases")),
+                                         title = list(text = "Confirmed active cases"),
+                                         fixedrange = TRUE),
                             xaxis = list(range = plotRange(),
-                                         title = list(text = "")),
+                                         title = list(text = ""),
+                                         fixedrange = TRUE),
                             title = list(text = input$countryFinder)
                       )
   })
@@ -107,9 +109,11 @@ server <- function(input, output) {
     fig <- fig %>% layout(showlegend = FALSE, 
                           yaxis = list(type = "log",
                                        range = list(log10(0.1), log10(yMax)),
-                                       title = list(text = "Confirmed active cases (log scale)")),
+                                       title = list(text = "Confirmed active cases (log scale)"),
+                                       fixedrange = TRUE),
                           xaxis = list(range = plotRange(),
-                                       title = list(text = ""))
+                                       title = list(text = ""),
+                                       fixedrange = TRUE)
                     )
   })
 
