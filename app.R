@@ -75,7 +75,7 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", x = ~dates)
+    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates)
       fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
       fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
       fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
@@ -99,8 +99,8 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter")
-    fig <- fig %>% add_trace(x = ~dates, y = ~fit, mode = "lines", line = list(color = clrDark))
+    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates)
+    fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
     fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
     fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
     fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
