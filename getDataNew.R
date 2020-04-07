@@ -52,8 +52,12 @@ names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
 names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
 
-## add recovery lag -- assumes all cases recover at 22 days
-tsA <- recLag(tsI, tsD)
+# Standardise dataframes and compute active cases
+std <- activeCases(tsI, tsD, tsR)
+tsI <- std$tsI
+tsD <- std$tsD
+tsR <- std$tsR
+tsA <- std$tsA
 
 
 ## GLOBAL

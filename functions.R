@@ -22,6 +22,47 @@
 
 ## function definitions
 
+# Aggregates a particular country within a dataframe
+  # useful for standardising the input dataframes
+internalAgg <- function(tsDF, country){
+  ssCol <- dateCols(tsDF)
+  temp <- subset(tsDF, tsDF$Country.Region==country)
+  agg <- countryAgg(temp)
+  bRow <- temp[1,]
+  bRow[ssCol] <- agg[,-1]
+  tsDF <- subset(tsDF, tsDF$Country.Region!=country)
+  rbind(tsDF, bRow)
+}
+
+# Takes infection, death, and recovrey time series and converts to active cases
+  # returns standardised dataframes
+activeCases <- function(infections, deaths, recoveries){
+  ssCol <- dateCols(infections) # get date columns
+  # find countries where recoveries have been aggregated, but infections/deaths have not
+  countI <- table(infections$Country.Region)
+  countR <- table(recoveries$Country.Region)
+  cNames <- names(countI)[countI>countR]
+  for (cc in cNames){
+    # aggregate infections
+    infections <- internalAgg(infections, cc)
+    # aggregate deaths
+    deaths <- internalAgg(deaths, cc)
+  }
+  # Standardise order
+  infections <- infections[order(infections$Country.Region, infections$Province.State),]
+  deaths <- deaths[order(deaths$Country.Region, deaths$Province.State),]
+  recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
+  # subset to case data
+  infMat <- infections[,ssCol]
+  deathMat <- deaths[,ssCol]
+  recMat <- recoveries[,ssCol]
+  # generate active case data frame
+  active <- infections
+  active[,ssCol] <- infMat - deathMat - recMat
+  # return standardised data frames
+  list(tsI = infections, tsD = deaths, tsR = recoveries, tsA = active)
+}
+
 # Adjusts cumulative infections to get active cases
   # cumulative infections and deaths, ttr = time to recovery
 recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22){
