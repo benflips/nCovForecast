@@ -139,8 +139,13 @@ server <- function(input, output, session) {
 ##### Prediction table true #####    
   output$tablePredTrue <- renderTable({
     yA <- yAfCast()
-    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    if (input$global_or_country == 'Global') {
+      yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    } else {
+      yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
+    }
     dRate <- detRate(yI, yD)
     lDat <- projfCast()
     nowDiag <- tail(yA[!is.na(yA)], 1)
