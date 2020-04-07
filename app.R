@@ -66,9 +66,13 @@ server <- function(input, output, session) {
   ##### Raw stats #####  
   output$rawStats <- renderTable({
     yA <- yAfCast()
-    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    #yR <- tsSub(tsR,tsR$Country.Region %in% input$countryFinder)
+    if (input$global_or_country == 'Global') {
+      yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    } else {
+      yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
+    }
     nn <-length(yI)
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
@@ -203,8 +207,13 @@ server <- function(input, output, session) {
   
 ##### Detection rate #####    
   output$detRate <- renderText({
-    yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    if (input$global_or_country == 'Global') {
+      yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    } else {
+      yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
+      yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
+    }
     dR<-round(detRate(yI, yD), 4)*100
     if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
   })
