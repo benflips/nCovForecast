@@ -244,6 +244,7 @@ server <- function(input, output) {
     legend("topleft", 
            legend = pDat$Country, 
            lty = 1, 
+           lwd = 3,
            col = clrs,
            bty = "n")
   })
