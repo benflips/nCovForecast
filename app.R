@@ -42,7 +42,11 @@ server <- function(input, output, session) {
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
-    tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    if (input$global_or_country == 'Global') {
+      tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
+    } else {
+      tsSub(tsA,tsA$Province.State %in% input$countryFinder)
+    }
   })
   
   projfCast <- reactive({ # projection for forecast
