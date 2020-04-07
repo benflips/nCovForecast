@@ -32,20 +32,12 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-reactive({
-  global_or_country <- input$global_or_country
-  load(paste("dat/",global_or_country,"/cacheData.RData"))
-  load(paste("dat/",global_or_country,"/menuData.RData"))
-})
 
-output$global_or_country <- renderText({
-  input$global_or_country
-})
-
-observe({
-  load(paste0("dat/",input$global_or_country,"/menuData.RData"))
-  updateSelectizeInput(session, "countryFinder", choices = ddReg)
-})
+  # if we observe that global_or_country is changing, then update the choies in countryFinder
+  observe({
+    load(paste0("dat/",input$global_or_country,"/menuData.RData"))
+    updateSelectizeInput(session, "countryFinder", choices = ddReg)
+  })
 
 
 #### Reactive expressions for forecast page ####
