@@ -90,8 +90,7 @@ function openTab(evt, tabName) {
         <div class="form-group shiny-input-container">
           {{ selectizeInput(inputId  = "countryFinder",
                          label    = "Select Country/Region:",
-                         choices  = ddReg,
-                         selected = "US") }}
+                         choices  = ddReg) }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
 
@@ -131,11 +130,10 @@ function openTab(evt, tabName) {
       <div class="left-panel" style="width:700px!important;">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
-          {{ selectInput(inputId  = "countryGrowthRate",
-                         label    = "Select Country/Region:",
-                         choices  = ddReg,
-                         selected = c("US", "Italy", "Australia", "China"),
-                         multiple = TRUE) }}
+          {{ selectizeInput(inputId  = "countryGrowthRate",
+                            label    = "Select Country/Region:",
+                            choices  = ddReg,
+                            multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
         <p></p>

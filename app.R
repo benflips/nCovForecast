@@ -32,10 +32,16 @@ options(scipen=9)
 server <- function(input, output, session) {
 
 
-  # if we observe that global_or_country is changing, then update the choies in countryFinder
+  # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     load(paste0("dat/",input$global_or_country,"/menuData.RData"))
-    updateSelectizeInput(session, "countryFinder", choices = ddReg)
+    if (input$global_or_country == 'Global') {
+      updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
+      updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
+    } else {
+      updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+      updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
+    }
   })
 
 
