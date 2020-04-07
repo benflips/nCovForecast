@@ -66,10 +66,13 @@ function openTab(evt, tabName) {
 </script>
 
 <fieldset>
-  {{ selectInput(inputId = "world_or_country",
-                 label   = "Select world or country",
-                 choices = c("World","Australia","Canada","China","Denmark","France","Netherlands","United Kingdom"),
-                 selected = "World") }}
+        <div class="form-group shiny-input-container">
+  {{ selectInput(inputId = "global_or_country",
+                 label   = "Select global or country",
+                 choices = c("Global","Australia","Canada","China","Denmark","France","Netherlands","United Kingdom"),
+                 selected = "Global") }}
+          <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
+        </div>
 </fieldset>
 
 <div class="tabbed-nav" data-tabbed="" id="nav">
@@ -91,7 +94,8 @@ function openTab(evt, tabName) {
                          selected = "US") }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
-
+{{ textOutput(outputId = "global_or_country") }}
+{{ textOutput(outputId = "the_great_list") }}
         <h3>Raw case numbers:</h3>
         {{ tableOutput(outputId = "rawStats") }}
 
