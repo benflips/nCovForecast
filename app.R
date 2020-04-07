@@ -256,7 +256,11 @@ server <- function(input, output) {
     colnames(gRate)[-1] <- pDat$Country
     fig <- plot_ly(gRate, type = "scatter", mode = "none", x = ~dates)
     for (cc in 2:ncol(gRate)){
-      fig <- fig %>% add_trace(y = gRate[,cc], mode = "lines+markers", name = colnames(gRate)[cc])
+      fig <- fig %>% add_trace(y = gRate[,cc], 
+                               mode = "lines+markers", 
+                               name = colnames(gRate)[cc],
+                               hoverinfo = "text+name", 
+                               text = paste(format(gRate$dates, "%b %d"), round(gRate[,cc], 1), "%"))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Growth rate (% per day)"))
