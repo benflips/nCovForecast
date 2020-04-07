@@ -76,10 +76,30 @@ server <- function(input, output) {
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
     fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
-              add_trace(y = ~fit, mode = "lines", line = list(color = clrDark), name = "Best fit") %>%
-              add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"), name = "CI lower bound") %>%
-              add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"), name = "CI upper bound") %>%
-              add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight), name = "Active cases") %>%
+              add_trace(y = ~fit, 
+                        mode = "lines", 
+                        line = list(color = clrDark), 
+                        name = "Best fit", 
+                        hoverinfo = "text+name", 
+                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
+              add_trace(y = ~lwr, 
+                        mode = "lines", 
+                        line = list(color = clrDark, dash = "dash"), 
+                        name = "CI lower bound",
+                        hoverinfo = "text+name", 
+                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
+              add_trace(y = ~upr, 
+                        mode = "lines", 
+                        line = list(color = clrDark, dash = "dash"), 
+                        name = "CI upper bound",
+                        hoverinfo = "text+name", 
+                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
+              add_trace(y = ~yA, 
+                        mode = "markers", 
+                        marker = list(color = clrLight), 
+                        name = "Active cases",
+                        hoverinfo = "text+name", 
+                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
               layout(showlegend = FALSE, 
                      yaxis = list(range = list(0, yMax),
                                   title = list(text = "Confirmed active cases"),
