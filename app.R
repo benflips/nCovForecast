@@ -199,21 +199,18 @@ server <- function(input, output) {
   })
   
 ##### Growth rate #####    
-  output$growthRate <- renderPlot({
+  output$growthRate <- renderPlotly({
     pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
-    clrs<-hcl.colors(length(input$countryGrowthRate))
-    dates10 <- dates[(length(pDat)-10+1):length(pDat)]
-    counts <- table(gRate)
-    barplot(gRate,
-            main="Growth rate",
-            xlab="Date", 
-            ylab="Growth rate (% per day)",
-            beside=TRUE,
-            col = clrs,
-            legend = pDat$Country,
-            names.arg = format(as.Date(colnames(gRate), format = "%m/%d/%y"), format = "%b %d"),
-            args.legend = list(bty = "n", x = "topright"))
+    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m/%d/%y"), t(gRate))
+    colnames(gRate)[-1] <- pDat$Country
+    fig <- plot_ly(gRate, type = "scatter", mode = "none", x = ~dates)
+    for (cc in 2:ncol(gRate)){
+      fig <- fig %>% add_trace(y = gRate[,cc], mode = "lines+markers", name = colnames(gRate)[cc])
+    }
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Growth rate (% per day)"))
+                    )
   })
   
 ##### Doubling time ##### 
