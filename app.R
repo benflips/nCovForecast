@@ -71,7 +71,7 @@ server <- function(input, output) {
     yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
     lDat <- projfCast()
     pDat <- merge(yA, lDat, all = TRUE)
-    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)
+    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
@@ -118,7 +118,7 @@ server <- function(input, output) {
     yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
     lDat <- projfCast()
     pDat <- merge(yA, lDat, all = TRUE)
-    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)
+    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
@@ -221,32 +221,35 @@ server <- function(input, output) {
   growthSub <- reactive({
     subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
   })
-  ##### Curve-flattenning #####    
-  output$cfi <- renderPlot({
+
+##### Curve-flattenning #####    
+  output$cfi <- renderPlotly({
     pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     pMat<-as.matrix(log(pDat[,-1]))
     row.names(pMat)<-pDat$Country
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
-    clrs<-hcl.colors(length(input$countryGrowthRate))
     dateSub<-3:length(dates) # date subset
-    plot(cfiDat[,1]~dates[dateSub], 
-         type = "n", 
-         ylim = range(c(-1.2,1.2)*sd(cfiDat)),
-         bty = "l",
-         xlab = "Date",
-         ylab = "Curve-flatenning index")
-    abline(a = 0, b = 0, lty = 2, lwd = 2)
     for (cc in 1:ncol(cfiDat)){
       cfiSmooth<-loess(cfiDat[,cc]~as.numeric(dates[dateSub]))
-      lines(cfiSmooth$fitted~dates[dateSub], col = clrs[cc], lwd=3)
+      cfiDat[,cc] <- predict(cfiSmooth, newdata = as.numeric(dates[dateSub]))
     }
-    legend("topleft", 
-           legend = pDat$Country, 
-           lty = 1, 
-           lwd = 3,
-           col = clrs,
-           bty = "n")
+    yRange <- as.list(range(cfiDat)*1.05)
+    cfiDat <- data.frame(dates = dates[dateSub], cfiDat)
+    fig <- plot_ly(cfiDat, x = ~dates, type = "scatter", mode = "none", name = "")
+    for (cc in 2:ncol(cfiDat)){
+      fig <- fig %>% add_trace(y = cfiDat[,cc], 
+                               mode = "lines",
+                               name = colnames(cfiDat)[cc],
+                               hoverinfo = "text+name", 
+                               text = paste(format(cfiDat$dates, "%b %d"), round(cfiDat[,cc], 2)))
+    }
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Curve-flattening index"),
+                                       range = yRange)
+                          ) %>%
+                   config(displayModeBar = FALSE)
+     
   })
   
 ##### Growth rate #####    
