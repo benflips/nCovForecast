@@ -75,20 +75,21 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates)
-      fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
-      fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
-      fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
-      fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
-      fig <- fig %>% layout(showlegend = FALSE, 
-                            yaxis = list(range = list(0, yMax),
-                                         title = list(text = "Confirmed active cases"),
-                                         fixedrange = TRUE),
-                            xaxis = list(range = plotRange(),
-                                         title = list(text = ""),
-                                         fixedrange = TRUE),
-                            title = list(text = input$countryFinder)
-                      )
+    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
+              add_trace(y = ~fit, mode = "lines", line = list(color = clrDark)) %>%
+              add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash")) %>%
+              add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash")) %>%
+              add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight)) %>%
+              layout(showlegend = FALSE, 
+                     yaxis = list(range = list(0, yMax),
+                                  title = list(text = "Confirmed active cases"),
+                                  fixedrange = TRUE),
+                     xaxis = list(range = plotRange(),
+                                  title = list(text = ""),
+                                  fixedrange = TRUE),
+                     title = list(text = input$countryFinder)
+              ) %>%
+              config(displayModeBar = FALSE)
   })
   
 ##### Log plot #####
@@ -101,20 +102,21 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates)
-    fig <- fig %>% add_trace(y = ~fit, mode = "lines", line = list(color = clrDark))
-    fig <- fig %>% add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash"))
-    fig <- fig %>% add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash"))
-    fig <- fig %>% add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight))
-    fig <- fig %>% layout(showlegend = FALSE, 
-                          yaxis = list(type = "log",
-                                       range = list(log10(0.1), log10(yMax)),
-                                       title = list(text = "Confirmed active cases (log scale)"),
-                                       fixedrange = TRUE),
-                          xaxis = list(range = plotRange(),
-                                       title = list(text = ""),
-                                       fixedrange = TRUE)
-                    )
+    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
+              add_trace(y = ~fit, mode = "lines", line = list(color = clrDark)) %>%
+              add_trace(y = ~lwr, mode = "lines", line = list(color = clrDark, dash = "dash")) %>%
+              add_trace(y = ~upr, mode = "lines", line = list(color = clrDark, dash = "dash")) %>%
+              add_trace(y = ~yA, mode = "markers", marker = list(color = clrLight)) %>%
+              layout(showlegend = FALSE, 
+                     yaxis = list(type = "log",
+                                  range = list(log10(0.1), log10(yMax)),
+                                  title = list(text = "Confirmed active cases (log scale)"),
+                                  fixedrange = TRUE),
+                     xaxis = list(range = plotRange(),
+                                  title = list(text = ""),
+                                  fixedrange = TRUE)
+              ) %>%
+              config(displayModeBar = FALSE)
   })
 
 ##### New cases ##### 
@@ -127,7 +129,8 @@ server <- function(input, output) {
     fig <- fig %>% layout(xaxis = list(range = plotRange(),
                                       title = list(text = "Date")),
                           yaxis = list(title = list(text = "Number of new cases"))
-                    )
+                    ) %>%
+                    config(displayModeBar = FALSE)
   })
   
   
@@ -210,7 +213,8 @@ server <- function(input, output) {
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Growth rate (% per day)"))
-                    )
+                    ) %>%
+                    config(displayModeBar = FALSE)
   })
   
 ##### Doubling time ##### 
