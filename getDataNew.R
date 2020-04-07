@@ -1,4 +1,4 @@
-s## ---------------------------
+## ---------------------------
 ##
 ## Script name: getData.R
 ##
@@ -69,29 +69,34 @@ tsA <- recLag(tsI, tsD)
   source("detection/estGlobalV2.R")
 
   ## write data caches out
-  save(ddReg, ddNames,                                   file =        "dat/Global/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/Global/cacheData.RData"))
+  save(ddReg, ddNames,                                   file = "dat/Global/menuData.RData")
+  save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = "dat/Global/cacheData.RData")
 
-## AUSTRALIA
 
-  focusCountry <- 'Australia'
 
-  # subset to Australia
-  tsI <- subset(tsI, tsI$Country.Region == focusCountry)
-  tsD <- subset(tsD, tsD$Country.Region == focusCountry)
+  available_countries <- c("Australia","Canada","China","Denmark","France","Netherlands","United Kingdom")
 
-  tsA <- recLag(tsI, tsD)
+  for(focusCountry in available_countries) {
 
-  tsA <- natAgg(tsA)
-  tsI <- natAgg(tsI)
-  tsD <- natAgg(tsD)
+    print(focusCountry)
+    # subset to focusCountry
+    tsI_specific_country <- subset(tsI, tsI$Country.Region == focusCountry)
+    tsD_specific_country <- subset(tsD, tsD$Country.Region == focusCountry)
 
-  ## Define menus
-  # get region names 
-  ddNames      <- tsA$Province.State
-  ddReg        <- ddNames
-  names(ddReg) <- ddNames
+    tsA_specific_country <- recLag(tsI_specific_country, tsD_specific_country)
 
-  ## write data caches out
-  save(ddReg, ddNames,                                   file =        "dat/Australia/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, dates, ddNames, ddReg, file = paste0("dat/Australia/cacheData.RData"))
+    tsA_specific_country <- natAgg(tsA_specific_country)
+    tsI_specific_country <- natAgg(tsI_specific_country)
+    tsD_specific_country <- natAgg(tsD_specific_country)
+
+    ## Define menus
+    # get region names 
+    ddNames      <- tsA_specific_country$Province.State
+    ddReg        <- ddNames
+    names(ddReg) <- ddNames
+
+    ## write data caches out
+    save(ddReg, ddNames,                                                                          file = paste0("dat/",focusCountry,"/menuData.RData"))
+    save(tsI_specific_country, tsD_specific_country, tsA_specific_country, dates, ddNames, ddReg, file = paste0("dat/",focusCountry,"/cacheData.RData"))
+
+  }
