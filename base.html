@@ -65,15 +65,13 @@ function openTab(evt, tabName) {
 }
 </script>
 
-<fieldset>
-        <div class="form-group shiny-input-container">
+<div class="form-group shiny-input-container center" id="div_global_or_country">
   {{ selectizeInput(inputId = "global_or_country",
-                 label   = "Select global or country",
-                 choices = c("Global","Australia","Canada","China","Denmark","France","Netherlands","United Kingdom"),
-                 selected = "Global") }}
-          <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
-        </div>
-</fieldset>
+                    label   = "Select global or country:",
+                    choices = c("Global","Australia","Canada","China","Denmark","France","Netherlands","United Kingdom"),
+                    selected = "Global") }}
+  <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
+</div>
 
 
 
@@ -210,6 +208,13 @@ div.shiny-input-container {width:100%!important;}
   border-bottom-color: rgb(173, 205, 240)!important;
   border-bottom-width: 6px;
   border-bottom-style: solid;
+}
+
+@media(min-width: 10px) {
+  #div_global_or_country {width:95%!important;}
+}
+@media(min-width: 768px) {
+  #div_global_or_country {width:50%!important;}
 }
 
 </style>
