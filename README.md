@@ -20,6 +20,7 @@ install.packages('readr')
 install.packages('markdown')
 install.packages('curl')
 install.packages('addreg')
+install.packages('plotly')
 ```
 6. Generate cached data (see below)
 7. `library(shiny)`

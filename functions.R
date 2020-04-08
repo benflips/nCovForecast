@@ -95,7 +95,7 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10){
   mFit <- lm(lnN~tIn)
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
-  list(x=x, y=y)
+  data.frame(dates = x, y)
 }
 
 # Simple projection based on growth over last inWindow days

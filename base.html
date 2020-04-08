@@ -110,8 +110,11 @@ function openTab(evt, tabName) {
       </div>
 
       <div class="right-panel">
-        {{ plotOutput("rawPlot") }}
-        {{ plotOutput("logPlot") }}
+        {{ plotlyOutput("rawPlot") }}
+        <p></p>
+        {{ plotlyOutput("logPlot") }}
+        <p></p>
+        {{ plotlyOutput("newCases") }}
       </div>
     </section>
   </div>
@@ -138,12 +141,12 @@ function openTab(evt, tabName) {
         <p>This is the growth rate of the number of active cases for the last 10 days.  It can be though of as the interest rate, compounded daily.</p>
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
         <p>Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.</p>
-        {{ plotOutput("growthRate") }}
+        {{ plotlyOutput("growthRate") }}
 
         <h3>Curve flattening index</h3>
         <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
         <p>Note, this last plot covers the entire time period of the pandemic, not just the last ten days.</p>
-        {{ plotOutput("cfi") }}
+        {{ plotlyOutput("cfi") }}
         <p>For more details see the 'About' tab.</p>
       </div>
     </section>
