@@ -1,4 +1,4 @@
-s## ---------------------------
+## ---------------------------
 ##
 ## Script name: getData.R
 ##
@@ -80,7 +80,6 @@ tsA <- std$tsA
   ## write data caches out
   save(ddReg, ddNames,                   file = "dat/Global/menuData.RData")
   save(tsI, tsD, tsA, tsACountry, dates, file = "dat/Global/cacheData.RData")
-
 
 
   available_countries <- c("Australia","Canada","China","Denmark","France","Netherlands","United Kingdom")
