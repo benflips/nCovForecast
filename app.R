@@ -238,7 +238,7 @@ server <- function(input, output) {
     cfiDat <- data.frame(dates = dates[dateSub], cfiDat)
     fig <- plot_ly(type = "scatter", mode = "none", name = "")
     for (cc in 2:ncol(cfiDat)){
-      fig <- fig %>% add_trace(y = cfiDat[,cc], 
+      fig <- fig %>% add_trace(y = cfiDat[,cc],
                                mode = "lines",
                                name = colnames(cfiDat)[cc],
                                hoverinfo = "text+name", 
@@ -258,9 +258,10 @@ server <- function(input, output) {
     gRate <- as.matrix(growthRate(pDat))
     gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m/%d/%y"), t(gRate))
     colnames(gRate)[-1] <- pDat$Country
-    fig <- plot_ly(type = "scatter", mode = "none")
+    fig <- plot_ly(gRate, type = "scatter", mode = "none")
     for (cc in 2:ncol(gRate)){
-      fig <- fig %>% add_trace(y = gRate[,cc], 
+      fig <- fig %>% add_trace(y = gRate[,cc],
+                               x = ~dates,
                                mode = "lines+markers", 
                                name = colnames(gRate)[cc],
                                hoverinfo = "text+name", 
