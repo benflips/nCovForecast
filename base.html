@@ -92,7 +92,8 @@ function openTab(evt, tabName) {
                          choices  = ddReg) }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
-
+{{ textOutput(outputId = "global_or_country") }}
+{{ textOutput(outputId = "the_great_list") }}
         <h3>Raw case numbers:</h3>
         {{ tableOutput(outputId = "rawStats") }}
 
