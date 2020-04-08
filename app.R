@@ -75,26 +75,30 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
-              add_trace(y = ~fit, 
+    fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
+              add_trace(y = ~fit,
+                        x = ~dates, 
                         mode = "lines", 
                         line = list(color = clrDark), 
                         name = "Best fit", 
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
-              add_trace(y = ~lwr, 
+              add_trace(y = ~lwr,
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI lower bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
               add_trace(y = ~upr, 
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI upper bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
               add_trace(y = ~yA, 
+                        x = ~dates,
                         mode = "markers", 
                         marker = list(color = clrLight), 
                         name = "Active cases",
@@ -122,26 +126,30 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
-              add_trace(y = ~fit, 
+    fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
+              add_trace(y = ~fit,
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark), 
                         name = "Best fit",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
               add_trace(y = ~lwr, 
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI lower bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
               add_trace(y = ~upr, 
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI upper bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
               add_trace(y = ~yA, 
+                        x = ~dates,
                         mode = "markers", 
                         marker = list(color = clrLight), 
                         name = "Active cases",
@@ -222,7 +230,7 @@ server <- function(input, output) {
     subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
   })
 
-##### Curve-flattenning #####    
+##### Curve-flattening #####    
   output$cfi <- renderPlotly({
     pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     pMat<-as.matrix(log(pDat[,-1]))
@@ -236,9 +244,10 @@ server <- function(input, output) {
     }
     yRange <- as.list(range(cfiDat)*1.05)
     cfiDat <- data.frame(dates = dates[dateSub], cfiDat)
-    fig <- plot_ly(cfiDat, x = ~dates, type = "scatter", mode = "none", name = "")
+    fig <- plot_ly(type = "scatter", mode = "none", name = "")
     for (cc in 2:ncol(cfiDat)){
-      fig <- fig %>% add_trace(y = cfiDat[,cc], 
+      fig <- fig %>% add_trace(y = cfiDat[,cc],
+                               x = dates[dateSub],
                                mode = "lines",
                                name = colnames(cfiDat)[cc],
                                hoverinfo = "text+name", 
@@ -258,9 +267,10 @@ server <- function(input, output) {
     gRate <- as.matrix(growthRate(pDat))
     gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m/%d/%y"), t(gRate))
     colnames(gRate)[-1] <- pDat$Country
-    fig <- plot_ly(gRate, type = "scatter", mode = "none", x = ~dates)
+    fig <- plot_ly(gRate, type = "scatter", mode = "none")
     for (cc in 2:ncol(gRate)){
-      fig <- fig %>% add_trace(y = gRate[,cc], 
+      fig <- fig %>% add_trace(y = gRate[,cc],
+                               x = ~dates,
                                mode = "lines+markers", 
                                name = colnames(gRate)[cc],
                                hoverinfo = "text+name", 
