@@ -82,7 +82,7 @@ tsA <- std$tsA
 
 
 
-  available_countries <- c("Australia","Canada","China","Denmark","France","Netherlands","United Kingdom")
+  available_countries <- c("Australia","Canada","China")
 
   for(focusCountry in available_countries) {
 

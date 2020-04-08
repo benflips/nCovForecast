@@ -10,3 +10,14 @@ dat/~$*
 dat/cacheData.RData
 dat/estGlobal.RData
 dat/menuData.RData
+
+dat/Global/cacheData.RData
+dat/Global/menuData.RData
+
+dat/Australia/cacheData.RData
+dat/Australia/menuData.RData
+dat/Canada/cacheData.RData
+dat/Canada/menuData.RData
+dat/China/cacheData.RData
+dat/China/menuData.RData
+
