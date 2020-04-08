@@ -50,7 +50,6 @@ dates<-as.Date(colnames(tsI)[dCols], format = "%m/%d/%y")
 ## Tidy up names
 names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
-<<<<<<< HEAD
 names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
 
 # Standardise dataframes and compute active cases
