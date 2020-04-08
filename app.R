@@ -222,7 +222,7 @@ server <- function(input, output) {
     subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
   })
 
-##### Curve-flattenning #####    
+##### Curve-flattening #####    
   output$cfi <- renderPlotly({
     pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     pMat<-as.matrix(log(pDat[,-1]))
@@ -236,7 +236,7 @@ server <- function(input, output) {
     }
     yRange <- as.list(range(cfiDat)*1.05)
     cfiDat <- data.frame(dates = dates[dateSub], cfiDat)
-    fig <- plot_ly(cfiDat, x = ~dates, type = "scatter", mode = "none", name = "")
+    fig <- plot_ly(type = "scatter", mode = "none", name = "")
     for (cc in 2:ncol(cfiDat)){
       fig <- fig %>% add_trace(y = cfiDat[,cc], 
                                mode = "lines",
@@ -258,7 +258,7 @@ server <- function(input, output) {
     gRate <- as.matrix(growthRate(pDat))
     gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m/%d/%y"), t(gRate))
     colnames(gRate)[-1] <- pDat$Country
-    fig <- plot_ly(gRate, type = "scatter", mode = "none", x = ~dates)
+    fig <- plot_ly(type = "scatter", mode = "none")
     for (cc in 2:ncol(gRate)){
       fig <- fig %>% add_trace(y = gRate[,cc], 
                                mode = "lines+markers", 
