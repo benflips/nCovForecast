@@ -48,6 +48,10 @@ server <- function(input, output, session) {
     }
   })
 
+observe({
+  print('in observe')
+  updateSelectizeInput(session, "countryFinder", choices = ddReg)
+})
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
