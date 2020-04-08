@@ -32,7 +32,6 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     load(paste0("dat/",input$global_or_country,"/menuData.RData"))
