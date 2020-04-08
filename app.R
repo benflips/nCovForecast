@@ -239,6 +239,7 @@ server <- function(input, output) {
     fig <- plot_ly(type = "scatter", mode = "none", name = "")
     for (cc in 2:ncol(cfiDat)){
       fig <- fig %>% add_trace(y = cfiDat[,cc],
+                               x = dates[dateSub],
                                mode = "lines",
                                name = colnames(cfiDat)[cc],
                                hoverinfo = "text+name", 
