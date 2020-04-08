@@ -92,6 +92,10 @@ tsA <- std$tsA
 
     tsA_specific_country <- recLag(tsI_specific_country, tsD_specific_country)
 
+    tsA_specific_country <- natAgg(tsA_specific_country)
+    tsI_specific_country <- natAgg(tsI_specific_country)
+    tsD_specific_country <- natAgg(tsD_specific_country)
+
     ## Define menus
     # get region names 
     ddNames      <- tsA_specific_country$Province.State
