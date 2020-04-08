@@ -19,7 +19,7 @@ The app relies on relatively simple heuristics rather than comprehensive analyse
 
 ### Raw case numbers
 
-Our data come from the [John Hopkins University dataset](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6), which is updated daily.  These data report the cumulative number of infections ($I_t$) and number of deaths ($D_t$) in each country.  The raw case numbers are simply a report of their raw numbers for the selected country at the current date.
+Our data come from the [John Hopkins University dataset](https://github.com/CSSEGISandData/COVID-19), which is updated daily.  These data report the cumulative number of infections ($I_t$) and number of deaths ($D_t$) in each country.  The raw case numbers are simply a report of their raw numbers for the selected country at the current date.
 
 ### Current active cases
 
