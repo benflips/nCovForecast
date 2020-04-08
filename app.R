@@ -48,11 +48,6 @@ server <- function(input, output, session) {
     }
   })
 
-observe({
-  load(paste0("dat/",input$global_or_country,"/menuData.RData"))
-  updateSelectizeInput(session, "countryFinder", choices = ddReg)
-})
-
 
 #### Reactive expressions for forecast page ####
   yAfCast <-reactive({ # subset country for forecast page
