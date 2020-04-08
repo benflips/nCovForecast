@@ -39,6 +39,7 @@ if (server){
   tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
+
 tsI<-read_csv(file = tsConf)
 tsD<-read_csv(file = tsDeath)
 tsR<-read_csv(file = tsRec)
