@@ -126,26 +126,30 @@ server <- function(input, output) {
     clrDark<-"#273D6E"
     clrLight<-"#B2C3D5"
     #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none", x = ~dates) %>%
-              add_trace(y = ~fit, 
+    fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
+              add_trace(y = ~fit,
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark), 
                         name = "Best fit",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
               add_trace(y = ~lwr, 
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI lower bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
               add_trace(y = ~upr, 
+                        x = ~dates,
                         mode = "lines", 
                         line = list(color = clrDark, dash = "dash"), 
                         name = "CI upper bound",
                         hoverinfo = "text+name", 
                         text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
               add_trace(y = ~yA, 
+                        x = ~dates,
                         mode = "markers", 
                         marker = list(color = clrLight), 
                         name = "Active cases",
