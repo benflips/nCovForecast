@@ -81,7 +81,7 @@ tsA <- std$tsA
   save(tsI, tsD, tsA, tsACountry, dates, file = "dat/Global/cacheData.RData")
 
 
-  available_countries <- c("Australia","Canada","China","Denmark","France","Netherlands","United Kingdom")
+  available_countries <- c("Australia","Canada","China")
 
   for(focusCountry in available_countries) {
 
