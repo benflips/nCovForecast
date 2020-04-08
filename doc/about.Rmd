@@ -19,7 +19,7 @@ The app relies on relatively simple heuristics rather than comprehensive analyse
 
 ### Raw case numbers
 
-Our data come from the [John Hopkins University dataset](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6), which is updated daily.  These data report the cumulative number of infections ($I_t$) and number of deaths ($D_t$) in each country.  The raw case numbers are simply a report of their raw numbers for the selected country at the current date.
+Our data come from the [John Hopkins University dataset](https://github.com/CSSEGISandData/COVID-19), which is updated daily.  These data report the cumulative number of infections ($I_t$) and number of deaths ($D_t$) in each country.  The raw case numbers are simply a report of their raw numbers for the selected country at the current date.
 
 ### Current active cases
 
@@ -69,6 +69,18 @@ Which could be simplified, but has been written so as to help you see that it is
 The second plot on the "Growth rate and curve-flattening" tab places a smoother through this index across all time for which we have data.  Times when countries are reducing their growth rate are indicated by the smoother sitting in positive territory.
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
+
+## Media
+
+Media enquiries
+
+University of Melbourne Newsroom
+
+Phone: +61 3 8344 4123
+
+Email: [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=covid19forecast.science.unimelb.edu.au>)
+
+[Newsroom website](https://about.unimelb.edu.au/newsroom)
 
 
 ## Acknowledgements
