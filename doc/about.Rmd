@@ -70,6 +70,18 @@ The second plot on the "Growth rate and curve-flattening" tab places a smoother 
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
+## Media
+
+Media enquiries
+
+University of Melbourne Newsroom
+
+Phone: +61 3 8344 4123
+
+Email: [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=covid19forecast.science.unimelb.edu.au>)
+
+[Newsroom website](https://about.unimelb.edu.au/newsroom)
+
 
 ## Acknowledgements
 
