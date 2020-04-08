@@ -1,4 +1,4 @@
-## ---------------------------
+s## ---------------------------
 ##
 ## Script name: getData.R
 ##
@@ -39,7 +39,6 @@ if (server){
   tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
-
 tsI<-read_csv(file = tsConf)
 tsD<-read_csv(file = tsDeath)
 tsR<-read_csv(file = tsRec)
@@ -51,6 +50,7 @@ dates<-as.Date(colnames(tsI)[dCols], format = "%m/%d/%y")
 ## Tidy up names
 names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
 names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
+<<<<<<< HEAD
 names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
 
 # Standardise dataframes and compute active cases
@@ -93,10 +93,6 @@ tsA <- std$tsA
     tsD_specific_country <- subset(tsD, tsD$Country.Region == focusCountry)
 
     tsA_specific_country <- recLag(tsI_specific_country, tsD_specific_country)
-
-    tsA_specific_country <- natAgg(tsA_specific_country)
-    tsI_specific_country <- natAgg(tsI_specific_country)
-    tsD_specific_country <- natAgg(tsD_specific_country)
 
     ## Define menus
     # get region names 
