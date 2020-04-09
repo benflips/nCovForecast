@@ -44,7 +44,7 @@ server <- function(input, output, session) {
     } else {
       if (input$global_or_country == 'Australia') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg[! ddReg %in% c('Victoria','Western Australia')] )
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg )
       } else if (input$global_or_country == 'Canada') {
         ddReg = ddReg[! ddReg %in% c('Diamond Princess','Recovered')] # for some reason, these states do not work.  TOFIX.
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
