@@ -120,9 +120,9 @@ regionAgg<-function(x, regionCol, regionName = "Region"){
 natAgg <-function(tsDF){
   cAgg <- colSums(tsDF[,-1])
   dim(cAgg)<-c(1, length(cAgg))
-  cAgg <- data.frame(Region = "National aggregate", cAgg)
+  cAgg <- data.frame(Region = "National aggregate", cAgg, stringsAsFactors = FALSE)
   colnames(cAgg) <- colnames(tsDF)
-  data.frame(cAgg, tsDF, stringsAsFactors = FALSE)
+  rbind(cAgg, tsDF)
 }
 
 # calculates the curve flatenning index.
