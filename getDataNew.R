@@ -74,11 +74,11 @@ tsA <- std$tsA
   names(ddReg) <- ddNames
 
   ## run deconvolution to estimate undiagnosed cases
-  source("detection/estGlobalV2.R")
+  system("Rscript detection/estGlobalV2.R 'Global'")
 
   ## write data caches out
   save(ddReg, ddNames,                   file = "dat/Global/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, dates, file = "dat/Global/cacheData.RData")
+  save(tsI, tsD, tsA, tsACountry, tsICountry, dates, file = "dat/Global/cacheData.RData")
 
 
   available_countries <- c("Australia","China")
