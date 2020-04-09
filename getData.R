@@ -117,7 +117,15 @@ save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesAct
 system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
 load("dat/Global/estDeconv.RData")
 
-dataList$Global <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
+dataList$Global <- list(timeSeriesInfections = timeSeriesInfections,
+                        timeSeriesDeaths = timeSeriesDeaths,
+                        timeSeriesRecoveries = timeSeriesRecoveries,
+                        timeSeriesActive = timeSeriesActive,
+                        dates = dates,
+                        ddReg = ddReg,
+                        ddNames = ddNames,
+                        cumulative.infections = cumulative.infections,
+                        active.cases = active.cases)
 
 ###### LOCAL ######
 
@@ -159,7 +167,15 @@ for(focusCountry in available_countries) {
     
     system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
     load(paste0("dat/",focusCountry,"/estDeconv.RData"))
-    dataList[[focusCountry]] <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
+    dataList[[focusCountry]] <- list(timeSeriesInfections = timeSeriesInfections,
+                                     timeSeriesDeaths = timeSeriesDeaths,
+                                     timeSeriesRecoveries = timeSeriesRecoveries,
+                                     timeSeriesActive = timeSeriesActive,
+                                     dates = dates,
+                                     ddReg = ddReg,
+                                     ddNames = ddNames,
+                                     cumulative.infections = cumulative.infections,
+                                     active.cases = active.cases)
 }
 
 save(dataList, file = "dat/dataList.RData")
