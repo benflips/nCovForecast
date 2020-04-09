@@ -42,6 +42,10 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "countryFinder",     choices = ddReg)
       if (input$global_or_country == 'Australia') {
         updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg)
+      } else if (input$global_or_country == 'Canada') {
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Ontario","Quebec"), choices = ddReg)
+      } else if (input$global_or_country == 'China') {
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Hubei","Henan","Heilongjiang"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
       }
