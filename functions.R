@@ -22,16 +22,72 @@
 
 ## function definitions
 
+# Function to load data and standardise names, columns and so on
+loadData <- function(path){
+  d <- read.csv(file = path, stringsAsFactors = FALSE) # read data
+  names(d) <- gsub(pattern = "_", replacement = ".", x = names(d))
+  d <- d[, colnames(d) %in% c("Country.Region", "Province.State") | dateCols(d)] # throw away unwanted columns
+  names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
+  d <- d[c(2, 1, 3:ncol(d))] # reorder so country.region is first
+  d
+}
+
+
+# Aggregates a particular country within a dataframe
+  # useful for standardising the input dataframes
+internalAgg <- function(tsDF, country){
+  ssCol <- dateCols(tsDF)
+  temp <- subset(tsDF, tsDF$Country.Region==country)
+  agg <- countryAgg(temp)
+  bRow <- temp[1,]
+  bRow[ssCol] <- agg[,-1]
+  tsDF <- subset(tsDF, tsDF$Country.Region!=country)
+  rbind(tsDF, bRow)
+}
+
+# Takes infection, death, and recovrey time series and converts to active cases
+  # returns standardised dataframes
+activeCases <- function(infections, deaths, recoveries){
+  ssCol <- dateCols(infections) # get date columns
+  # find countries where recoveries have been aggregated, but infections/deaths have not
+  countI <- table(infections$Country.Region)
+  countR <- table(recoveries$Country.Region)
+  cNames <- names(countI)[countI>countR]
+  for (cc in cNames){
+    # aggregate infections
+    infections <- internalAgg(infections, cc)
+    # aggregate deaths
+    deaths <- internalAgg(deaths, cc)
+  }
+  # Standardise order
+  infections <- infections[order(infections$Country.Region, infections$Province.State),]
+  deaths <- deaths[order(deaths$Country.Region, deaths$Province.State),]
+  recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
+  # subset to case data
+  infMat <- infections[,ssCol]
+  deathMat <- deaths[,ssCol]
+  recMat <- recoveries[,ssCol]
+  # generate active case data frame
+  active <- infections
+  active[,ssCol] <- infMat - deathMat - recMat
+  # return standardised data frames
+  list(tsI = infections, tsD = deaths, tsR = recoveries, tsA = active)
+}
+
 # Adjusts cumulative infections to get active cases
   # cumulative infections and deaths, ttr = time to recovery
-recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22){
+  # if active = false, returns recoveries rather than active cases
+recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22, active = TRUE){
   matI<-as.matrix(infections[, datCols])
   matD<-as.matrix(deaths[, datCols])
   matA<-matI-matD #remove deaths
-  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
+  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # "recovered"
   matA <- matA - matR
-  
-  out <- data.frame(infections[,!datCols], matA) # active cases
+  if (active) {
+    out <- data.frame(infections[,!datCols], matA) # "active" cases
+  } else {
+    out <- data.frame(infections[,!datCols], matR) # "recovered"
+  }
   colnames(out) <- colnames(infections)
   out
 }
@@ -52,10 +108,21 @@ growthRate <- function(cases, inWindow=10){
 }
 
 
-# aggregates results to country
-countryAgg<-function(x){
+# aggregates results to relevant region (regionCol allows to specify whether Provinc.State, or COuntry.Region)
+regionAgg<-function(x, regionCol, regionName = "Region"){
   xSelect<-x[, dateCols(x)]
-  aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
+  out <- aggregate(xSelect, by = list(regionCol), FUN = sum)
+  names(out)[1] <- regionName
+  out
+}
+
+# calculates a national aggregate and appends to dataframe
+natAgg <-function(tsDF){
+  cAgg <- colSums(tsDF[,-1])
+  dim(cAgg)<-c(1, length(cAgg))
+  cAgg <- data.frame(Region = "National aggregate", cAgg, stringsAsFactors = FALSE)
+  colnames(cAgg) <- colnames(tsDF)
+  rbind(cAgg, tsDF)
 }
 
 # calculates the curve flatenning index.
@@ -114,7 +181,7 @@ projSimpleSlope<-function(rawN, rawTime, inWindow=10){
 
 # to identify the date columns in ts dataframes
 dateCols<-function(x){
-  grepl(pattern = "\\d", x = colnames(x))
+  grepl(pattern = "\\d.\\d", x = colnames(x))
 }
 
 # To subset time series data and aggregate totals

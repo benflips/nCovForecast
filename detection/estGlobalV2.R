@@ -27,9 +27,16 @@ library("addreg")
 
 #functions for estimation and projection
 source("detection/estFunctionsV3.R")
+source("functions.R")
 
+orgLevel <- commandArgs()[6] # get relevant command line argument
+
+load(paste0("dat/",orgLevel,"/cacheData.RData"))
+cases.all <- t(timeSeriesInfections)[-1,]
+
+                            
 # organise case data by country
-cases.all <- t(tsICountry)[-1,]
+
 T<-dim(cases.all)[1]
 
 #incubation distribution: discretised version of a logNormal(mean=5.2 days, 95% percentile=12.5 days)
@@ -50,14 +57,14 @@ designF<-design(T,inc.dist)
 
 #produce cumulative infection estimates for each country/region
 infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
-cumulative.infections<-data.frame(tsICountry[,1],t(infect.total))
-colnames(cumulative.infections)<-colnames(tsICountry)
+cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
+colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
-active.cases <- recLag(cumulative.infections, tsDCountry)
+active.cases <- recLag(cumulative.infections, timeSeriesDeaths)
 colnames(active.cases)<- colnames(cumulative.infections)
 
 
-save(cumulative.infections,active.cases, file="dat/estGlobal.RData")
+save(cumulative.infections,active.cases, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
 #The following currently disabled code can be used to
 #produce cumulative projections and append them to the cumulative observed cases
