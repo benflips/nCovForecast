@@ -29,24 +29,24 @@ source('functions.R')
 ## Get data
 server <- FALSE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
 if (server){
-  tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConf    <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsConfUS  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeath   <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   tsDeathUS <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsRec <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
+  tsRec     <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
 } else {  
-  tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConf    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsConfUS  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeath   <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   tsDeathUS <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+  tsRec     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
-timeSeriesInfections<-loadData(tsConf)
-timeSeriesInfectionsUS<-loadData(tsConfUS)
-timeSeriesDeaths<-loadData(tsDeath)
-timeSeriesDeathsUS<-loadData(tsDeathUS)
-timeSeriesRecoveries<-loadData(tsRec)
+timeSeriesInfections   <-loadData(tsConf)
+timeSeriesInfectionsUS <-loadData(tsConfUS)
+timeSeriesDeaths       <-loadData(tsDeath)
+timeSeriesDeathsUS     <-loadData(tsDeathUS)
+timeSeriesRecoveries   <-loadData(tsRec)
 
 rm(tsConf, tsConfUS, tsDeath, tsDeathUS, tsRec) # tidy up
 
@@ -68,9 +68,9 @@ rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
 #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
 
 # take US, Canada data, and generate recovery data assuming ttr
-infSub<- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
-deathSub <- subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region %in% c("Canada", "US"))
-recSub <- recLag(infSub, deathSub, active = FALSE)
+infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
+deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
+recSub   <- recLag(infSub, deathSub, active = FALSE)
 
 # Merge US, Canada estimated recoveries on to known recoveries
 timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
@@ -100,9 +100,9 @@ names(dataList) <- c("Global", available_countries)
 ###### GLOBAL ######
 
 timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
-timeSeriesDeaths <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
+timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
 timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
-timeSeriesActive <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
+timeSeriesActive     <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
 
 ## Define menus
 # get region names with 20 or more cases as of yesterday
