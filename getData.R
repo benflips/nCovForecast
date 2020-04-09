@@ -90,7 +90,9 @@ dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 # Standardise dataframes and compute active cases
 std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
 
-
+available_countries <- c("Australia","China", "Canada", "US") # countries available for drill-down
+dataList <- vector(mode = "list", length = length(available_countries)+1)
+names(dataList) <- c("Global", available_countries)
 
 ###### GLOBAL ######
 
@@ -107,16 +109,17 @@ ddReg <- ddNames
 names(ddReg) <- ddNames
 
 ## write data caches out
+
 save(ddReg, ddNames, file = "dat/Global/menuData.RData")
 save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
 ## run deconvolution to estimate undiagnosed cases from cached data
 system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
+load("dat/Global/estDeconv.RData")
 
+dataList$Global <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
 
 ###### LOCAL ######
-
-available_countries <- c("Australia","China", "Canada", "US")
 
 for(focusCountry in available_countries) {
 
@@ -155,4 +158,8 @@ for(focusCountry in available_countries) {
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
     system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
+    load(paste0("dat/",focusCountry,"/estDeconv.RData"))
+    dataList[focusCountry] <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
 }
+
+save(dataList, file = "dat/dataList.RData")
