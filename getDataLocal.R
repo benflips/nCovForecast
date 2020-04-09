@@ -1,5 +1,3 @@
-load("dat/dataList.RData")
-#list2env(dataList[["Global"]], envir = environment())
-#load("dat/Global/cacheData.RData")
-load("dat/Global/menuData.RData")
-#load("dat/Global/estDeconv.RData")
+load("dat/dataList.RData") # main data source
+load("dat/Global/menuData.RData") # data to fire up the ui
+
