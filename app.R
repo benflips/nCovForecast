@@ -236,27 +236,13 @@ server <- function(input, output, session) {
   
 ##### Prediction table true #####    
   output$tablePredTrue <- renderTable({
-    yA <- yAfCast()
-    if (input$global_or_country == 'Global') {
-      yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    } else {
-      if (input$countryFinder == 'National aggregate') {
-        yD <- tsSub(tsD,tsD$Country.Region %in% input$global_or_country)
-        yI <- tsSub(tsI,tsI$Country.Region %in% input$global_or_country)
-      } else {
-        yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
-        yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
-      }
-    }
+    yA <- yfCast()$yA
+    yD <- yfCast()$yD
+    yI <- yfCast()$yI
     dRate <- detRate(yI, yD)
     nowDiag <- tail(yA[!is.na(yA)], 1)
     nowUndet <- nowDiag/dRate - nowDiag
-    if (input$countryFinder == 'National aggregate') {
-      nowUndiag <- active.cases[active.cases$Country==input$global_or_country, ncol(active.cases)] - nowDiag
-    } else {
-      nowUndiag <- active.cases[active.cases$Country==input$countryFinder, ncol(active.cases)] - nowDiag
-    }
+    nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
     if (nowUndiag<0) nowUndiag <- 0
     nowTotal <- nowDiag+nowUndiag+nowUndet
     nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
