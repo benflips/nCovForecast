@@ -203,7 +203,11 @@ server <- function(input, output, session) {
 
 ##### New cases ##### 
   output$newCases <- renderPlotly({
-    yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    if (input$countryFinder == 'National aggregate') {
+      yI <- tsSub(tsI,tsI$Country.Region %in% input$global_or_country)
+    } else {
+      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
+    }
     yA <- yAfCast()
     newCases <- diff(yI)
     newCases <- data.frame(dates = as.Date(names(newCases), format = "%m/%d/%y"), newCases)
