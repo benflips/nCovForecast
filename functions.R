@@ -109,20 +109,19 @@ growthRate <- function(cases, inWindow=10){
 
 
 # aggregates results to relevant region (regionCol allows to specify whether Provinc.State, or COuntry.Region)
-regionAgg<-function(x, regionCol, regionName){
+regionAgg<-function(x, regionCol, regionName = "Region"){
   xSelect<-x[, dateCols(x)]
   out <- aggregate(xSelect, by = list(regionCol), FUN = sum)
   names(out)[1] <- regionName
   out
 }
 
-# calculates a nation aggregate and appends to dataframe
+# calculates a national aggregate and appends to dataframe
 natAgg <-function(tsDF){
-  cAgg <- tsSub(tsDF, subset = tsDF$Country.Region==tsDF$Country.Region[1])
+  cAgg <- colSums(tsDF[,-1])
   dim(cAgg)<-c(1, length(cAgg))
-  cAgg<-data.frame(tsI[1, !dCols], cAgg)
-  cAgg$Province.State <- "National aggregate"
-  colnames(cAgg)<-colnames(tsDF)
+  cAgg <- data.frame(Region = "National aggregate", cAgg)
+  colnames(cAgg) <- colnames(tsDF)
   rbind(cAgg, tsDF)
 }
 

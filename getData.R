@@ -92,55 +92,67 @@ std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
 
 
 
-## GLOBAL
+###### GLOBAL ######
 
 timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
 timeSeriesDeaths <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
 timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
 timeSeriesActive <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
 
-  ## Define menus
-  # get region names with 20 or more cases as of yesterday
-  ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+## Define menus
+# get region names with 20 or more cases as of yesterday
+ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
 
-  ddReg <- ddNames
-  names(ddReg) <- ddNames
+ddReg <- ddNames
+names(ddReg) <- ddNames
 
-  ## write data caches out
-  save(ddReg, ddNames, file = "dat/Global/menuData.RData")
-  save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
+## write data caches out
+save(ddReg, ddNames, file = "dat/Global/menuData.RData")
+save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
-  ## run deconvolution to estimate undiagnosed cases from cached data
-  system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE, show.output.on.console = FALSE)
+## run deconvolution to estimate undiagnosed cases from cached data
+system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
 
-  available_countries <- c("Australia","China")
 
-  for(focusCountry in available_countries) {
+###### LOCAL ######
+
+available_countries <- c("Australia","China", "Canada", "US")
+
+for(focusCountry in available_countries) {
 
     print(focusCountry)
     # set dataframes back to standards
     tsI <- std$tsI
     tsD <- std$tsD
+    tsR <- std$tsR
     tsA <- std$tsA
     
     # subset to focusCountry
     tsI <- subset(tsI, tsI$Country.Region == focusCountry)
     tsD <- subset(tsD, tsD$Country.Region == focusCountry)
+    tsR <- subset(tsR, tsR$Country.Region == focusCountry)
     tsA <- subset(tsA, tsA$Country.Region == focusCountry)
-
-    tsI <- natAgg(tsI)
-    tsD <- natAgg(tsD)
-    tsA <- natAgg(tsA)
+    
+    # aggregate to region
+    tsI <- regionAgg(tsI, regionCol = tsI$Province.State)
+    tsD <- regionAgg(tsD, regionCol = tsD$Province.State)
+    tsR <- regionAgg(tsR, regionCol = tsR$Province.State)
+    tsA <- regionAgg(tsA, regionCol = tsA$Province.State)
+    
+    timeSeriesInfections <- natAgg(tsI)
+    timeSeriesDeaths <- natAgg(tsD)
+    timeSeriesRecoveries <- natAgg(tsR)
+    timeSeriesActive <- natAgg(tsA)
 
     ## Define menus
     # get region names 
-    ddNames      <- tsA$Province.State
+    ddNames      <- timeSeriesActive$Region
     ddReg        <- ddNames
     names(ddReg) <- ddNames
 
     ## write data caches out
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
-    save(tsI, tsD, tsA, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
+    save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
-    system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE, show.output.on.console = FALSE)
-  }
+    system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
+}
