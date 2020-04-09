@@ -73,36 +73,41 @@ tsA <- std$tsA
   ddReg <- ddNames
   names(ddReg) <- ddNames
 
-  ## run deconvolution to estimate undiagnosed cases
-  system("Rscript detection/estGlobalV2.R 'Global'")
-
   ## write data caches out
-  save(ddReg, ddNames,                   file = "dat/Global/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, tsICountry, dates, file = "dat/Global/cacheData.RData")
-
+  save(ddReg, ddNames, file = "dat/Global/menuData.RData")
+  save(tsI, tsD, tsA, tsACountry, tsICountry, tsDCountry, dates, file = "dat/Global/cacheData.RData")
+  
+  ## run deconvolution to estimate undiagnosed cases from cached data
+  system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE, show.output.on.console = FALSE)
 
   available_countries <- c("Australia","China")
 
   for(focusCountry in available_countries) {
 
     print(focusCountry)
+    # set dataframes back to standards
+    tsI <- std$tsI
+    tsD <- std$tsD
+    tsA <- std$tsA
+    
     # subset to focusCountry
-    tsI_specific_country <- subset(tsI, tsI$Country.Region == focusCountry)
-    tsD_specific_country <- subset(tsD, tsD$Country.Region == focusCountry)
-    tsA_specific_country <- subset(tsA, tsA$Country.Region == focusCountry)
+    tsI <- subset(tsI, tsI$Country.Region == focusCountry)
+    tsD <- subset(tsD, tsD$Country.Region == focusCountry)
+    tsA <- subset(tsA, tsA$Country.Region == focusCountry)
 
-    tsA_specific_country <- natAgg(tsA_specific_country)
-    tsI_specific_country <- natAgg(tsI_specific_country)
-    tsD_specific_country <- natAgg(tsD_specific_country)
+    tsI <- natAgg(tsI)
+    tsD <- natAgg(tsD)
+    tsA <- natAgg(tsA)
 
     ## Define menus
     # get region names 
-    ddNames      <- tsA_specific_country$Province.State
+    ddNames      <- tsA$Province.State
     ddReg        <- ddNames
     names(ddReg) <- ddNames
 
     ## write data caches out
-    save(ddReg, ddNames,                                                          file = paste0("dat/",focusCountry,"/menuData.RData"))
-    save(tsI_specific_country, tsD_specific_country, tsA_specific_country, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
-
+    save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
+    save(tsI, tsD, tsA, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
+    
+    system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE, show.output.on.console = FALSE)
   }
