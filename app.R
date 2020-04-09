@@ -22,8 +22,8 @@ library(plotly)
 ## ---------------------------
 
 ## source files
-source("functions.R")
-source("getDataLocal.R")
+source("functions.R") # makes functions available to the instance.
+source("getDataLocal.R") #makes data available to the instance.
 
 ## ---------------------------
 options(scipen=9)
@@ -32,12 +32,12 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-  list2env(dataList[["Global"]], envir = environment()) # make global data avilable to server
+  list2env(dataList[["Global"]], envir = environment()) # make global data avilable to session
 
 #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
-    list2env(dataList[[input$global_or_country]], envir = environment())
+    list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
