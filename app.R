@@ -253,14 +253,14 @@ server <- function(input, output, session) {
   
 ##### Reactive expressions for growth page #####    
   growthSub <- reactive({
-    subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+    subset(timeSeriesActive, timeSeriesActive$Region %in% input$countryGrowthRate)
   })
 
 ##### Curve-flattening #####    
   output$cfi <- renderPlotly({
-    pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
+    pDat <- growthSub()
     pMat<-as.matrix(log(pDat[,-1]))
-    row.names(pMat)<-pDat$Country
+    row.names(pMat)<-pDat$Region
     cfiDat<-apply(pMat, MARGIN = 1, FUN = "cfi")
     cfiDat[!is.finite(cfiDat)]<-0
     dateSub<-3:length(dates) # date subset
