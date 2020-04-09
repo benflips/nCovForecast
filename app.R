@@ -23,6 +23,7 @@ library(plotly)
 
 ## source files
 source("functions.R")
+source("getDataLocal.R")
 
 ## ---------------------------
 options(scipen=9)
