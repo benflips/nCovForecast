@@ -310,12 +310,8 @@ server <- function(input, output, session) {
   
 ##### Doubling time ##### 
   output$doubTime <- renderText({
-    if (input$global_or_country == 'Global') {
-      pDat <- tsSub(tsACountry, tsACountry$Country %in% input$countryFinder)
-    } else {
-      pDat <- yAfCast()
-    }
-    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+      pDat <- yfCast()$yA
+      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
   
 ##### Doubling time plot #####    
