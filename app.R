@@ -313,25 +313,8 @@ server <- function(input, output, session) {
       pDat <- yfCast()$yA
       dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
-  
-##### Doubling time plot #####    
-  output$doubTimePlot <- renderPlot({
-    pDat <- subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
-    dTime <- as.matrix(doubTime(pDat, dates, inWindow = input$fitWinSlider))
-    dTime[!is.finite(dTime)]<-NA
-    clrs<-hcl.colors(length(input$countryGrowthRate))
-    dates10 <- dates[(length(pDat)-10+1):length(pDat)]
-    counts <- table(dTime)
-    barplot(dTime,
-            main="Doubling time",
-            xlab="Date", 
-            ylab="Doubling time (days)",
-            beside=TRUE,
-            col = clrs,
-            legend = input$countryGrowthRate,
-            args.legend = list(bty = "n", x = "topleft"))
-  })
-}
+
+} # end of server expression
 
 shinyApp(ui = htmlTemplate('base.html'), server)
 
