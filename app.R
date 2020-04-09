@@ -32,6 +32,7 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
+#### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     load(paste0("dat/",input$global_or_country,"/menuData.RData"))
@@ -56,26 +57,21 @@ server <- function(input, output, session) {
 
 
 #### Reactive expressions for forecast page ####
-  yAfCast <-reactive({ # subset country for forecast page
-    if (input$global_or_country == 'Global') {
-      tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
-    } else {
-      if (input$countryFinder == 'National aggregate') {
-        tsSub(tsA,tsA$Country.Region %in% input$global_or_country)
-      } else {
-        tsSub(tsA,tsA$Province.State %in% input$countryFinder)
-      }
-    }
+  yfCast <-reactive({ # subset country for forecast page
+    yI <- tsSub(timeSeriesInfections,timeSeriesInfections$Region %in% input$countryFinder)  
+    yD <- tsSub(timeSeriesDeaths,timeSeriesDeaths$Region %in% input$countryFinder) 
+    yR <- tsSub(timeSeriesRecoveries,timeSeriesRecoveries$Region %in% input$countryFinder)  
+    yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
+    list(yI = yI, yD = yD, yR = yR, yA = yA)
   })
   
   projfCast <- reactive({ # projection for forecast
-    yA <- yAfCast()
-    projSimple(yA, dates, inWindow = input$fitWinSlider)
+    projSimple(yfCast$yA, dates, inWindow = input$fitWinSlider)
   })
   
   plotRange <- reactive({ # get date range to plot
-    yA <- yAfCast()
-    dFrame <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
+    yA <- yfCast()$yA
+    dFrame <- data.frame(dates = dates, yA)
     if (max(dFrame$yA)>200) {minDate <- min(dFrame$dates[dFrame$yA>20]); maxDate <- max(dFrame$dates)+10} else {
       minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
     }
@@ -84,19 +80,9 @@ server <- function(input, output, session) {
   
   ##### Raw stats #####  
   output$rawStats <- renderTable({
-    yA <- yAfCast()
-    if (input$global_or_country == 'Global') {
-      yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
-      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    } else {
-      if (input$countryFinder == 'National aggregate') {
-        yD <- tsSub(tsD,tsD$Country.Region %in% input$global_or_country)
-        yI <- tsSub(tsI,tsI$Country.Region %in% input$global_or_country)
-      } else {
-        yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
-        yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
-      }
-    }
+    yA <- yfCast()$yA
+    yD <- yfCast()$yD
+    yI <- yfCast()$yI
     nn <-length(yI)
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
