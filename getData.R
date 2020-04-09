@@ -18,7 +18,6 @@
 ## --------------------------
 ## load up the packages we will need:  
 
-library("readr")
 
 ## ---------------------------
 ## load up functions
@@ -30,27 +29,43 @@ source('functions.R')
 ## Get data
 server <- FALSE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
 if (server){
-  tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" 
-  tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" 
+  tsConf  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConfUS  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+  tsDeath <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeathUS <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   tsRec <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
 } else {  
   tsConf  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConfUS  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
   tsDeath <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeathUS <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   tsRec <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
-tsI<-read_csv(file = tsConf)
-tsD<-read_csv(file = tsDeath)
-tsR<-read_csv(file = tsRec)
+timeSeriesInfections<-loadData(tsConf)
+timeSeriesInfectionsUS<-loadData(tsConfUS)
+timeSeriesDeaths<-loadData(tsDeath)
+timeSeriesDeathsUS<-loadData(tsDeathUS)
+timeSeriesRecoveries<-loadData(tsRec)
+
+#aggregate US data to Province.State
+timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
+  timeSeriesInfectionsUS$Country.Region <- rep("US", nrow(timeSeriesInfectionsUS))
+  timeSeriesInfectionsUS <- timeSeriesInfectionsUS[c(ncol(timeSeriesInfectionsUS), 1:(ncol(timeSeriesInfectionsUS)-1))] 
+timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsUS$Province.State, regionName = "Province.State")
+  timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
+  timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
+
+# Merge US data with global datframes
+timeSeriesInfections <- rbind(timeSeriesInfections, timeSeriesInfectionsUS)
+timeSeriesDeaths <- rbind(timeSeriesDeaths, timeSeriesDeathsUS)
+  
+## standardise
 
 ## get Date range
-dCols<-dateCols(tsI)
-dates<-as.Date(colnames(tsI)[dCols], format = "%m/%d/%y")
+dCols<-dateCols(timeSeriesInfections)
+dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 
-## Tidy up names
-names(tsI)[!dCols] <- make.names(names(tsI)[!dCols])
-names(tsD)[!dCols] <- make.names(names(tsD)[!dCols])
-names(tsR)[!dCols] <- make.names(names(tsR)[!dCols])
 
 # Standardise dataframes and compute active cases
 std <- activeCases(tsI, tsD, tsR)

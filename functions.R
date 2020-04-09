@@ -22,6 +22,17 @@
 
 ## function definitions
 
+# Function to load data and standardise names, columns and so on
+loadData <- function(path){
+  d <- read.csv(file = path) # read data
+  names(d) <- gsub(pattern = "_", replacement = ".", x = names(d))
+  d <- d[, colnames(d) %in% c("Country.Region", "Province.State") | dateCols(d)] # throw away unwanted columns
+  names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
+  d <- d[c(2, 1, 3:ncol(d))] # reorder so country.region is first
+  d
+}
+
+
 # Aggregates a particular country within a dataframe
   # useful for standardising the input dataframes
 internalAgg <- function(tsDF, country){
@@ -93,10 +104,12 @@ growthRate <- function(cases, inWindow=10){
 }
 
 
-# aggregates results to country
-countryAgg<-function(x){
+# aggregates results to relevant region (regionCol allows to specify whether Provinc.State, or COuntry.Region)
+regionAgg<-function(x, regionCol, regionName){
   xSelect<-x[, dateCols(x)]
-  aggregate(xSelect, by = list(Country = x$Country.Region), FUN = sum)
+  out <- aggregate(xSelect, by = list(regionCol), FUN = sum)
+  names(out)[1] <- regionName
+  out
 }
 
 # calculates a nation aggregate and appends to dataframe
@@ -165,7 +178,7 @@ projSimpleSlope<-function(rawN, rawTime, inWindow=10){
 
 # to identify the date columns in ts dataframes
 dateCols<-function(x){
-  grepl(pattern = "\\d", x = colnames(x))
+  grepl(pattern = "\\d.\\d", x = colnames(x))
 }
 
 # To subset time series data and aggregate totals
