@@ -66,12 +66,12 @@ server <- function(input, output, session) {
   })
   
   projfCast <- reactive({ # projection for forecast
-    projSimple(yfCast$yA, dates, inWindow = input$fitWinSlider)
+    projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider)
   })
   
   plotRange <- reactive({ # get date range to plot
     yA <- yfCast()$yA
-    dFrame <- data.frame(dates = dates, yA)
+    dFrame <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
     if (max(dFrame$yA)>200) {minDate <- min(dFrame$dates[dFrame$yA>20]); maxDate <- max(dFrame$dates)+10} else {
       minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
     }
@@ -93,8 +93,8 @@ server <- function(input, output, session) {
   
 ##### Raw plot #####
   output$rawPlot <- renderPlotly({
-    yA <- yAfCast()
-    yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
+    yA <- yfCast()$yA
+    yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
     lDat <- projfCast()
     pDat <- merge(yA, lDat, all = TRUE)
     yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
