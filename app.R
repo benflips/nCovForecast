@@ -32,7 +32,7 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-  list2env(dataList[["Global"]], envir = environment()) # make global data avilable to session
+  list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
 #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
