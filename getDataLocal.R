@@ -1,3 +1,5 @@
-load("dat/Global/cacheData.RData")
+load("dat/dataList.RData")
+#list2env(dataList[["Global"]], envir = environment())
+#load("dat/Global/cacheData.RData")
 load("dat/Global/menuData.RData")
-load("dat/Global/estDeconv.RData")
+#load("dat/Global/estDeconv.RData")

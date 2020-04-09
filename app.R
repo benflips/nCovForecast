@@ -35,9 +35,7 @@ server <- function(input, output, session) {
 #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
-    load(paste0("dat/",input$global_or_country,"/menuData.RData"))
-    load(paste0("dat/",input$global_or_country,"/cacheData.RData"))
-    load(paste0("dat/",input$global_or_country,"/estDeconv.RData"))
+    list2env(dataList[[input$global_or_country]], envir = environment())
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
