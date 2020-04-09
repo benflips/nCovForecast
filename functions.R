@@ -24,7 +24,7 @@
 
 # Function to load data and standardise names, columns and so on
 loadData <- function(path){
-  d <- read.csv(file = path) # read data
+  d <- read.csv(file = path, stringsAsFactors = FALSE) # read data
   names(d) <- gsub(pattern = "_", replacement = ".", x = names(d))
   d <- d[, colnames(d) %in% c("Country.Region", "Province.State") | dateCols(d)] # throw away unwanted columns
   names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
@@ -76,14 +76,18 @@ activeCases <- function(infections, deaths, recoveries){
 
 # Adjusts cumulative infections to get active cases
   # cumulative infections and deaths, ttr = time to recovery
-recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22){
+  # if active = false, returns recoveries rather than active cases
+recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22, active = TRUE){
   matI<-as.matrix(infections[, datCols])
   matD<-as.matrix(deaths[, datCols])
   matA<-matI-matD #remove deaths
-  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # recovered
+  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # "recovered"
   matA <- matA - matR
-  
-  out <- data.frame(infections[,!datCols], matA) # active cases
+  if (active) {
+    out <- data.frame(infections[,!datCols], matA) # "active" cases
+  } else {
+    out <- data.frame(infections[,!datCols], matR) # "recovered"
+  }
   colnames(out) <- colnames(infections)
   out
 }

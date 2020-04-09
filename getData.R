@@ -48,6 +48,8 @@ timeSeriesDeaths<-loadData(tsDeath)
 timeSeriesDeathsUS<-loadData(tsDeathUS)
 timeSeriesRecoveries<-loadData(tsRec)
 
+rm(tsConf, tsConfUS, tsDeath, tsDeathUS, tsRec) # tidy up
+
 #aggregate US data to Province.State
 timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
   timeSeriesInfectionsUS$Country.Region <- rep("US", nrow(timeSeriesInfectionsUS))
@@ -56,10 +58,28 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
   timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
   timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
 
-# Merge US data with global datframes
-timeSeriesInfections <- rbind(timeSeriesInfections, timeSeriesInfectionsUS)
-timeSeriesDeaths <- rbind(timeSeriesDeaths, timeSeriesDeathsUS)
-  
+# Merge US data with global dataframes
+timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US") , timeSeriesInfectionsUS)
+timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US") , timeSeriesDeathsUS)
+
+rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
+
+# a check
+#sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
+
+# take US, Canada data, and generate recovery data assuming ttr
+infSub<- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
+deathSub <- subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region %in% c("Canada", "US"))
+recSub <- recLag(infSub, deathSub, active = FALSE)
+
+# Merge US, Canada estimated recoveries on to known recoveries
+timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
+
+# a check
+#sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
+rm(infSub, deathSub, recSub) # tidy up
+
+
 ## standardise
 
 ## get Date range
@@ -68,29 +88,27 @@ dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 
 
 # Standardise dataframes and compute active cases
-std <- activeCases(tsI, tsD, tsR)
-tsI <- std$tsI
-tsD <- std$tsD
-tsR <- std$tsR
-tsA <- std$tsA
+std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
+
 
 
 ## GLOBAL
 
-  tsICountry <- countryAgg(tsI) # aggregated to country
-  tsACountry <- countryAgg(tsA) 
-  tsDCountry <- countryAgg(tsD)
+timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
+timeSeriesDeaths <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
+timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
+timeSeriesActive <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
 
   ## Define menus
   # get region names with 20 or more cases as of yesterday
-  ddNames <- tsACountry$Country[tsACountry[[ncol(tsACountry)-1]]>19]
+  ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
 
   ddReg <- ddNames
   names(ddReg) <- ddNames
 
   ## write data caches out
   save(ddReg, ddNames, file = "dat/Global/menuData.RData")
-  save(tsI, tsD, tsA, tsACountry, tsICountry, tsDCountry, dates, file = "dat/Global/cacheData.RData")
+  save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
   ## run deconvolution to estimate undiagnosed cases from cached data
   system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE, show.output.on.console = FALSE)
