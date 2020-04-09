@@ -81,7 +81,7 @@ tsA <- std$tsA
   save(tsI, tsD, tsA, tsACountry, dates, file = "dat/Global/cacheData.RData")
 
 
-  available_countries <- c("Australia","Canada","China")
+  available_countries <- c("Australia","China")
 
   for(focusCountry in available_countries) {
 
@@ -89,8 +89,7 @@ tsA <- std$tsA
     # subset to focusCountry
     tsI_specific_country <- subset(tsI, tsI$Country.Region == focusCountry)
     tsD_specific_country <- subset(tsD, tsD$Country.Region == focusCountry)
-
-    tsA_specific_country <- recLag(tsI_specific_country, tsD_specific_country)
+    tsA_specific_country <- subset(tsA, tsA$Country.Region == focusCountry)
 
     tsA_specific_country <- natAgg(tsA_specific_country)
     tsI_specific_country <- natAgg(tsI_specific_country)
