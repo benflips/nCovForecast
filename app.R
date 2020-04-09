@@ -54,7 +54,11 @@ server <- function(input, output, session) {
     if (input$global_or_country == 'Global') {
       tsSub(tsA,tsA$Country.Region %in% input$countryFinder)
     } else {
-      tsSub(tsA,tsA$Province.State %in% input$countryFinder)
+      if (input$countryFinder == 'National aggregate') {
+        tsSub(tsA,tsA$Country.Region %in% input$global_or_country)
+      } else {
+        tsSub(tsA,tsA$Province.State %in% input$countryFinder)
+      }
     }
   })
   
