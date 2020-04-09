@@ -144,8 +144,8 @@ server <- function(input, output, session) {
   
 ##### Log plot #####
   output$logPlot <- renderPlotly({
-    yA <- yAfCast()
-    yA <- data.frame(dates = as.Date(names(yA), format = "%m/%d/%y"), yA)
+    yA <- yfCast()$yA
+    yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
     lDat <- projfCast()
     pDat <- merge(yA, lDat, all = TRUE)
     yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
