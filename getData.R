@@ -90,9 +90,12 @@ dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 # Standardise dataframes and compute active cases
 std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
 
+
+# Create a list to hold all data
 available_countries <- c("Australia","China", "Canada", "US") # countries available for drill-down
 dataList <- vector(mode = "list", length = length(available_countries)+1)
 names(dataList) <- c("Global", available_countries)
+
 
 ###### GLOBAL ######
 
