@@ -113,7 +113,7 @@ names(ddReg) <- ddNames
 
 ## write data caches out
 
-save(ddReg, ddNames, file = "dat/Global/menuData.RData")
+save(ddReg, ddNames, dates, file = "dat/Global/menuData.RData")
 save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
 ## run deconvolution to estimate undiagnosed cases from cached data
