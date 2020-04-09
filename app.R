@@ -291,8 +291,8 @@ server <- function(input, output, session) {
   output$growthRate <- renderPlotly({
     pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
     gRate <- as.matrix(growthRate(pDat))
-    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m/%d/%y"), t(gRate))
-    colnames(gRate)[-1] <- pDat$Country
+    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), t(gRate))
+    colnames(gRate)[-1] <- pDat$Region
     fig <- plot_ly(gRate, type = "scatter", mode = "none")
     for (cc in 2:ncol(gRate)){
       fig <- fig %>% add_trace(y = gRate[,cc],
