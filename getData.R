@@ -159,7 +159,7 @@ for(focusCountry in available_countries) {
     
     system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
     load(paste0("dat/",focusCountry,"/estDeconv.RData"))
-    dataList[focusCountry] <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
+    dataList[[focusCountry]] <- list(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, ddReg, ddNames, cumulative.infections, active.cases)
 }
 
 save(dataList, file = "dat/dataList.RData")
