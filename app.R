@@ -225,7 +225,7 @@ server <- function(input, output, session) {
   
 ##### Prediction table confirmed #####    
   output$tablePredConf <- renderTable({
-    yA <- yAfCast()
+    yA <- yfCast()$yA
     lDat <- projfCast()
     nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
     nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
