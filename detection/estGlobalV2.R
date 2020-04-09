@@ -31,16 +31,9 @@ source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
 
-if (orgLevel == "Global") { # act on that argument
-  load(paste0("dat/",orgLevel,"/cacheData.RData"))
-  cases.all <- t(tsICountry)[-1,]
-} else {
-  print(paste0("dat/",orgLevel,"/cacheData.RData"))
-  load(paste0("dat/",orgLevel,"/cacheData.RData"))
-  tsICountry <- tsI[,-(2:4)] # assign country-level data to structure this script expects
-  tsDCountry <- tsD[,-(2:4)]
-  cases.all <- t(tsICountry)[-1,]
-}
+load(paste0("dat/",orgLevel,"/cacheData.RData"))
+cases.all <- t(timeSeriesInfections)[-1,]
+
                             
 # organise case data by country
 
@@ -64,10 +57,10 @@ designF<-design(T,inc.dist)
 
 #produce cumulative infection estimates for each country/region
 infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
-cumulative.infections<-data.frame(tsICountry[,1],t(infect.total))
-colnames(cumulative.infections)<-colnames(tsICountry)
+cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
+colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
-active.cases <- recLag(cumulative.infections, tsDCountry)
+active.cases <- recLag(cumulative.infections, timeSeriesDeaths)
 colnames(active.cases)<- colnames(cumulative.infections)
 
 
