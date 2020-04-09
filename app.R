@@ -42,16 +42,23 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
-      updateSelectizeInput(session, "countryFinder",     choices = ddReg)
       if (input$global_or_country == 'Australia') {
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg)
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg[! ddReg %in% c('Victoria','Western Australia')] )
       } else if (input$global_or_country == 'Canada') {
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Ontario","Quebec"), choices = ddReg)
+        ddReg = ddReg[! ddReg %in% c('Diamond Princess','Recovered')] # for some reason, these states do not work.  TOFIX.
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Ontario","Quebec"), choices = ddReg )
       } else if (input$global_or_country == 'China') {
+        ddReg = ddReg[! ddReg %in% c('Anhui', 'Guangxi', 'Guizhou', 'Hainan', 'Ningxia', 'Qinghai', 'Tibet', 'Xinjiang')] # for some reason, these states do not work.  TOFIX.
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Hubei","Henan","Heilongjiang"), choices = ddReg)
       } else if (input$global_or_country == 'US') {
+        ddReg = ddReg[! ddReg %in% c('American Samoa')] # for some reason, these states do not work.  TOFIX.
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Michigan","New Jersey","New York"), choices = ddReg)
       } else {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
       }
     }
