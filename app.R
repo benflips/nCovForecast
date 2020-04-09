@@ -195,14 +195,10 @@ server <- function(input, output, session) {
 
 ##### New cases ##### 
   output$newCases <- renderPlotly({
-    if (input$countryFinder == 'National aggregate') {
-      yI <- tsSub(tsI,tsI$Country.Region %in% input$global_or_country)
-    } else {
-      yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
-    }
-    yA <- yAfCast()
+    yI <- yfCast()$yI
+    yA <- yfCast()$yA
     newCases <- diff(yI)
-    newCases <- data.frame(dates = as.Date(names(newCases), format = "%m/%d/%y"), newCases)
+    newCases <- data.frame(dates = as.Date(names(newCases), format = "%m.%d.%y"), newCases)
     fig <- plot_ly(newCases, 
                    x = ~dates, 
                    y = ~newCases, 
