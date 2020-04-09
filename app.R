@@ -83,8 +83,13 @@ server <- function(input, output, session) {
       yD <- tsSub(tsD,tsD$Country.Region %in% input$countryFinder)
       yI <- tsSub(tsI,tsI$Country.Region %in% input$countryFinder)
     } else {
-      yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
-      yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
+      if (input$countryFinder == 'National aggregate') {
+        yD <- tsSub(tsD,tsD$Country.Region %in% input$global_or_country)
+        yI <- tsSub(tsI,tsI$Country.Region %in% input$global_or_country)
+      } else {
+        yD <- tsSub(tsD,tsD$Province.State %in% input$countryFinder)
+        yI <- tsSub(tsI,tsI$Province.State %in% input$countryFinder)
+      }
     }
     nn <-length(yI)
     if (is.na(yA[nn])) nn <- nn-1
