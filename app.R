@@ -299,17 +299,24 @@ server <- function(input, output, session) {
 ##### Growth rate #####    
   output$growthRate <- renderPlotly({
     pDat <- growthSub()
-    gRate <- as.matrix(growthRate(pDat[,-1]))
-    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), t(gRate))
-    colnames(gRate)[-1] <- pDat$Region
-    fig <- plot_ly(gRate, type = "scatter", mode = "none")
-    for (cc in 2:ncol(gRate)){
-      fig <- fig %>% add_trace(y = gRate[,cc],
+    gRate <- as.matrix(growthRate(pDat[,-1], inWindow = ncol(pDat)-2)) #daily growth over all time
+    gRateMA <- apply(gRate, # get moving average (three day window)
+                     MARGIN = 1, 
+                     FUN = function(x, n = 3){stats::filter(x, rep(1 / n, n), sides = 1)})
+    gRateMA[is.infinite(gRateMA)]<-NA #remove Infs
+    # reorganise for plotting
+    gRateMA <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), gRateMA)
+    if (nrow(gRateMA)>20) gRateMA <-tail(gRateMA, 20)
+    colnames(gRateMA)[-1] <- pDat$Region
+    # and plot
+    fig <- plot_ly(gRateMA, type = "scatter", mode = "none")
+    for (cc in 2:ncol(gRateMA)){
+      fig <- fig %>% add_trace(y = gRateMA[,cc],
                                x = ~dates,
-                               mode = "lines+markers", 
-                               name = colnames(gRate)[cc],
+                               mode = "lines", 
+                               name = colnames(gRateMA)[cc],
                                hoverinfo = "text+name", 
-                               text = paste(format(gRate$dates, "%b %d"), round(gRate[,cc], 1), "%"))
+                               text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Growth rate (% per day)"))
@@ -323,14 +330,6 @@ server <- function(input, output, session) {
       dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
 
-##### R over time ##### 
-  output$rOverTime <- renderPlotly({
-    pDat <- growthSub()
-    gRate <- as.matrix(growthRate(pDat, inWindow = length))
-    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), t(gRate))
-  })
-  
-  
 } # end of server expression
 
 shinyApp(ui = htmlTemplate('base.html'), server)
