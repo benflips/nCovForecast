@@ -298,8 +298,8 @@ server <- function(input, output, session) {
   
 ##### Growth rate #####    
   output$growthRate <- renderPlotly({
-    pDat <- growthSub()#subset(tsACountry, tsACountry$Country %in% input$countryGrowthRate)
-    gRate <- as.matrix(growthRate(pDat))
+    pDat <- growthSub()
+    gRate <- as.matrix(growthRate(pDat[,-1]))
     gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), t(gRate))
     colnames(gRate)[-1] <- pDat$Region
     fig <- plot_ly(gRate, type = "scatter", mode = "none")
@@ -323,6 +323,14 @@ server <- function(input, output, session) {
       dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
   })
 
+##### R over time ##### 
+  output$rOverTime <- renderPlotly({
+    pDat <- growthSub()
+    gRate <- as.matrix(growthRate(pDat, inWindow = length))
+    gRate <- data.frame(dates = as.Date(colnames(gRate), format = "%m.%d.%y"), t(gRate))
+  })
+  
+  
 } # end of server expression
 
 shinyApp(ui = htmlTemplate('base.html'), server)
