@@ -56,7 +56,7 @@ Detection is our weakest estimate in this app; please take it as indicative only
 
 ### Growth rate
 
-Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rate and curve-flattening" tab shows this rate as a percentage, $100\times G_t$, expressing population growth in more broadly understood terms; as a compound interest rate.
+Public health interventions are firmly aimed at reducing virus transmission and so reducing the growth in the number of active cases.  The earliest indications of intervention success will manifest in lowered growth rates (around ten days after the intervention is made in the case of covid-19).  The per-capita growth rate can be calculated each day as $G_t = \frac{A_t-A_{t-1}}{A_{t-1}}$.  The top plot on the "Growth rates" tab shows this rate as a percentage, $100\times G_t$, expressing population growth in more broadly understood terms; as a compound interest rate.  The plot uses a three-day moving average.
 
 ### Curve flattening
 

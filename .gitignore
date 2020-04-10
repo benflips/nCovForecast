@@ -10,6 +10,7 @@ dat/~$*
 dat/cacheData.RData
 dat/estGlobal.RData
 dat/menuData.RData
+dat/dataList.RData
 
 dat/Global/cacheData.RData
 dat/Global/menuData.RData
