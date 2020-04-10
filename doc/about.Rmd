@@ -23,7 +23,7 @@ Our data come from the [John Hopkins University dataset](https://github.com/CSSE
 
 ### Current active cases
 
-Active cases ($A_t$) should be simply be $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU were no longer able to keep track of recoveries.  As a consequence, we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
+Active cases ($A_t$) are simply $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU no longer report recoveries in the US and Canada at State/Province level.  As a consequence, for these countries. we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
 
 ### Growth model and forecast of active cases
 
