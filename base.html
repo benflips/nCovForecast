@@ -87,7 +87,7 @@ function openTab(evt, tabName) {
   <div class="full-width">
     <nav role="tablist">
       <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
-      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rate and curve-flattening</a>
+      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rates</a>
       <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
     </nav>
   </div>
@@ -121,7 +121,7 @@ function openTab(evt, tabName) {
         <div class="center">{{ textOutput(outputId = "detRate") }}</div>
 
         <p>Possible number of cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
-        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases).</p>
+        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
         
         <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
 
@@ -156,14 +156,14 @@ function openTab(evt, tabName) {
 
       <div class="right-panel">
         <h3>Growth rate</h3>
-        <p>This is the growth rate of the number of active cases for the last 10 days.  It can be thought of as the interest rate, compounded daily.</p>
+        <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
-        <p>Note, days with low or zero growth followed by large spikes are reporting issues: countries miss a day (or several) of reporting and then aggregate cases into the following day.</p>
+        
         {{ plotlyOutput("growthRate") }}
 
         <h3>Curve flattening index</h3>
         <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
-        <p>Note, this last plot covers the entire time period of the pandemic, not just the last ten days.</p>
+        <p>Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.</p>
         {{ plotlyOutput("cfi") }}
         <p>For more details see the 'About' tab.</p>
       </div>
