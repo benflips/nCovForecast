@@ -26,7 +26,7 @@ install.packages('plotly')
 7. `library(shiny)`
 8. `runApp('.')`  This should automatically open your browser and display the app.
 
-After you have installed and run this for the first time, only steps 3, 4, and 7-8 will be required.  Data can be updated by running step 6.
+After you have installed and run this for the first time, only steps 3, 4, and 7-8 will be required.  Data can be updated each day by running step 6.
 
 ## To generate cached data (step 6)
 
@@ -34,8 +34,10 @@ If you are on the main server, simply run:
 
 `Rscript getDataNew.R`
 
-Otherwise, go into getDataNew.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  Then, run:
+Otherwise, go into getData.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  This script requires a directory structure inside /dat which you will need to setup.  It requires dat/Global/ , and dat/[country/] where country is one of the countries named in the available_countries variable on line 95 of getData.R.
 
-`Rscript getDataNew.R`
+Once this directory structure is in place, run:
 
-Which will take about 20 minutes to run.
+`Rscript getData.R`
+
+Which will take about 10 minutes to run.
