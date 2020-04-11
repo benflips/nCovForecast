@@ -32,7 +32,7 @@ After you have installed and run this for the first time, only steps 3, 4, and 7
 
 If you are on the main server, simply run:
 
-`Rscript getDataNew.R`
+`Rscript getData.R`
 
 Otherwise, go into getData.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  This script requires a directory structure inside /dat which you will need to setup.  It requires dat/Global/ , and dat/[country/] where country is one of the countries named in the available_countries variable on line 95 of getData.R.
 
