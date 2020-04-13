@@ -343,6 +343,10 @@ server <- function(input, output, session) {
     for (rr in 1:nrow(datIMat)){
       detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
     }
+    # smooth with moving average
+    detMat <- apply(detMat, # get moving average (three day window)
+                    MARGIN = 2, 
+                    FUN = function(x, n = 3){stats::filter(x, rep(1 / n, n), sides = 1)})
     # get common NAs
     commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
     # organise into dataframe for plotting
