@@ -146,11 +146,11 @@ detRate<-function(infd, deaths, cfr = 0.033, ttd=17, window=5, pointEst = TRUE){
   detRate[is.infinite(detRate)]<-NA
   if (pointEst) {
     out<-mean(detRate, na.rm = TRUE)
+    if (is.nan(out)) return(NA)
+    if (out>1) out<-1
   } else {
     out <- detRate  
     }
-  if (is.nan(out)) return(NA)
-  if (out>1) out<-1
   out
 }
 
