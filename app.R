@@ -223,6 +223,11 @@ server <- function(input, output, session) {
                     config(displayModeBar = FALSE)
   })
   
+##### Doubling time ##### 
+  output$doubTime <- renderText({
+    pDat <- yfCast()$yA
+    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+  })
   
 ##### Detection rate #####    
   output$detRate <- renderText({
@@ -323,13 +328,12 @@ server <- function(input, output, session) {
                     ) %>%
                     config(displayModeBar = FALSE)
   })
-  
-##### Doubling time ##### 
-  output$doubTime <- renderText({
-      pDat <- yfCast()$yA
-      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
-  })
 
+##### Detection Plot #####   
+ output$detPlot <- renderPlotly({
+   
+ })
+  
 } # end of server expression
 
 shinyApp(ui = htmlTemplate('base.html'), server)
