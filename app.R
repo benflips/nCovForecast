@@ -343,10 +343,26 @@ server <- function(input, output, session) {
    for (rr in 1:nrow(pDatI)){
      detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
    }
+   # get common NAs
+   commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
    # organise into dataframe for plotting
    pDet <- data.frame(dates = as.Date(colnames(pDatI), format = "%m.%d.%y"), detMat)
    colnames(pDet)[-1] <- datI$Region
-   
+   xRange <- as.list(range(pDet$dates[!commonNA]))
+   # make the plot
+   fig <- plot_ly(pDet, type = "scatter", mode = "none")
+   for (cc in 2:ncol(pDet)){
+     fig <- fig %>% add_trace(y = pDet[,cc],
+                              x = ~dates,
+                              mode = "lines", 
+                              name = colnames(pDet)[cc],
+                              hoverinfo = "text+name", 
+                              text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
+   }
+   fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                         yaxis = list(title = list(text = "Detection probability"))
+   ) %>%
+     config(displayModeBar = FALSE)
  })
   
 } # end of server expression
