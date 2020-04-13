@@ -331,6 +331,21 @@ server <- function(input, output, session) {
 
 ##### Detection Plot #####   
  output$detPlot <- renderPlotly({
+   # get data subsets
+   datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
+   datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+   # Drop region names and organise infection and death data into matrix
+   datIMat <- as.matrix(datI[, -1])
+   datDMat <- as.matrix(datD[, -1])
+   # make a matrix to receive detection outputs
+   detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
+   # generate detection vectors
+   for (rr in 1:nrow(pDatI)){
+     detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
+   }
+   # organise into dataframe for plotting
+   pDet <- data.frame(dates = as.Date(colnames(pDatI), format = "%m.%d.%y"), detMat)
+   colnames(pDet)[-1] <- datI$Region
    
  })
   
