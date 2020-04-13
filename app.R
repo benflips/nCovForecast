@@ -296,9 +296,9 @@ server <- function(input, output, session) {
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Curve-flattening index"),
                                        range = yRange)
-                          ) %>%
-                   config(displayModeBar = FALSE)
-     
+                    ) %>%
+                    config(displayModeBar = FALSE)
+    
   })
   
 ##### Growth rate #####    
@@ -326,46 +326,48 @@ server <- function(input, output, session) {
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Growth rate (% per day)"))
                     ) %>%
-                    config(displayModeBar = FALSE)
+                   config(displayModeBar = FALSE)
   })
-
+  
 ##### Detection Plot #####   
- output$detPlot <- renderPlotly({
-   # get data subsets
-   datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
-   datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
-   # Drop region names and organise infection and death data into matrix
-   datIMat <- as.matrix(datI[, -1])
-   datDMat <- as.matrix(datD[, -1])
-   # make a matrix to receive detection outputs
-   detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
-   # generate detection vectors
-   for (rr in 1:nrow(pDatI)){
-     detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
-   }
-   # get common NAs
-   commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
-   # organise into dataframe for plotting
-   pDet <- data.frame(dates = as.Date(colnames(pDatI), format = "%m.%d.%y"), detMat)
-   colnames(pDet)[-1] <- datI$Region
-   xRange <- as.list(range(pDet$dates[!commonNA]))
-   # make the plot
-   fig <- plot_ly(pDet, type = "scatter", mode = "none")
-   for (cc in 2:ncol(pDet)){
-     fig <- fig %>% add_trace(y = pDet[,cc],
-                              x = ~dates,
-                              mode = "lines", 
-                              name = colnames(pDet)[cc],
-                              hoverinfo = "text+name", 
-                              text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
-   }
-   fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                         yaxis = list(title = list(text = "Detection probability"))
-   ) %>%
-     config(displayModeBar = FALSE)
- })
+  output$detPlot <- renderPlotly({
+    # get data subsets
+    datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
+    datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+    # Drop region names and organise infection and death data into matrix
+    datIMat <- as.matrix(datI[, -1])
+    datDMat <- as.matrix(datD[, -1])
+    # make a matrix to receive detection outputs
+    detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
+    # generate detection vectors
+    for (rr in 1:nrow(datIMat)){
+      detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
+    }
+    # get common NAs
+    commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
+    # organise into dataframe for plotting
+    pDet <- data.frame(dates = as.Date(colnames(datIMat), format = "%m.%d.%y"), detMat)
+    colnames(pDet)[-1] <- datI$Region
+    xRange <- as.list(range(pDet$dates[!commonNA]))
+    # make the plot
+    fig <- plot_ly(pDet, type = "scatter", mode = "none")
+    for (cc in 2:ncol(pDet)){
+      fig <- fig %>% add_trace(y = pDet[,cc],
+                               x = ~dates,
+                               mode = "lines", 
+                               name = colnames(pDet)[cc],
+                               hoverinfo = "text+name", 
+                               text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
+    }
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Detection probability"))
+                    ) %>%
+                    config(displayModeBar = FALSE)
+    
+  })
   
 } # end of server expression
+
 
 shinyApp(ui = htmlTemplate('base.html'), server)
 

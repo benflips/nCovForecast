@@ -160,6 +160,11 @@ function openTab(evt, tabName) {
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
         
         {{ plotlyOutput("growthRate") }}
+                
+        <h3>Detection rate</h3>
+        <p>This is the probability of detection and how it has changed over time.  Countries that have ramped up testing will show steady increases in detection over time. </p>
+
+        {{ plotlyOutput("detPlot") }}
 
         <h3>Curve flattening index</h3>
         <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
