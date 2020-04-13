@@ -162,7 +162,8 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("growthRate") }}
                 
         <h3>Detection rate</h3>
-        <p>This is the probability of detection and how it has changed over time.  Countries that have ramped up testing will show steady increases in detection over time. </p>
+        <p>This is the probability of detection and how it has changed over time.  Countries that have ramped up testing will show steady increases in detection over time.  Unexpected outbreaks cause temporary reductions in detection. </p>
+        <p>Detection estimates are often patchy in countries/regions with few deaths.</p>
 
         {{ plotlyOutput("detPlot") }}
 
