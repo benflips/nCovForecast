@@ -112,7 +112,7 @@ ddReg <- ddNames
 names(ddReg) <- ddNames
 
 ## write data caches out
-
+dir.create("dat/Global", recursive = TRUE, showWarnings = FALSE) # if the directory doesn't exist, create it.
 save(ddReg, ddNames, dates, file = "dat/Global/menuData.RData")
 save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
@@ -165,6 +165,7 @@ for(focusCountry in available_countries) {
     names(ddReg) <- ddNames
 
     ## write data caches out
+    dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
