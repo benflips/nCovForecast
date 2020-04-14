@@ -34,10 +34,8 @@ If you are on the main server, simply run:
 
 `Rscript getData.R`
 
-Otherwise, go into getData.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  This script requires a directory structure inside /dat which you will need to setup.  It requires dat/Global/ , and dat/[country/] where country is one of the countries named in the available_countries variable on line 95 of getData.R.
-
-Once this directory structure is in place, run:
+Otherwise, go into getData.R, set `server <- FALSE`.  This will then obtain data directly from raw.githubusercontent.com rather than from a saved path (which only applies if you are on the main server).  Then run:
 
 `Rscript getData.R`
 
-Which will take about 10 minutes to run.
+Which will take about 10 minutes to run.  This script will generate a directory structure inside /dat (if that structure doesn't already exist) and populate it with data required by the app.

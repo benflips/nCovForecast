@@ -240,6 +240,39 @@ server <- function(input, output, session) {
                     config(displayModeBar = FALSE)
   })
   
+##### Detection Plot #####   
+  output$detPlot <- renderPlotly({
+    # get data subsets
+    datI <- yfCast()$yI
+    datD <- yfCast()$yD
+    # generate detection vector
+    detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)*100
+    # smooth with moving average
+    detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
+    # organise into dataframe for plotting
+    pDet <- data.frame(dates = as.Date(names(datI), format = "%m.%d.%y"), detVec)
+    xRange <- as.list(range(na.omit(pDet)$dates))
+    # make the plot
+    fig <- plot_ly(pDet, type = "scatter", mode = "none", showlegend = FALSE)
+    fig <- fig %>% add_trace(y = ~detVec,
+                               x = ~dates,
+                               mode = "lines+markers", 
+                               name = "Detection",
+                               hoverinfo = "text+name", 
+                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
+                                       range = xRange),
+                          yaxis = list(title = list(text = "Percentage of cases detected per day"))
+    ) %>%
+      config(displayModeBar = FALSE)
+    
+  })
+  
+##### Doubling time ##### 
+  output$doubTime <- renderText({
+    pDat <- yfCast()$yA
+    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+  })
   
 ##### Detection rate #####    
   output$detRate <- renderText({
@@ -308,9 +341,9 @@ server <- function(input, output, session) {
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Curve-flattening index"),
                                        range = yRange)
-                          ) %>%
-                   config(displayModeBar = FALSE)
-     
+                    ) %>%
+                    config(displayModeBar = FALSE)
+    
   })
   
 ##### Growth rate #####    
@@ -338,16 +371,12 @@ server <- function(input, output, session) {
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Growth rate (% per day)"))
                     ) %>%
-                    config(displayModeBar = FALSE)
-  })
-  
-##### Doubling time ##### 
-  output$doubTime <- renderText({
-      pDat <- yfCast()$yA
-      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+                   config(displayModeBar = FALSE)
   })
 
+  
 } # end of server expression
+
 
 shinyApp(ui = htmlTemplate('base.html'), server)
 
