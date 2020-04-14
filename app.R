@@ -223,6 +223,47 @@ server <- function(input, output, session) {
                     config(displayModeBar = FALSE)
   })
   
+##### Detection Plot #####   
+  output$detPlot <- renderPlotly({
+    # get data subsets
+    datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
+    datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+    # Drop region names and organise infection and death data into matrix
+    datIMat <- as.matrix(datI[, -1])
+    datDMat <- as.matrix(datD[, -1])
+    # make a matrix to receive detection outputs
+    detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
+    # generate detection vectors
+    for (rr in 1:nrow(datIMat)){
+      detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
+    }
+    # smooth with moving average
+    detMat <- apply(detMat, # get moving average (three day window)
+                    MARGIN = 2, 
+                    FUN = function(x, n = 3){stats::filter(x, rep(1 / n, n), sides = 1)})
+    # get common NAs
+    commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
+    # organise into dataframe for plotting
+    pDet <- data.frame(dates = as.Date(colnames(datIMat), format = "%m.%d.%y"), detMat)
+    colnames(pDet)[-1] <- datI$Region
+    xRange <- as.list(range(pDet$dates[!commonNA]))
+    # make the plot
+    fig <- plot_ly(pDet, type = "scatter", mode = "none")
+    for (cc in 2:ncol(pDet)){
+      fig <- fig %>% add_trace(y = pDet[,cc],
+                               x = ~dates,
+                               mode = "lines", 
+                               name = colnames(pDet)[cc],
+                               hoverinfo = "text+name", 
+                               text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
+    }
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Detection probability"))
+    ) %>%
+      config(displayModeBar = FALSE)
+    
+  })
+  
 ##### Doubling time ##### 
   output$doubTime <- renderText({
     pDat <- yfCast()$yA
@@ -328,47 +369,7 @@ server <- function(input, output, session) {
                     ) %>%
                    config(displayModeBar = FALSE)
   })
-  
-##### Detection Plot #####   
-  output$detPlot <- renderPlotly({
-    # get data subsets
-    datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
-    datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
-    # Drop region names and organise infection and death data into matrix
-    datIMat <- as.matrix(datI[, -1])
-    datDMat <- as.matrix(datD[, -1])
-    # make a matrix to receive detection outputs
-    detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
-    # generate detection vectors
-    for (rr in 1:nrow(datIMat)){
-      detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
-    }
-    # smooth with moving average
-    detMat <- apply(detMat, # get moving average (three day window)
-                    MARGIN = 2, 
-                    FUN = function(x, n = 3){stats::filter(x, rep(1 / n, n), sides = 1)})
-    # get common NAs
-    commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
-    # organise into dataframe for plotting
-    pDet <- data.frame(dates = as.Date(colnames(datIMat), format = "%m.%d.%y"), detMat)
-    colnames(pDet)[-1] <- datI$Region
-    xRange <- as.list(range(pDet$dates[!commonNA]))
-    # make the plot
-    fig <- plot_ly(pDet, type = "scatter", mode = "none")
-    for (cc in 2:ncol(pDet)){
-      fig <- fig %>% add_trace(y = pDet[,cc],
-                               x = ~dates,
-                               mode = "lines", 
-                               name = colnames(pDet)[cc],
-                               hoverinfo = "text+name", 
-                               text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
-    }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Detection probability"))
-                    ) %>%
-                    config(displayModeBar = FALSE)
-    
-  })
+
   
 } # end of server expression
 
