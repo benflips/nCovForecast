@@ -226,38 +226,25 @@ server <- function(input, output, session) {
 ##### Detection Plot #####   
   output$detPlot <- renderPlotly({
     # get data subsets
-    datI <- subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
-    datD <- subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
-    # Drop region names and organise infection and death data into matrix
-    datIMat <- as.matrix(datI[, -1])
-    datDMat <- as.matrix(datD[, -1])
-    # make a matrix to receive detection outputs
-    detMat <- matrix(NA, nrow = ncol(datIMat), ncol = nrow(datIMat))
-    # generate detection vectors
-    for (rr in 1:nrow(datIMat)){
-      detMat[,rr] <- detRate(infd = datIMat[rr, ], deaths = datDMat[rr, ], pointEst = FALSE)
-    }
+    datI <- yfCast()$yI
+    datD <- yfCast()$yD
+    # generate detection vector
+    detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)
     # smooth with moving average
-    detMat <- apply(detMat, # get moving average (three day window)
-                    MARGIN = 2, 
-                    FUN = function(x, n = 3){stats::filter(x, rep(1 / n, n), sides = 1)})
-    # get common NAs
-    commonNA <- apply(detMat, 1, function(x){sum(is.na(x))==length(x)})
+    detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
     # organise into dataframe for plotting
-    pDet <- data.frame(dates = as.Date(colnames(datIMat), format = "%m.%d.%y"), detMat)
-    colnames(pDet)[-1] <- datI$Region
-    xRange <- as.list(range(pDet$dates[!commonNA]))
+    pDet <- data.frame(dates = as.Date(names(datI), format = "%m.%d.%y"), detVec)
+    xRange <- plotRange()
     # make the plot
     fig <- plot_ly(pDet, type = "scatter", mode = "none")
-    for (cc in 2:ncol(pDet)){
-      fig <- fig %>% add_trace(y = pDet[,cc],
+    fig <- fig %>% add_trace(y = ~detVec,
                                x = ~dates,
                                mode = "lines", 
-                               name = colnames(pDet)[cc],
+                               name = "Detection",
                                hoverinfo = "text+name", 
-                               text = paste(format(pDet$dates, "%b %d"), round(pDet[,cc], 1)))
-    }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
+                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1)))
+    fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
+                                       range = xRange),
                           yaxis = list(title = list(text = "Detection probability"))
     ) %>%
       config(displayModeBar = FALSE)
