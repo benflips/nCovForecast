@@ -134,6 +134,11 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("logPlot") }}
         <p></p>
         {{ plotlyOutput("newCases") }}
+        <p></p>
+        {{ plotlyOutput("detPlot") }}
+        <p>This last plot is the probability of detection and how it has changed over time.  Detection probabilities near one are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
+        <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.  See "About" for more details.</p>
+
       </div>
     </section>
   </div>
@@ -160,12 +165,6 @@ function openTab(evt, tabName) {
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
         
         {{ plotlyOutput("growthRate") }}
-                
-        <h3>Detection rate</h3>
-        <p>This is the probability of detection and how it has changed over time.  Countries that have ramped up testing will show steady increases in detection over time.  Unexpected outbreaks cause temporary reductions in detection. </p>
-        <p>Detection estimates are often patchy in countries/regions with few deaths.</p>
-
-        {{ plotlyOutput("detPlot") }}
 
         <h3>Curve flattening index</h3>
         <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
