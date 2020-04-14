@@ -229,23 +229,23 @@ server <- function(input, output, session) {
     datI <- yfCast()$yI
     datD <- yfCast()$yD
     # generate detection vector
-    detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)
+    detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)*100
     # smooth with moving average
     detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
     # organise into dataframe for plotting
     pDet <- data.frame(dates = as.Date(names(datI), format = "%m.%d.%y"), detVec)
-    xRange <- plotRange()
+    xRange <- as.list(range(na.omit(pDet)$dates))
     # make the plot
-    fig <- plot_ly(pDet, type = "scatter", mode = "none")
+    fig <- plot_ly(pDet, type = "scatter", mode = "none", showlegend = FALSE)
     fig <- fig %>% add_trace(y = ~detVec,
                                x = ~dates,
-                               mode = "lines", 
+                               mode = "lines+markers", 
                                name = "Detection",
                                hoverinfo = "text+name", 
-                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1)))
+                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
                                        range = xRange),
-                          yaxis = list(title = list(text = "Detection probability"))
+                          yaxis = list(title = list(text = "Percentage of cases detected per day"))
     ) %>%
       config(displayModeBar = FALSE)
     
