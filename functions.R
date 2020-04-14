@@ -145,7 +145,7 @@ detRate<-function(infd, deaths, cfr = 0.033, ttd=17, window=5, pointEst = TRUE){
   detRate[detRate==0]<-NA
   detRate[is.infinite(detRate)]<-NA
   if (pointEst) {
-    out<-mean(detRate, na.rm = TRUE)
+    out<-mean(tail(na.omit(detRate), 10), na.rm = TRUE) # take mean over last 10 observations
     if (is.nan(out)) return(NA)
     if (out>1) out <- 1
   } else {
