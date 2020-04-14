@@ -34,11 +34,8 @@ server <- function(input, output, session) {
   
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
-#### Observer function -- Global or Country level ####
-  # if we observe that global_or_country is changing, then update the choices in countryFinder
+#### Observer function -- set country names from url ####
   observe({
-    list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
-
     url <- session$clientData$url_hostname
     cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
     if (cname == "au") {
@@ -50,6 +47,13 @@ server <- function(input, output, session) {
     } else if (cname == "cn") {
       updateSelectizeInput(session, "global_or_country",  selected = "China")
     } 
+  })
+  
+#### Observer function -- Global or Country level ####
+  # if we observe that global_or_country is changing, then update the choices in countryFinder
+  observe({
+    # change data inputs
+    list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
 
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
