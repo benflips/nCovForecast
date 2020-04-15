@@ -37,7 +37,6 @@ server <- function(input, output, session) {
 # #### Observer function -- set country names from url ####
    observe({
      cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
-     cname <- 'au'
      if (cname == "au") {
        output$country_name_in_header <- renderText({'Australia'})
        updateSelectizeInput(session, "global_or_country",  selected = "Australia")

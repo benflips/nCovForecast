@@ -80,7 +80,7 @@ function openTab(evt, tabName) {
                     selected = "Global") }}
   <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
 </div>
-<div id="go_to_main_site">
+<div id="go_to_main_site" style="display:none;">
   <p>Are you interested in other countries?  This site is locked to one country, but go to <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.</p>
 </div>
 <div id="other_country_sites">
@@ -96,7 +96,7 @@ function openTab(evt, tabName) {
   var hostname = window.location.hostname;
   if (hostname.split('.')[0] != 'covid19forecast') {
     document.getElementById('div_global_or_country').style.display = 'none';
-    document.getElementById('go_to_main_site').style.display = 'none';
+    document.getElementById('go_to_main_site').style.display = 'block';
   }
 </script>
 
