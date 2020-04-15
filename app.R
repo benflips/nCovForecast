@@ -101,7 +101,8 @@ server <- function(input, output, session) {
   plotRange <- reactive({ # get date range to plot
     yA <- yfCast()$yA
     dFrame <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-    if (max(dFrame$yA)>200) {minDate <- min(dFrame$dates[dFrame$yA>20]); maxDate <- max(dFrame$dates)+10} else {
+    dFrame_without_na <- na.omit(dFrame$yA)
+    if (max(dFrame_without_na)>200) {minDate <- min(dFrame$dates[dFrame_without_na>20]); maxDate <- max(dFrame$dates)+10} else {
       minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
     }
     list(minDate, maxDate)
@@ -305,6 +306,7 @@ server <- function(input, output, session) {
     nowDiag <- tail(yA[!is.na(yA)], 1)
     nowUndet <- nowDiag/dRate - nowDiag
     nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
+    if (is.na(nowUndiag)) nowUndiag <- 0
     if (nowUndiag<0) nowUndiag <- 0
     nowTotal <- nowDiag+nowUndiag+nowUndet
     nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
