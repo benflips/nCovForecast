@@ -153,10 +153,10 @@ for(focusCountry in available_countries) {
     tsR <- regionAgg(tsR, regionCol = tsR$Province.State)
     tsA <- regionAgg(tsA, regionCol = tsA$Province.State)
     
-    timeSeriesInfections <- natAgg(tsI)
-    timeSeriesDeaths <- natAgg(tsD)
-    timeSeriesRecoveries <- natAgg(tsR)
-    timeSeriesActive <- natAgg(tsA)
+    timeSeriesInfections <- natAgg(tsI, aggName = paste("National aggregate -", focusCountry))
+    timeSeriesDeaths <- natAgg(tsD, aggName = paste("National aggregate -", focusCountry))
+    timeSeriesRecoveries <- natAgg(tsR, aggName = paste("National aggregate -", focusCountry))
+    timeSeriesActive <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
 
     ## Define menus
     # get region names 

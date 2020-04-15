@@ -117,10 +117,10 @@ regionAgg<-function(x, regionCol, regionName = "Region"){
 }
 
 # calculates a national aggregate and appends to dataframe
-natAgg <-function(tsDF){
+natAgg <-function(tsDF, aggName = "National aggregate"){
   cAgg <- colSums(tsDF[,-1])
   dim(cAgg)<-c(1, length(cAgg))
-  cAgg <- data.frame(Region = "National aggregate", cAgg, stringsAsFactors = FALSE)
+  cAgg <- data.frame(Region = aggName, cAgg, stringsAsFactors = FALSE)
   colnames(cAgg) <- colnames(tsDF)
   rbind(cAgg, tsDF)
 }
