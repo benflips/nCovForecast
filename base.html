@@ -88,13 +88,13 @@ function openTab(evt, tabName) {
        <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
        <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
        <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>, or
-       <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>.  <a href="http://covid19forecase.science.unimelb.edu.au">This is a link to our main site</a>.
+       <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>.
 </div>
 
 
 <script>
   var hostname = window.location.hostname;
-  if (hostname.split('.')[0] != 'covid19forecast') {
+  if (['covid19forecast','127','localhost'].indexOf(hostname.split('.')[0]) == -1) {
     document.getElementById('div_global_or_country').style.display = 'none';
     document.getElementById('go_to_main_site').style.display = 'block';
   }
