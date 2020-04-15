@@ -42,10 +42,13 @@ server <- function(input, output, session) {
        output$country_name_in_header <- renderText({'Australia'})
        updateSelectizeInput(session, "global_or_country",  selected = "Australia")
      } else if (cname == "us") {
+       output$country_name_in_header <- renderText({'United States of America'})
        updateSelectizeInput(session, "global_or_country",  selected = "US")
      } else if (cname == "ca") {
+       output$country_name_in_header <- renderText({'Canada'})
        updateSelectizeInput(session, "global_or_country",  selected = "Canada")
      } else if (cname == "cn") {
+       output$country_name_in_header <- renderText({'China'})
        updateSelectizeInput(session, "global_or_country",  selected = "China")
      } 
    })
