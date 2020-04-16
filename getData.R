@@ -63,83 +63,84 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
   # Infection and death data have same number of rows
 test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSeriesDeaths)==nrow(timeSeriesInfections)
+
+if (test1 & test2){
+  # Merge US data with global dataframes
+  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US") , timeSeriesInfectionsUS)
+  timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US") , timeSeriesDeathsUS)
   
-# Merge US data with global dataframes
-timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US") , timeSeriesInfectionsUS)
-timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US") , timeSeriesDeathsUS)
-
-rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
-
-# a check
-#sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
-
-# take US, Canada data, and generate recovery data assuming ttr
-infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
-deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
-recSub   <- recLag(infSub, deathSub, active = FALSE)
-
-# Merge US, Canada estimated recoveries on to known recoveries
-timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
-
-# a check
-#sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
-rm(infSub, deathSub, recSub) # tidy up
-
-
-## standardise
-
-## get Date range
-dCols<-dateCols(timeSeriesInfections)
-dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
-
-
-# Standardise dataframes and compute active cases
-std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
-
-
-# Create a list to hold all data
-available_countries <- c("Australia","China", "Canada", "US") # countries available for drill-down
-dataList <- vector(mode = "list", length = length(available_countries)+1)
-names(dataList) <- c("Global", available_countries)
-
-
-###### GLOBAL ######
-
-timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
-timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
-timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
-timeSeriesActive     <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
-
-## Define menus
-# get region names with 20 or more cases as of yesterday
-ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
-
-ddReg <- ddNames
-names(ddReg) <- ddNames
-
-## write data caches out
-dir.create("dat/Global", recursive = TRUE, showWarnings = FALSE) # if the directory doesn't exist, create it.
-save(ddReg, ddNames, dates, file = "dat/Global/menuData.RData")
-save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
+  rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
   
-## run deconvolution to estimate undiagnosed cases from cached data
-system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
-load("dat/Global/estDeconv.RData")
-
-dataList$Global <- list(timeSeriesInfections = timeSeriesInfections,
-                        timeSeriesDeaths = timeSeriesDeaths,
-                        timeSeriesRecoveries = timeSeriesRecoveries,
-                        timeSeriesActive = timeSeriesActive,
-                        dates = dates,
-                        ddReg = ddReg,
-                        ddNames = ddNames,
-                        cumulative.infections = cumulative.infections,
-                        active.cases = active.cases)
-
-###### LOCAL ######
-
-for(focusCountry in available_countries) {
-
+  # a check
+  #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
+  
+  # take US, Canada data, and generate recovery data assuming ttr
+  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
+  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
+  recSub   <- recLag(infSub, deathSub, active = FALSE)
+  
+  # Merge US, Canada estimated recoveries on to known recoveries
+  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
+  
+  # a check
+  #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
+  rm(infSub, deathSub, recSub) # tidy up
+  
+  
+  ## standardise
+  
+  ## get Date range
+  dCols<-dateCols(timeSeriesInfections)
+  dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
+  
+  
+  # Standardise dataframes and compute active cases
+  std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
+  
+  
+  # Create a list to hold all data
+  available_countries <- c("Australia","China", "Canada", "US") # countries available for drill-down
+  dataList <- vector(mode = "list", length = length(available_countries)+1)
+  names(dataList) <- c("Global", available_countries)
+  
+  
+  ###### GLOBAL ######
+  
+  timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
+  timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
+  timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
+  timeSeriesActive     <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
+  
+  ## Define menus
+  # get region names with 20 or more cases as of yesterday
+  ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+  
+  ddReg <- ddNames
+  names(ddReg) <- ddNames
+  
+  ## write data caches out
+  dir.create("dat/Global", recursive = TRUE, showWarnings = FALSE) # if the directory doesn't exist, create it.
+  save(ddReg, ddNames, dates, file = "dat/Global/menuData.RData")
+  save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
+  
+  ## run deconvolution to estimate undiagnosed cases from cached data
+  system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
+  load("dat/Global/estDeconv.RData")
+  
+  dataList$Global <- list(timeSeriesInfections = timeSeriesInfections,
+                          timeSeriesDeaths = timeSeriesDeaths,
+                          timeSeriesRecoveries = timeSeriesRecoveries,
+                          timeSeriesActive = timeSeriesActive,
+                          dates = dates,
+                          ddReg = ddReg,
+                          ddNames = ddNames,
+                          cumulative.infections = cumulative.infections,
+                          active.cases = active.cases)
+  
+  ###### LOCAL ######
+  
+  for(focusCountry in available_countries) {
+    
     print(focusCountry)
     # set dataframes back to standards
     tsI <- std$tsI
@@ -163,13 +164,13 @@ for(focusCountry in available_countries) {
     timeSeriesDeaths <- natAgg(tsD, aggName = paste("National aggregate -", focusCountry))
     timeSeriesRecoveries <- natAgg(tsR, aggName = paste("National aggregate -", focusCountry))
     timeSeriesActive <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
-
+    
     ## Define menus
     # get region names 
     ddNames      <- timeSeriesActive$Region
     ddReg        <- ddNames
     names(ddReg) <- ddNames
-
+    
     ## write data caches out
     dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
@@ -186,6 +187,8 @@ for(focusCountry in available_countries) {
                                      ddNames = ddNames,
                                      cumulative.infections = cumulative.infections,
                                      active.cases = active.cases)
-}
-
-save(dataList, file = "dat/dataList.RData")
+  }
+  
+  save(dataList, file = "dat/dataList.RData")
+  
+} # end of first data test if statement (test1, test2) 
