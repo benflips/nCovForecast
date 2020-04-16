@@ -63,8 +63,10 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
   # Infection and death data have same number of rows
 test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSeriesDeaths)==nrow(timeSeriesInfections)
+  # NAs anywhere in the data
+test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
-if (test1 & test2){
+if (test1 & test2 & test3){
   # Merge US data with global dataframes
   timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US") , timeSeriesInfectionsUS)
   timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US") , timeSeriesDeathsUS)
@@ -191,4 +193,4 @@ if (test1 & test2){
   
   save(dataList, file = "dat/dataList.RData")
   
-} # end of first data test if statement (test1, test2) 
+} # end of first data test if statement (test1, test2) ...need to add our else notification here
