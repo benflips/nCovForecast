@@ -59,7 +59,7 @@ server <- function(input, output, session) {
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
 
     if (input$global_or_country == 'Global') {
-      updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
+      updateSelectizeInput(session, "countryFinder",     selected = "China", choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
       if (input$global_or_country == 'Australia') {
