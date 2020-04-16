@@ -84,7 +84,7 @@ Email: [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=cov
 
 First, to the people on the front line who are collecting these data.  You are a legion of brave and selfless people.  We hope this work has in some diffuse way made your job easier.  Second, a big thanks to the team at John Hopkins University.  Their early decision to make these data open access, and their ongoing commitment to curating a large dynamic dataset has provided a critical resource for helping the world understand and manage this pandemic.
 
-The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Ian Marschner (University of Sydney) provided deconvolution code for estimating undiagnosed infection numbers. Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but thanks anyway).
+The app itself has been improved by Matteo Tomasini (Michigan State University); Melissa Makin and Uli Felzmann (University of Melbourne); and several contributors on github.  Ian Marschner (University of Sydney) provided deconvolution code for estimating undiagnosed infection numbers. Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Amy Hurford (Memorial University of Newfoundland), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but thanks anyway).
 
 
 
