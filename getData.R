@@ -193,4 +193,4 @@ if (test1 & test2 & test3){
   
   save(dataList, file = "dat/dataList.RData")
   
-} # end of first data test if statement (test1, test2) ...need to add our else notification here
+} else { print('there was an error!') } # end of first data test if statement (test1, test2) ...need to add our else notification here
