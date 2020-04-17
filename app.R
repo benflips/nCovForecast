@@ -31,6 +31,8 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
+
+  please_select_a_country <- 'Please select a country...'
   
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
@@ -269,50 +271,60 @@ server <- function(input, output, session) {
                           yaxis = list(title = list(text = "Percentage of cases detected per day"))
     ) %>%
       config(displayModeBar = FALSE)
-    
   })
   
 ##### Doubling time ##### 
   output$doubTime <- renderText({
-    pDat <- yfCast()$yA
-    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+    if (input$countryFinder == '') {
+      please_select_a_country
+    } else {
+      pDat <- yfCast()$yA
+      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+    }
   })
   
 ##### Detection rate #####    
   output$detRate <- renderText({
-    yI <- yfCast()$yI
-    yD <- yfCast()$yD
-    dR<-round(detRate(yI, yD), 4)*100
-    if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+    if (input$countryFinder == '') {
+      please_select_a_country
+    } else {
+      yI <- yfCast()$yI
+      yD <- yfCast()$yD
+      dR<-round(detRate(yI, yD), 4)*100
+      if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+    }
   })
   
 ##### Prediction table confirmed #####    
   output$tablePredConf <- renderTable({
-    yA <- yfCast()$yA
-    lDat <- projfCast()
-    nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
-    nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
-    dim(nowThen) <- c(1, 2)
-    colnames(nowThen)<-c("Now", "In 10 days (min-max)")
-    nowThen
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      lDat <- projfCast()
+      nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
+      nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
+      dim(nowThen) <- c(1, 2)
+      colnames(nowThen)<-c("Now", "In 10 days (min-max)")
+      nowThen
+    }
   }, rownames = FALSE)
   
 ##### Prediction table true #####    
   output$tablePredTrue <- renderTable({
-    yA <- yfCast()$yA
-    yD <- yfCast()$yD
-    yI <- yfCast()$yI
-    dRate <- detRate(yI, yD)
-    nowDiag <- tail(yA[!is.na(yA)], 1)
-    nowUndet <- nowDiag/dRate - nowDiag
-    nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
-#    if (is.na(nowUndiag)) nowUndiag <- 0
-    if (nowUndiag<0) nowUndiag <- 0
-    nowTotal <- nowDiag+nowUndiag+nowUndet
-    nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
-    dim(nowTable) <- c(4, 1)
-    rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
-    nowTable
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      yD <- yfCast()$yD
+      yI <- yfCast()$yI
+      dRate <- detRate(yI, yD)
+      nowDiag <- tail(yA[!is.na(yA)], 1)
+      nowUndet <- nowDiag/dRate - nowDiag
+      nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
+      if (nowUndiag<0) nowUndiag <- 0
+      nowTotal <- nowDiag+nowUndiag+nowUndet
+      nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
+      dim(nowTable) <- c(4, 1)
+      rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
+      nowTable
+    }
   }, rownames = TRUE, colnames = FALSE)
   
 ##### Reactive expressions for growth page #####    
