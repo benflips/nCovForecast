@@ -117,6 +117,7 @@ regionAgg<-function(x, regionCol, regionName = "Region"){
 }
 
 # calculates a national aggregate and appends to dataframe
+  # must be called after regionAgg
 natAgg <-function(tsDF, aggName = "National aggregate"){
   cAgg <- colSums(tsDF[,-1])
   dim(cAgg)<-c(1, length(cAgg))
