@@ -117,7 +117,7 @@ server <- function(input, output, session) {
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
     dim(out) <-c(1,2)
-    colnames(out) <- c("Total", "Deaths")
+    colnames(out) <- c("Infections", "Deaths")
     format(out, big.mark = ",")
   }, rownames = FALSE)
   
@@ -235,7 +235,7 @@ server <- function(input, output, session) {
                    type = "bar", 
                    showlegend = FALSE, 
                    marker = list(color = clrLight),
-                   name = "Daily Deaths",
+                   name = "Daily deaths",
                    hoverinfo = "text+name", 
                    text = paste(format(dailyDeaths$dates, "%b %d"), format(round(dailyDeaths$dailyDeaths, 0), big.mark = ",")))
     fig <- fig %>% layout(xaxis = list(range = plotRange(),
