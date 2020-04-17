@@ -70,6 +70,10 @@ The second plot on the "Growth rate and curve-flattening" tab places a smoother 
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
+### Daily deaths
+
+Daily deaths ($F_t$) is a simple calculation ($F_t = D_t -D_{t-1}$) where ($D_t$) is the cumulative number of deaths at time $t$, and ($D_{t-1}$) is the cumulative number of deaths the day before. 
+
 ## Media enquiries
 
 
