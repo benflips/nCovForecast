@@ -32,7 +32,7 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-  please_select_a_country <- 'Please select a country...'
+  please_select_a_country <- 'Please select a country or region...'
   
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
