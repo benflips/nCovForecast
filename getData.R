@@ -58,7 +58,7 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
   timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
   timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
 
-# Test for structural irregularities
+# Test for structural irregularities in data before proceeding any further
   # US and global data are up to the same date
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
   # Infection and death data have same number of rows
