@@ -250,7 +250,7 @@ server <- function(input, output, session) {
     datI <- yfCast()$yI
     datD <- yfCast()$yD
     # generate detection vector
-    detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)*100
+    detVec <- detRate(infd = datI, caseFatalityRatio=input$fatalityRateSlider, deaths = datD, pointEst = FALSE)*100
     # smooth with moving average
     detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
     # organise into dataframe for plotting
@@ -282,7 +282,7 @@ server <- function(input, output, session) {
   output$detRate <- renderText({
     yI <- yfCast()$yI
     yD <- yfCast()$yD
-    dR<-round(detRate(yI, yD), 4)*100
+    dR<-round(detRate(yI, yD, caseFatalityRatio=input$fatalityRateSlider), 4)*100
     if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
   })
   
@@ -302,7 +302,7 @@ server <- function(input, output, session) {
     yA <- yfCast()$yA
     yD <- yfCast()$yD
     yI <- yfCast()$yI
-    dRate <- detRate(yI, yD)
+    dRate <- detRate(yI, yD, caseFatalityRatio=input$fatalityRateSlider)
     nowDiag <- tail(yA[!is.na(yA)], 1)
     nowUndet <- nowDiag/dRate - nowDiag
     nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
