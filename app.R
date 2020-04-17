@@ -223,7 +223,29 @@ server <- function(input, output, session) {
               config(displayModeBar = FALSE)
   })
 
-##### New cases ##### 
+##### Daily Deaths ##### 
+  output$dailyDeaths <- renderPlotly({
+    yD <- yfCast()$yD
+    clrLight<-"#B2C3D5"
+    dailyDeaths <- diff(yD)
+    dailyDeaths <- data.frame(dates = as.Date(names(dailyDeaths), format = "%m.%d.%y"), dailyDeaths)
+        fig <- plot_ly(dailyDeaths, 
+                   x = ~dates, 
+                   y = ~dailyDeaths, 
+                   type = "bar", 
+                   showlegend = FALSE, 
+                   marker = list(color = clrLight),
+                   name = "Daily Deaths",
+                   hoverinfo = "text+name", 
+                   text = paste(format(dailyDeaths$dates, "%b %d"), format(round(dailyDeaths$dailyDeaths, 0), big.mark = ",")))
+    fig <- fig %>% layout(xaxis = list(range = plotRange(),
+                                      title = list(text = "Date")),
+                          yaxis = list(title = list(text = "Number of daily deaths"))
+                    ) %>%
+                    config(displayModeBar = FALSE)
+  })
+  
+  ##### New cases ##### 
   output$newCases <- renderPlotly({
     yI <- yfCast()$yI
     yA <- yfCast()$yA
@@ -244,7 +266,7 @@ server <- function(input, output, session) {
                     config(displayModeBar = FALSE)
   })
   
-##### Detection Plot #####   
+##### Detection Plot #####
   output$detPlot <- renderPlotly({
     # get data subsets
     datI <- yfCast()$yI
