@@ -266,7 +266,7 @@ server <- function(input, output, session) {
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
                                        range = xRange),
-                          yaxis = list(title = list(text = "Percentage of cases detected per day"))
+                          yaxis = list(title = list(text = "Cases successfully detected (%)"))
     ) %>%
       config(displayModeBar = FALSE)
     
