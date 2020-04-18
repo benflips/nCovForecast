@@ -33,7 +33,7 @@ misMatchJHU <- timeSeriesInfections$Region[! timeSeriesInfections$Region %in% d$
 d$Country[d$Country=="Burkina"] <- "Burkina Faso"
 d$Country[d$Country=="Congo, Democratic Republic of"] <- "Congo (Kinshasa)"
 d$Country[d$Country=="Congo"] <- "Congo (Brazzaville)"
-d$Country[d$Country=="Burma (Myanmar)"] <- "Burma"
+d$Country[d$Country=="Burma (Myanmar)"] <- "Myanmar"
 d$Country[d$Country=="Cape Verde"] <- "Cabo Verde"
 d$Country[d$Country=="Ivory Coast"] <- "Cote d'Ivoire"
 d$Country[d$Country=="CZ"] <- "Czechia"

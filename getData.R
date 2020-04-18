@@ -119,6 +119,13 @@ if (test1 & test2 & test3){
   timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
   timeSeriesActive <- natAgg(timeSeriesActive, aggName = "Global aggregate")
   
+  # Make continent aggregates
+  load("dat/Continents/ContinentData.RData")
+  timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
+  timeSeriesDeaths <- continentAgg(timeSeriesDeaths, continentData)
+  timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
+  timeSeriesActive <- continentAgg(timeSeriesActive, continentData)
+  
   ## Define menus
   # get region names with 20 or more cases as of yesterday
   ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]

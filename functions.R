@@ -29,6 +29,11 @@ loadData <- function(path){
   d <- d[, colnames(d) %in% c("Country.Region", "Province.State") | dateCols(d)] # throw away unwanted columns
   names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
   d <- d[c(2, 1, 3:ncol(d))] # reorder so country.region is first
+  # remove unwanted rows
+  unwanted <- c("Diamond Princess", "MS Zaandam")
+  d <- subset(d, !(d$Country.Region %in% unwanted | d$Province.State %in% unwanted))
+  # rename Burma
+  d$Country.Region[d$Country.Region=="Burma"] <- "Myanmar"
   d
 }
 
@@ -116,6 +121,7 @@ regionAgg<-function(x, regionCol, regionName = "Region"){
   out
 }
 
+
 # calculates a national aggregate and appends to dataframe
   # must be called after regionAgg
 natAgg <-function(tsDF, aggName = "National aggregate"){
@@ -124,6 +130,16 @@ natAgg <-function(tsDF, aggName = "National aggregate"){
   cAgg <- data.frame(Region = aggName, cAgg, stringsAsFactors = FALSE)
   colnames(cAgg) <- colnames(tsDF)
   rbind(cAgg, tsDF)
+}
+
+# aggregates to ocontinents
+  # called after regionAgg and natAgg takes case data frame and continent datafram
+  # returns case data fram with continents in rows 2-7
+continentAgg <- function(tsDF, contData){
+  ts <- subset(tsDF, tsDF$Region %in% contData$Country)
+  ts$Region <- contData$Continent[match(ts$Region, contData$Country)]
+  ts <- regionAgg(ts, regionCol = ts$Region)
+  rbind(tsDF[1,], ts, tsDF[-1,])
 }
 
 # calculates the curve flatenning index.
