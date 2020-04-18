@@ -132,15 +132,15 @@ function openTab(evt, tabName) {
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, label = "Fit window:", post = "days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
 
-        <h3>Fatality rate:</h3>
-        {{ sliderInput(inputId = "fatalityRateSlider", min=1, max=4, value=3.3, step=0.1, label = "Fatality rate:", post="%") }}
-
         <h2>Detection</h2>
 
-        <p>Detection rate:</p>
+        <p>Cases successfully detected:</p>
         <div class="center">{{ textOutput(outputId = "detRate") }}</div>
 
         <p>Possible number of cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
+        
+         {{ sliderInput(inputId = "fatalityRateSlider", min=1, max=4, value=3.3, step=0.1, label = "Fatality ratio:", post="%") }}
+        <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
         <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
         
         <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
