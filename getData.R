@@ -58,7 +58,7 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
   timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
   timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
 
-# Test for structural irregularities
+# Test for structural irregularities in data before proceeding any further
   # US and global data are up to the same date
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
   # Infection and death data have same number of rows
@@ -112,6 +112,19 @@ if (test1 & test2 & test3){
   timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
   timeSeriesRecoveries <- regionAgg(std$tsR, regionCol = std$tsR$Country.Region, regionName = "Region")
   timeSeriesActive     <- regionAgg(std$tsA, regionCol = std$tsA$Country.Region, regionName = "Region")
+  
+  # create global aggregate row
+  timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
+  timeSeriesDeaths <- natAgg(timeSeriesDeaths, aggName = "Global aggregate")
+  timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
+  timeSeriesActive <- natAgg(timeSeriesActive, aggName = "Global aggregate")
+  
+  # Make continent aggregates
+  load("dat/Continents/ContinentData.RData")
+  timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
+  timeSeriesDeaths <- continentAgg(timeSeriesDeaths, continentData)
+  timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
+  timeSeriesActive <- continentAgg(timeSeriesActive, continentData)
   
   ## Define menus
   # get region names with 20 or more cases as of yesterday
