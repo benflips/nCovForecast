@@ -55,7 +55,7 @@
 <br><br><br><br>
         <h1 class="center" style="padding-top:40px;">{{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast</h1>
         <h2>As of  {{ format(dates[length(dates)], "%d %B %Y") }} </h2>
-        <p>Provides estimates of near-future COVID-19 cases in each country, updated daily, based on global data aggregated by Johns Hopkins University</p>
+        <p>Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by Johns Hopkins University</p>
 
 <script>
 function openTab(evt, tabName) {
@@ -128,7 +128,8 @@ function openTab(evt, tabName) {
         
         <h3>Doubling time:</h3>
         <div class="center">{{ textOutput(outputId = "doubTime") }}</div>
-
+        <p>Negative doubling time indicates halving time.</p>
+        
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, label = "Fit window:", post = "days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
 
@@ -141,7 +142,7 @@ function openTab(evt, tabName) {
         
          {{ sliderInput(inputId = "fatalityRateSlider", min=1, max=4, value=3.3, step=0.1, label = "Fatality ratio:", post="%") }}
         <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
-        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the country than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
+        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
         
         <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
 
@@ -187,7 +188,7 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("growthRate") }}
 
         <h3>Curve flattening index</h3>
-        <p>This is a measure of how well a country is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
+        <p>This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
         <p>Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.</p>
         {{ plotlyOutput("cfi") }}
         <p>For more details see the 'About' tab.</p>

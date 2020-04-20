@@ -31,6 +31,8 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
+
+  please_select_a_country <- 'Please select a country or region...'
   
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
@@ -59,7 +61,7 @@ server <- function(input, output, session) {
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
 
     if (input$global_or_country == 'Global') {
-      updateSelectizeInput(session, "countryFinder",     selected = "US", choices = ddReg)
+      updateSelectizeInput(session, "countryFinder",  choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
       if (input$global_or_country == 'Australia') {
@@ -123,196 +125,214 @@ server <- function(input, output, session) {
   
 ##### Raw plot #####
   output$rawPlot <- renderPlotly({
-    yA <- yfCast()$yA
-    yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-    lDat <- projfCast()
-    pDat <- merge(yA, lDat, all = TRUE)
-    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-    clrDark<-"#273D6E"
-    clrLight<-"#B2C3D5"
-    #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
-              add_trace(y = ~fit,
-                        x = ~dates, 
-                        mode = "lines", 
-                        line = list(color = clrDark), 
-                        name = "Best fit", 
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
-              add_trace(y = ~lwr,
-                        x = ~dates,
-                        mode = "lines", 
-                        line = list(color = clrDark, dash = "dash"), 
-                        name = "CI lower bound",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
-              add_trace(y = ~upr, 
-                        x = ~dates,
-                        mode = "lines", 
-                        line = list(color = clrDark, dash = "dash"), 
-                        name = "CI upper bound",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
-              add_trace(y = ~yA, 
-                        x = ~dates,
-                        mode = "markers", 
-                        marker = list(color = clrLight), 
-                        name = "Active cases",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-              layout(showlegend = FALSE, 
-                     yaxis = list(range = list(0, yMax),
-                                  title = list(text = "Confirmed active cases"),
-                                  fixedrange = TRUE),
-                     xaxis = list(range = plotRange(),
-                                  title = list(text = ""),
-                                  fixedrange = TRUE),
-                     title = list(text = input$countryFinder)
-              ) %>%
-              config(displayModeBar = FALSE)
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
+      lDat <- projfCast()
+      pDat <- merge(yA, lDat, all = TRUE)
+      yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
+      clrDark<-"#273D6E"
+      clrLight<-"#B2C3D5"
+      #yTxt <- "Confirmed active cases"
+      fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
+                add_trace(y = ~fit,
+                          x = ~dates, 
+                          mode = "lines", 
+                          line = list(color = clrDark), 
+                          name = "Best fit", 
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
+                add_trace(y = ~lwr,
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark, dash = "dash"), 
+                          name = "CI lower bound",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
+                add_trace(y = ~upr, 
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark, dash = "dash"), 
+                          name = "CI upper bound",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
+                add_trace(y = ~yA, 
+                          x = ~dates,
+                          mode = "markers", 
+                          marker = list(color = clrLight), 
+                          name = "Active cases",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                layout(showlegend = FALSE, 
+                       yaxis = list(range = list(0, yMax),
+                                    title = list(text = "Confirmed active cases"),
+                                    fixedrange = TRUE),
+                       xaxis = list(range = plotRange(),
+                                    title = list(text = ""),
+                                    fixedrange = TRUE),
+                       title = list(text = input$countryFinder)
+                ) %>%
+                config(displayModeBar = FALSE)
+    }
   })
   
 ##### Log plot #####
   output$logPlot <- renderPlotly({
-    yA <- yfCast()$yA
-    yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-    lDat <- projfCast()
-    pDat <- merge(yA, lDat, all = TRUE)
-    yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-    clrDark<-"#273D6E"
-    clrLight<-"#B2C3D5"
-    #yTxt <- "Confirmed active cases"
-    fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
-              add_trace(y = ~fit,
-                        x = ~dates,
-                        mode = "lines", 
-                        line = list(color = clrDark), 
-                        name = "Best fit",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
-              add_trace(y = ~lwr, 
-                        x = ~dates,
-                        mode = "lines", 
-                        line = list(color = clrDark, dash = "dash"), 
-                        name = "CI lower bound",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
-              add_trace(y = ~upr, 
-                        x = ~dates,
-                        mode = "lines", 
-                        line = list(color = clrDark, dash = "dash"), 
-                        name = "CI upper bound",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
-              add_trace(y = ~yA, 
-                        x = ~dates,
-                        mode = "markers", 
-                        marker = list(color = clrLight), 
-                        name = "Active cases",
-                        hoverinfo = "text+name", 
-                        text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-              layout(showlegend = FALSE, 
-                     yaxis = list(type = "log",
-                                  range = list(log10(0.1), log10(yMax)),
-                                  title = list(text = "Confirmed active cases (log scale)"),
-                                  fixedrange = TRUE),
-                     xaxis = list(range = plotRange(),
-                                  title = list(text = ""),
-                                  fixedrange = TRUE)
-              ) %>%
-              config(displayModeBar = FALSE)
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
+      lDat <- projfCast()
+      pDat <- merge(yA, lDat, all = TRUE)
+      yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
+      clrDark<-"#273D6E"
+      clrLight<-"#B2C3D5"
+      #yTxt <- "Confirmed active cases"
+      fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
+                add_trace(y = ~fit,
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark), 
+                          name = "Best fit",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
+                add_trace(y = ~lwr, 
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark, dash = "dash"), 
+                          name = "CI lower bound",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
+                add_trace(y = ~upr, 
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark, dash = "dash"), 
+                          name = "CI upper bound",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
+                add_trace(y = ~yA, 
+                          x = ~dates,
+                          mode = "markers", 
+                          marker = list(color = clrLight), 
+                          name = "Active cases",
+                          hoverinfo = "text+name", 
+                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                layout(showlegend = FALSE, 
+                       yaxis = list(type = "log",
+                                    range = list(log10(0.1), log10(yMax)),
+                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    fixedrange = TRUE),
+                       xaxis = list(range = plotRange(),
+                                    title = list(text = ""),
+                                    fixedrange = TRUE)
+                ) %>%
+                config(displayModeBar = FALSE)
+    }
   })
 
 ##### New cases ##### 
   output$newCases <- renderPlotly({
-    yI <- yfCast()$yI
-    yA <- yfCast()$yA
-    newCases <- diff(yI)
-    newCases <- data.frame(dates = as.Date(names(newCases), format = "%m.%d.%y"), newCases)
-    fig <- plot_ly(newCases, 
-                   x = ~dates, 
-                   y = ~newCases, 
-                   type = "bar", 
-                   showlegend = FALSE, 
-                   name = "New cases",
-                   hoverinfo = "text+name", 
-                   text = paste(format(newCases$dates, "%b %d"), format(round(newCases$newCases, 0), big.mark = ",")))
-    fig <- fig %>% layout(xaxis = list(range = plotRange(),
-                                      title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Number of new cases"))
-                    ) %>%
-                    config(displayModeBar = FALSE)
+    if (input$countryFinder != '') {
+      yI <- yfCast()$yI
+      yA <- yfCast()$yA
+      newCases <- diff(yI)
+      newCases <- data.frame(dates = as.Date(names(newCases), format = "%m.%d.%y"), newCases)
+      fig <- plot_ly(newCases, 
+                     x = ~dates, 
+                     y = ~newCases, 
+                     type = "bar", 
+                     showlegend = FALSE, 
+                     name = "New cases",
+                     hoverinfo = "text+name", 
+                     text = paste(format(newCases$dates, "%b %d"), format(round(newCases$newCases, 0), big.mark = ",")))
+      fig <- fig %>% layout(xaxis = list(range = plotRange(),
+                                        title = list(text = "Date")),
+                            yaxis = list(title = list(text = "Number of new cases"))
+                      ) %>%
+                      config(displayModeBar = FALSE)
+    }
   })
   
 ##### Detection Plot #####   
   output$detPlot <- renderPlotly({
-    # get data subsets
-    datI <- yfCast()$yI
-    datD <- yfCast()$yD
-    # generate detection vector
-    detVec <- detRate(infd = datI, caseFatalityRatio=input$fatalityRateSlider, deaths = datD, pointEst = FALSE)*100
-    # smooth with moving average
-    detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
-    # organise into dataframe for plotting
-    pDet <- data.frame(dates = as.Date(names(datI), format = "%m.%d.%y"), detVec)
-    xRange <- as.list(range(na.omit(pDet)$dates))
-    # make the plot
-    fig <- plot_ly(pDet, type = "scatter", mode = "none", showlegend = FALSE)
-    fig <- fig %>% add_trace(y = ~detVec,
+    if (input$countryFinder != '') {
+      # get data subsets
+      datI <- yfCast()$yI
+      datD <- yfCast()$yD
+      # generate detection vector
+      detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE)*100
+      # smooth with moving average
+      detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
+      # organise into dataframe for plotting
+      pDet <- data.frame(dates = as.Date(names(datI), format = "%m.%d.%y"), detVec)
+      xRange <- as.list(range(na.omit(pDet)$dates))
+      # make the plot
+      fig <- plot_ly(pDet, type = "scatter", mode = "none", showlegend = FALSE)
+      fig <- fig %>% add_trace(y = ~detVec,
                                x = ~dates,
                                mode = "lines+markers", 
                                name = "Detection",
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
-                                       range = xRange),
-                          yaxis = list(title = list(text = "Cases successfully detected (%)"))
-    ) %>%
-      config(displayModeBar = FALSE)
-    
+      fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
+                                         range = xRange),
+                            yaxis = list(title = list(text = "Percentage of cases detected per day"))
+      ) %>%
+        config(displayModeBar = FALSE)
+    }
   })
   
 ##### Doubling time ##### 
   output$doubTime <- renderText({
-    pDat <- yfCast()$yA
-    dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+    if (input$countryFinder == '') {
+      please_select_a_country
+    } else {
+      pDat <- yfCast()$yA
+      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+    }
   })
   
 ##### Detection rate #####    
   output$detRate <- renderText({
-    yI <- yfCast()$yI
-    yD <- yfCast()$yD
-    dR<-round(detRate(yI, yD, caseFatalityRatio=input$fatalityRateSlider), 4)*100
-    if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+    if (input$countryFinder == '') {
+      please_select_a_country
+    } else {
+      yI <- yfCast()$yI
+      yD <- yfCast()$yD
+      dR<-round(detRate(yI, yD), 4)*100
+      if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+    }
   })
   
 ##### Prediction table confirmed #####    
   output$tablePredConf <- renderTable({
-    yA <- yfCast()$yA
-    lDat <- projfCast()
-    nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
-    nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
-    dim(nowThen) <- c(1, 2)
-    colnames(nowThen)<-c("Now", "In 10 days (min-max)")
-    nowThen
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      lDat <- projfCast()
+      nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
+      nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
+      dim(nowThen) <- c(1, 2)
+      colnames(nowThen)<-c("Now", "In 10 days (min-max)")
+      nowThen
+    }
   }, rownames = FALSE)
   
 ##### Prediction table true #####    
   output$tablePredTrue <- renderTable({
-    yA <- yfCast()$yA
-    yD <- yfCast()$yD
-    yI <- yfCast()$yI
-    dRate <- detRate(yI, yD, caseFatalityRatio=input$fatalityRateSlider)
-    nowDiag <- tail(yA[!is.na(yA)], 1)
-    nowUndet <- nowDiag/dRate - nowDiag
-    nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
-#    if (is.na(nowUndiag)) nowUndiag <- 0
-    if (nowUndiag<0) nowUndiag <- 0
-    nowTotal <- nowDiag+nowUndiag+nowUndet
-    nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
-    dim(nowTable) <- c(4, 1)
-    rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
-    nowTable
+    if (input$countryFinder != '') {
+      yA <- yfCast()$yA
+      yD <- yfCast()$yD
+      yI <- yfCast()$yI
+      dRate <- detRate(yI, yD)
+      nowDiag <- tail(yA[!is.na(yA)], 1)
+      nowUndet <- nowDiag/dRate - nowDiag
+      nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
+      if (nowUndiag<0) nowUndiag <- 0
+      nowTotal <- nowDiag+nowUndiag+nowUndet
+      nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
+      dim(nowTable) <- c(4, 1)
+      rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
+      nowTable
+    }
   }, rownames = TRUE, colnames = FALSE)
   
 ##### Reactive expressions for growth page #####    
