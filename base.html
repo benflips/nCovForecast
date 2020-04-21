@@ -140,7 +140,7 @@ function openTab(evt, tabName) {
 
         <p>Possible number of cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
         
-         {{ sliderInput(inputId = "fatalityRateSlider", min=1, max=4, value=3.3, step=0.1, label = "Case Fatality ratio:", post="%") }}
+         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case Fatality ratio:", post="%") }}
         <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
         <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
         

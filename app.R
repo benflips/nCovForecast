@@ -259,7 +259,7 @@ server <- function(input, output, session) {
       datI <- yfCast()$yI
       datD <- yfCast()$yD
       # generate detection vector
-      detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE, caseFatalityRatio = input$fatalityRateSlider)*100
+      detVec <- detRate(infd = datI, deaths = datD, pointEst = FALSE, caseFatalityRatio = input$fatalityRatioSlider)*100
       # smooth with moving average
       detVec <- stats::filter(detVec, rep(1 / 3, 3), sides = 1) #3-day moving average
       # organise into dataframe for plotting
@@ -298,7 +298,7 @@ server <- function(input, output, session) {
     } else {
       yI <- yfCast()$yI
       yD <- yfCast()$yD
-      dR<-round(detRate(yI, yD, caseFatalityRatio = input$fatalityRateSlider), 4)*100
+      dR<-round(detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider), 4)*100
       if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
     }
   })
@@ -322,7 +322,7 @@ server <- function(input, output, session) {
       yA <- yfCast()$yA
       yD <- yfCast()$yD
       yI <- yfCast()$yI
-      dRate <- detRate(yI, yD, caseFatalityRatio = input$fatalityRateSlider)
+      dRate <- detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider)
       nowDiag <- tail(yA[!is.na(yA)], 1)
       nowUndet <- nowDiag/dRate - nowDiag
       nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
