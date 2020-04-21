@@ -143,6 +143,9 @@ function openTab(evt, tabName) {
          {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case Fatality ratio:", post="%") }}
         <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
         <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
+
+        <p>The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
+        <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.</p>
         
         <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
 
@@ -157,9 +160,6 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("newCases") }}
         <p></p>
         {{ plotlyOutput("detPlot") }}
-        <p>This last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
-        <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.  See "About" for more details.</p>
-
       </div>
     </section>
   </div>
