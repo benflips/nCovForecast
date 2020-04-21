@@ -170,7 +170,8 @@ server <- function(input, output, session) {
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
                                     fixedrange = TRUE),
-                       title = list(text = input$countryFinder)
+                       title = list(text = input$countryFinder),
+                       autosize = F
                 ) %>%
                 config(displayModeBar = FALSE)
     }
@@ -223,7 +224,8 @@ server <- function(input, output, session) {
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
-                                    fixedrange = TRUE)
+                                    fixedrange = TRUE),
+                       autosize = F
                 ) %>%
                 config(displayModeBar = FALSE)
     }
@@ -246,7 +248,8 @@ server <- function(input, output, session) {
                      text = paste(format(newCases$dates, "%b %d"), format(round(newCases$newCases, 0), big.mark = ",")))
       fig <- fig %>% layout(xaxis = list(range = plotRange(),
                                         title = list(text = "Date")),
-                            yaxis = list(title = list(text = "Number of new cases"))
+                            yaxis = list(title = list(text = "Number of new cases")),
+                            autosize = F
                       ) %>%
                       config(displayModeBar = FALSE)
     }
@@ -275,7 +278,8 @@ server <- function(input, output, session) {
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
                                          range = xRange),
-                            yaxis = list(title = list(text = "Percentage of cases detected per day"))
+                            yaxis = list(title = list(text = "Percentage of cases detected per day")),
+                            autosize = F
       ) %>%
         config(displayModeBar = FALSE)
     }
@@ -365,7 +369,8 @@ server <- function(input, output, session) {
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
                           yaxis = list(title = list(text = "Curve-flattening index"),
-                                       range = yRange)
+                                       range = yRange),
+                          autosize = F
                     ) %>%
                     config(displayModeBar = FALSE)
     
@@ -394,7 +399,8 @@ server <- function(input, output, session) {
                                text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Growth rate (% per day)"))
+                          yaxis = list(title = list(text = "Growth rate (% per day)")),
+                          autosize = F
                     ) %>%
                    config(displayModeBar = FALSE)
   })
