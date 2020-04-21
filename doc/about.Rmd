@@ -19,11 +19,11 @@ The app relies on relatively simple heuristics rather than comprehensive analyse
 
 ### Raw case numbers
 
-Our data come from the [John Hopkins University dataset](https://github.com/CSSEGISandData/COVID-19), which is updated daily.  Country to continent associations come from [this file](https://github.com/dbouquin/IS_608/blob/master/NanosatDB_munging/Countries-Continents.csv).  These data report the cumulative number of infections ($I_t$) and number of deaths ($D_t$) in each country.  The raw case numbers are simply a report of their raw numbers for the selected country at the current date.
+Our data come from the [John Hopkins University dataset](https://github.com/CSSEGISandData/COVID-19), which is updated daily.  Country to continent associations come from [this file](https://github.com/dbouquin/IS_608/blob/master/NanosatDB_munging/Countries-Continents.csv).  These data report for each country the cumulative number of infections ($I_t$), number of deaths ($D_t$), and (for most countries) number of recoveries ($R_t$).  The raw case numbers we report are simply a report of the JHU raw numbers for the selected country at the current date.  We also provide aggregate tallies for each continent, and the world.
 
 ### Current active cases
 
-Active cases ($A_t$) are simply $A_t = I_t-D_t-R_t$ where $R_t$ is cumulative recoveries at time $t$.  As of 23 March, however, JHU no longer report recoveries in the US and Canada at State/Province level.  As a consequence, for these countries. we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
+Active cases ($A_t$) are simply $A_t = I_t-D_t-R_t$ where $t$ denotes time.  As of 23 March, however, JHU no longer report recoveries in the US and Canada at State/Province level.  As a consequence, for these countries. we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
 
 ### Growth model and forecast of active cases
 
