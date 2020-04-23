@@ -120,7 +120,7 @@ if (test1 & test2 & test3){
   timeSeriesActive <- natAgg(timeSeriesActive, aggName = "Global aggregate")
   
   # Make continent aggregates
-  load("dat/Continents/ContinentData.RData")
+  load("dat/Continents/continentData.RData")
   timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
   timeSeriesDeaths <- continentAgg(timeSeriesDeaths, continentData)
   timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
