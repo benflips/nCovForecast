@@ -56,6 +56,10 @@ timeSeriesDeathsUS        <-loadData(tsDeathUS)
 timeSeriesDeathsIndia     <-loadData(tsDeathIndia)
 timeSeriesRecoveries      <-loadData(tsRec)
 
+timeSeriesInfections <- rbind(timeSeriesInfections, timeSeriesInfectionsIndia)
+timeSeriesDeaths     <- rbind(timeSeriesDeaths,     timeSeriesDeathsIndia)
+
+
 rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec) # tidy up
 
 #aggregate US data to Province.State
@@ -76,24 +80,26 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
 if (test1 & test2 & test3){
+
   # Merge US data with global dataframes
-  timeSeriesInfections <- rbind(subset(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US"), timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsUS, timeSeriesInfectionsIndia)
-  timeSeriesDeaths <- rbind(subset(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US"), timeSeriesDeaths$Country.Region!="India") , timeSeriesDeathsUS, timeSeriesDeathsIndia)
+  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region != "US"), timeSeriesInfectionsUS)
+  timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     != "US"), timeSeriesDeathsUS)
+
   
-  rm(timeSeriesDeathsUS, timeSeriesInfectionsUS, timeSeriesDeathsIndia, timeSeriesInfectionsIndia) #tidy up
+  rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
   
   # a check
   #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
   
-  # take US, Canada, India data, and generate recovery data assuming ttr
-  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US", "India"))
-  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US", "India"))
+  # take US, Canada and generate recovery data assuming ttr
+  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
+  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
   recSub   <- recLag(infSub, deathSub, active = FALSE)
   
 
-  # Merge US, Canada, India estimated recoveries on to known recoveries
-  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada", "India"))) , recSub)
-  
+  # Merge US, Canada estimated recoveries on to known recoveries
+  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
+
 
   # a check
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
