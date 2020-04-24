@@ -43,7 +43,8 @@ loadData <- function(path){
 internalAgg <- function(tsDF, country){
   ssCol <- dateCols(tsDF)
   temp <- subset(tsDF, tsDF$Country.Region==country)
-  agg <- countryAgg(temp)
+#  agg <- countryAgg(temp)
+  agg <- natAgg(temp)
   bRow <- temp[1,]
   bRow[ssCol] <- agg[,-1]
   tsDF <- subset(tsDF, tsDF$Country.Region!=country)
