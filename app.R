@@ -241,23 +241,50 @@ server <- function(input, output, session) {
 ##### New cases ##### 
   output$newCases <- renderPlotly({
     if (input$countryFinder != '') {
-      yI <- yfCast()$yI
-      yA <- yfCast()$yA
-      newCases <- diff(yI)
-      newCases <- data.frame(dates = as.Date(names(newCases), format = "%m.%d.%y"), newCases)
-      fig <- plot_ly(newCases, 
-                     x = ~dates, 
-                     y = ~newCases, 
-                     type = "bar", 
-                     showlegend = FALSE, 
-                     name = "New cases",
-                     hoverinfo = "text+name", 
-                     text = paste(format(newCases$dates, "%b %d"), format(round(newCases$newCases, 0), big.mark = ",")))
-      fig <- fig %>% layout(xaxis = list(range = plotRange(),
-                                        title = list(text = "Date")),
-                            yaxis = list(title = list(text = "Number of new cases"))
-                      ) %>%
-                      config(displayModeBar = FALSE)
+      yI <- yfCast()$yI # Infected
+      yD <- yfCast()$yD # Deaths
+      clrDark<-"#273D6E"
+      clrLight<-"#B2C3D5"
+      clrOrange<-"#FF7F0E"
+      # Calculate new cases
+      newCases <- diff(yI) 
+      # Format the date
+      newCases <- data.frame(dates = as.Date(names(newCases), format = "%m.%d.%y"), newCases) 
+      
+      # Calculate daily deaths
+      dailyDeaths <- diff(yD) 
+      
+      # Second Y-axis details
+      deathsay <- list(
+        overlaying = "y",
+        side = "right",
+        title = "Number of daily deaths")
+      
+      fig <- plot_ly(newCases, mode = "none") %>%
+        add_bars(y = ~newCases,
+                 x = ~dates, 
+                 name = "new cases", 
+                 marker = list(color = clrOrange), 
+                 text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
+                 hoverinfo = "text+name",
+                 offsetgroup = 1
+        ) %>%
+        add_bars(y = ~dailyDeaths,
+                 x = ~dates,
+                 name = "daily deaths",
+                 marker = list(color = clrLight),
+                 text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
+                 hoverinfo = "text+name",
+                 yaxis = "y2",
+                 offsetgroup = 2
+        ) %>%
+        layout(xaxis = list(range = plotRange(),
+                            title = list(text = "Date")),
+               yaxis = list(title = list(text = "Number of new cases")),
+               yaxis2 = deathsay,
+               barmode = 'group'
+        ) %>%
+        config(displayModeBar = FALSE)      
     }
   })
   
