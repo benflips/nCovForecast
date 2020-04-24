@@ -56,11 +56,14 @@ timeSeriesDeathsUS        <-loadData(tsDeathUS)
 timeSeriesDeathsIndia     <-loadData(tsDeathIndia)
 timeSeriesRecoveries      <-loadData(tsRec)
 
+
+# add in 32 Indian states
 timeSeriesInfections <- rbind(timeSeriesInfections, timeSeriesInfectionsIndia)
 timeSeriesDeaths     <- rbind(timeSeriesDeaths,     timeSeriesDeathsIndia)
 
 
-rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec) # tidy up
+
+rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec, timeSeriesInfectionsIndia, timeSeriesDeathsIndia) # tidy up
 
 #aggregate US data to Province.State
 timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
@@ -95,11 +98,10 @@ if (test1 & test2 & test3){
   infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
   deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
   recSub   <- recLag(infSub, deathSub, active = FALSE)
-  
+
 
   # Merge US, Canada estimated recoveries on to known recoveries
   timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
-
 
   # a check
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
