@@ -100,6 +100,15 @@ server <- function(input, output, session) {
     projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
   })
   
+  # adjust slide input given model type
+  observe({
+    if (input$modelType){
+      updateSliderInput(session, "fitWinSlider", value = 15, min = 10, max = 25)
+    } else {
+      updateSliderInput(session, "fitWinSlider", value = 7, min = 3, max = 10)
+    }
+  })
+  
   plotRange <- reactive({ # get date range to plot
     yA <- yfCast()$yA
     dFrame <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
