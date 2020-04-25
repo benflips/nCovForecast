@@ -97,7 +97,7 @@ server <- function(input, output, session) {
   })
   
   projfCast <- reactive({ # projection for forecast
-    projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider)
+    projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
   })
   
   plotRange <- reactive({ # get date range to plot
