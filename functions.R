@@ -175,17 +175,17 @@ detRate<-function(infd, deaths, caseFatalityRatio = 3.3, ttd=17, window=5, point
 
 # Simple projection based on growth over last inWindow days
   # returns extended plotting data
-projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, constantGrowth = TRUE){
+projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth = FALSE){
   nn <- length(rawN)
   ss <- (nn-inWindow+1):nn
   x <- c(rawTime[ss], rawTime[nn]+1:extWindow)
   lnN <- log(rawN[ss])
   lnN[is.infinite(lnN)]<-NA
   tIn <- rawTime[ss]
-  if (constantGrowth){
-    mFit <- lm(lnN~tIn)
-  } else {
+  if (timeVaryingGrowth){
     mFit <- lm(lnN~poly(tIn, 2))
+  } else {
+    mFit <- lm(lnN~tIn)
   }
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
