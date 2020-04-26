@@ -33,6 +33,7 @@ d <- gsheet2tbl(baseURL)
 d$Date <- as.Date(d$Date, format = "%d/%m/%Y")
 # throw out columns we don't need
 d <- d[, c("State", "Date", "Cumulative case count", "Cumulative deaths", "Recovered (cumulative)")]
+d <- subset(d, d$Date<=max(dates))
 # enforce dates as per JHU dataset -- dates object comes from getData.R
 d$Date <- factor(d$Date, levels = levels(factor(dates))) 
 
@@ -83,6 +84,13 @@ auI <- data.frame(Country.Region, Province.State, auI, check.names = FALSE)
 auD <- data.frame(Country.Region, Province.State, auD, check.names = FALSE)
 auR <- data.frame(Country.Region, Province.State, auR, check.names = FALSE)
 
+names(auI) <- names(timeSeriesInfections)
+names(auD) <- names(timeSeriesInfections)
+names(auR) <- names(timeSeriesInfections)
 
+# swap out JHU with Guardian data for Australia
+timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="Australia") , auI)
+timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="Australia") , auR)
+timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region!="Australia") , auR)
 
 
