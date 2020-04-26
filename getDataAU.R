@@ -94,8 +94,11 @@ names(auD) <- names(timeSeriesInfections)
 names(auR) <- names(timeSeriesInfections)
 
 # swap out JHU with Guardian data for Australia
-timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="Australia") , auI)
-timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="Australia") , auR)
-timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region!="Australia") , auR)
+timeSeriesInfections <- rbind(subset(timeSeriesInfections, 
+                                     timeSeriesInfections$Country.Region!="Australia") , auI)
+timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, 
+                                 timeSeriesDeaths$Country.Region!="Australia") , auD)
+timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, 
+                                     timeSeriesRecoveries$Country.Region!="Australia") , auR)
 
 
