@@ -25,18 +25,23 @@ library("gsheet")
 
 ## ---------------------------
 
+# get data
 baseURL <- "https://docs.google.com/spreadsheets/d/1q5gdePANXci8enuiS4oHUJxcxC13d6bjMRSicakychE/edit#gid=1437767505"
 d <- gsheet2tbl(baseURL)
- 
+
+# format dates
 d$Date <- as.Date(d$Date, format = "%d/%m/%Y")
-
+# throw out columns we don't need
 d <- d[, c("State", "Date", "Cumulative case count", "Cumulative deaths", "Recovered (cumulative)")]
-d$Date <- factor(d$Date, levels = levels(factor(dates))) # enforce dates as per JHU dataset -- dates object comes from getData.R
+# enforce dates as per JHU dataset -- dates object comes from getData.R
+d$Date <- factor(d$Date, levels = levels(factor(dates))) 
 
+# empty variables to take results
 auI <- c()
 auD <- c()
 auR <- c()
 
+# enforces data into a cumulant -- fills NAs and corrects any (non-cumulant) errors
 makeCumulant <- function(x){
   x[1]<-0
   # push through NAs
@@ -56,6 +61,7 @@ makeCumulant <- function(x){
   x
 }
 
+# step through states and build JHU-structured dataframes.
 for (ss in unique(d$State)){
   dSub <- subset(d, d$State==ss)
   # Infections
@@ -71,9 +77,12 @@ for (ss in unique(d$State)){
   tsR <- makeCumulant(tsR)
   auR <- rbind(auR, tsR)
 }
-Region <- matrix(unique(d$State), nrow = length(unique(d$State)))
-auI <- data.frame(Region, auI, check.names = FALSE)
-auD <- data.frame(Region, auD, check.names = FALSE)
-auR <- data.frame(Region, auR, check.names = FALSE)
+Province.State <- matrix(unique(d$State), nrow = length(unique(d$State)))
+Country.Region <- matrix("Australia", nrow = length(unique(d$State)), ncol = 1)
+auI <- data.frame(Country.Region, Province.State, auI, check.names = FALSE)
+auD <- data.frame(Country.Region, Province.State, auD, check.names = FALSE)
+auR <- data.frame(Country.Region, Province.State, auR, check.names = FALSE)
+
+
 
 
