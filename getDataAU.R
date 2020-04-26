@@ -72,6 +72,8 @@ for (ss in unique(d$State)){
   auR <- rbind(auR, tsR)
 }
 Region <- matrix(unique(d$State), nrow = length(unique(d$State)))
-auI <- data.frame(Region, auI)
-auD <- data.frame(Region, auD)
-auR <- data.frame(Region, auR)
+auI <- data.frame(Region, auI, check.names = FALSE)
+auD <- data.frame(Region, auD, check.names = FALSE)
+auR <- data.frame(Region, auR, check.names = FALSE)
+
+
