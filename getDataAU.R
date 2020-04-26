@@ -24,6 +24,11 @@ library("gsheet")
 ## load up our functions into memory
 
 ## ---------------------------
+# get dates from JHU data
+## get Date range
+dCols<-dateCols(timeSeriesInfections)
+dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
+
 
 # get data
 baseURL <- "https://docs.google.com/spreadsheets/d/1q5gdePANXci8enuiS4oHUJxcxC13d6bjMRSicakychE/edit#gid=1437767505"

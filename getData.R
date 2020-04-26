@@ -58,6 +58,9 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
   timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
   timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
 
+# source alternative Australian data  from Guardian Australia. 
+source("getDataAU.R")
+  
 # Test for structural irregularities in data before proceeding any further
   # US and global data are up to the same date
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
@@ -139,7 +142,7 @@ if (test1 & test2 & test3){
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
   ## run deconvolution to estimate undiagnosed cases from cached data
-  system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
+  #system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
   load("dat/Global/estDeconv.RData")
   
   dataList$Global <- list(timeSeriesInfections = timeSeriesInfections,
@@ -191,7 +194,7 @@ if (test1 & test2 & test3){
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
-    system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
+    #system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
     load(paste0("dat/",focusCountry,"/estDeconv.RData"))
     dataList[[focusCountry]] <- list(timeSeriesInfections = timeSeriesInfections,
                                      timeSeriesDeaths = timeSeriesDeaths,
