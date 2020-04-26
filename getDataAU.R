@@ -47,22 +47,16 @@ auI <- c()
 auD <- c()
 auR <- c()
 
-# enforces data into a cumulant -- fills NAs and corrects any (non-cumulant) errors
+# tidies cumulant -- fills early NAs with zeros and interpolates missing data thereafter
 makeCumulant <- function(x){
-  x[1]<-0
-  # push through NAs
-  for (dd in 2: length(x)){
-    if (is.na(x[dd])) x[dd]<-x[dd-1]
-  }
-  # catch errors in cumulative data
-  for (dd in 2: length(x)){
-    if (!(is.na(x[dd]) | is.na(x[dd-1]))){
-      if ((x[dd]<x[dd-1])) x[x==x[dd-1]]<-NA
-    }
-  }
-  # push through NAs again
-  for (dd in 2: length(x)){
-    if (is.na(x[dd])) x[dd]<-x[dd-1]
+  if (sum(is.na(x))==length(x)) {x[1:length(x)]<-0; return(x)}
+  firstData <- min(which(!is.na(x)))
+  if (firstData > 1) x[1:(firstData-1)] <- 0
+  naFiller <-approxfun(1:length(x), x)
+  x[is.na(x)] <- round(naFiller(which(is.na(x))), 0)
+  if (sum(is.na(x))>0) {
+    lastData <- min(which(is.na(x)))
+    x[lastData:length(x)] <- x[lastData - 1]
   }
   x
 }
