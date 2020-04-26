@@ -71,15 +71,15 @@ makeCumulant <- function(x){
 for (ss in unique(d$State)){
   dSub <- subset(d, d$State==ss)
   # Infections
-  tsI <- tapply(dSub$`Cumulative case count`, INDEX = list(date = dSub$Date), FUN = sum)
+  tsI <- tapply(dSub$`Cumulative case count`, INDEX = list(date = dSub$Date), FUN = function(x){x[length(x)]})
   tsI <- makeCumulant(tsI)
   auI <- rbind(auI, tsI)
   # Deaths
-  tsD <- tapply(dSub$`Cumulative deaths`, INDEX = list(date = dSub$Date), FUN = sum)
+  tsD <- tapply(dSub$`Cumulative deaths`, INDEX = list(date = dSub$Date), FUN = function(x){x[length(x)]})
   tsD <- makeCumulant(tsD)
   auD <- rbind(auD, tsD)
   # Recoveries
-  tsR <- tapply(dSub$`Recovered (cumulative)`, INDEX = list(date = dSub$Date), FUN = sum)
+  tsR <- tapply(dSub$`Recovered (cumulative)`, INDEX = list(date = dSub$Date), FUN = function(x){x[length(x)]})
   tsR <- makeCumulant(tsR)
   auR <- rbind(auR, tsR)
 }
