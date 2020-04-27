@@ -294,6 +294,8 @@ server <- function(input, output, session) {
   output$doubTime <- renderText({
     if (input$countryFinder == '') {
       please_select_a_country
+    } else if (input$modelType){
+      "Not calculated under time-varying growth"
     } else {
       pDat <- yfCast()$yA
       dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
