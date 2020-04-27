@@ -39,12 +39,12 @@ if (server){
 } else {  
   tsConf       <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsConfUS     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-#  tsConfIndia  <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
-  tsConfIndia  <- "/home/unimelb.edu.au/miwals/confirmed.csv"
+  tsConfIndia  <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
+#  tsConfIndia  <- "/home/unimelb.edu.au/miwals/confirmed.csv"
   tsDeath      <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   tsDeathUS    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-#  tsDeathIndia <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
-  tsDeathIndia <- "/home/unimelb.edu.au/miwals/deaths.csv"
+  tsDeathIndia <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
+#  tsDeathIndia <- "/home/unimelb.edu.au/miwals/deaths.csv"
   tsRec        <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
@@ -58,8 +58,12 @@ timeSeriesRecoveries      <-loadData(tsRec)
 
 
 # add in 32 Indian states
-timeSeriesInfections <- rbind(timeSeriesInfections, timeSeriesInfectionsIndia)
-timeSeriesDeaths     <- rbind(timeSeriesDeaths,     timeSeriesDeathsIndia)
+# temporary patch to column names
+colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
+colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
+
+timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
+timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
 
 
 
