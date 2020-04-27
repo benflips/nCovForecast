@@ -38,19 +38,6 @@ loadData <- function(path){
 }
 
 
-# Aggregates a particular country within a dataframe
-  # useful for standardising the input dataframes
-internalAgg <- function(tsDF, country){
-  ssCol <- dateCols(tsDF)
-  temp <- subset(tsDF, tsDF$Country.Region==country)
-#  agg <- countryAgg(temp)
-  agg <- natAgg(temp)
-  bRow <- temp[1,]
-  bRow[ssCol] <- agg[,-1]
-  tsDF <- subset(tsDF, tsDF$Country.Region!=country)
-  rbind(tsDF, bRow)
-}
-
 # Takes infection, death, and recovrey time series and converts to active cases
   # returns standardised dataframes
 activeCases <- function(infections, deaths, recoveries){

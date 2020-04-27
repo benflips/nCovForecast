@@ -57,10 +57,17 @@ timeSeriesDeathsIndia     <-loadData(tsDeathIndia)
 timeSeriesRecoveries      <-loadData(tsRec)
 
 
+## get Date range from JHU
+dCols<-dateCols(timeSeriesInfections)
+dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
+
 # add in 32 Indian states
 # temporary patch to column names
 colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
 colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
+# enforce date range against JHU
+timeSeriesInfectionsIndia <- timeSeriesInfectionsIndia[, 1:ncol(timeSeriesInfections)]
+timeSeriesDeathsIndia <- timeSeriesDeathsIndia[, 1:ncol(timeSeriesInfections)]
 
 timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
 timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
@@ -98,14 +105,14 @@ if (test1 & test2 & test3){
   # a check
   #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
   
-  # take US, Canada and generate recovery data assuming ttr
-  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
-  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
+  # take US, Canada, India and generate recovery data assuming ttr
+  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US", "India"))
+  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US", "India"))
   recSub   <- recLag(infSub, deathSub, active = FALSE)
 
 
-  # Merge US, Canada estimated recoveries on to known recoveries
-  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
+  # Merge US, Canada, India estimated recoveries on to known recoveries
+  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada", "India"))) , recSub)
 
   # a check
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
@@ -113,12 +120,6 @@ if (test1 & test2 & test3){
   
   
   ## standardise
-  
-  ## get Date range
-  dCols<-dateCols(timeSeriesInfections)
-  dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
-  
-  
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
