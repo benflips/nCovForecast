@@ -55,16 +55,8 @@ internalAgg <- function(tsDF, country){
   # returns standardised dataframes
 activeCases <- function(infections, deaths, recoveries){
   ssCol <- dateCols(infections) # get date columns
-  # find countries where recoveries have been aggregated, but infections/deaths have not
-  countI <- table(infections$Country.Region)
-  countR <- table(recoveries$Country.Region)
-  cNames <- names(countI)[countI>countR]
-  for (cc in cNames){
-    # aggregate infections
-    infections <- internalAgg(infections, cc)
-    # aggregate deaths
-    deaths <- internalAgg(deaths, cc)
-  }
+  inputTest <- !(nrow(infections) == nrow(deaths) & nrow(infections) == nrow(recoveries))
+  if (inputTest) stop("Input dataframes must have identical dimensions")
   # Standardise order
   infections <- infections[order(infections$Country.Region, infections$Province.State),]
   deaths <- deaths[order(deaths$Country.Region, deaths$Province.State),]
