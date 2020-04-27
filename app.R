@@ -97,7 +97,16 @@ server <- function(input, output, session) {
   })
   
   projfCast <- reactive({ # projection for forecast
-    projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider)
+    projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
+  })
+  
+  # adjust slide input given model type
+  observe({
+    if (input$modelType){
+      updateSliderInput(session, "fitWinSlider", value = 18, min = 10, max = 30)
+    } else {
+      updateSliderInput(session, "fitWinSlider", value = 7, min = 3, max = 10)
+    }
   })
   
   plotRange <- reactive({ # get date range to plot
@@ -285,6 +294,8 @@ server <- function(input, output, session) {
   output$doubTime <- renderText({
     if (input$countryFinder == '') {
       please_select_a_country
+    } else if (input$modelType){
+      "Not calculated under time-varying growth"
     } else {
       pDat <- yfCast()$yA
       dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
