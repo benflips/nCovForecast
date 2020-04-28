@@ -115,8 +115,6 @@ if (test1 & test2 & test3 & test4){
   infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% recMissing)
   deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% recMissing)
   recSub   <- recLag(infSub, deathSub, active = FALSE)
-
-
   # Merge US, Canada, India estimated recoveries on to known recoveries
   timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% recMissing)) , recSub)
   
@@ -124,21 +122,21 @@ if (test1 & test2 & test3 & test4){
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
   rm(infSub, deathSub, recSub) # tidy up
   
-  # exclude data where there are large errors in the cumulant
-  checkI <- cumulantCheck(timeSeriesInfections)
-  checkD <- cumulantCheck(timeSeriesDeaths)
-  checkR <- cumulantCheck(timeSeriesRecoveries)
-  cumSub <- checkI & checkD & checkR
-  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
-  timeSeriesInfections <- timeSeriesInfections[cumSub,]
-  timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
-  timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
-  
-  
   ## standardise
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
+  # exclude data where there are large errors in the infection and death cumulants
+  checkI <- cumulantCheck(std$tsI)
+  checkD <- cumulantCheck(std$tsD)
+  cumSub <- checkI & checkD
+  print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+  std$tsI <- std$tsI[cumSub,]
+  std$tsD <- std$tsD[cumSub,]
+  std$tsR <- std$tsR[cumSub,]
+  std$tsA <- std$tsA[cumSub,]
+  rm(checkI, checkD, cumSub)
+
   
   # Create a list to hold all data
   available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
@@ -168,7 +166,7 @@ if (test1 & test2 & test3 & test4){
   
   ## Define menus
   # get region names with 20 or more cases as of yesterday
-  ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+  ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
   
   ddReg <- ddNames
   names(ddReg) <- ddNames
@@ -222,7 +220,7 @@ if (test1 & test2 & test3 & test4){
     
     ## Define menus
     # get region names with 20 or more cases as of yesterday
-    ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+    ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
     ddReg        <- ddNames
     names(ddReg) <- ddNames
     
