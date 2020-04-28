@@ -205,8 +205,8 @@ if (test1 & test2 & test3){
     timeSeriesActive <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
     
     ## Define menus
-    # get region names 
-    ddNames      <- timeSeriesActive$Region
+    # get region names with 20 or more cases as of yesterday
+    ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
     ddReg        <- ddNames
     names(ddReg) <- ddNames
     
