@@ -173,7 +173,7 @@ if (test1 & test2 & test3 & test4){
   
   ## Define menus
   # get region names with 20 or more cases as of yesterday
-  ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+  ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
   
   ddReg <- ddNames
   names(ddReg) <- ddNames
@@ -227,7 +227,7 @@ if (test1 & test2 & test3 & test4){
     
     ## Define menus
     # get region names with 20 or more cases as of yesterday
-    ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
+    ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
     ddReg        <- ddNames
     names(ddReg) <- ddNames
     
