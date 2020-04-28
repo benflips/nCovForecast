@@ -255,7 +255,7 @@ server <- function(input, output, session) {
       dailyDeaths <- diff(yD) 
       
       # Plot new cases
-      fig1 <- plot_ly(newCases, mode = "none") %>%
+      fig1 <- plot_ly(newCases) %>%
         add_bars(y = ~newCases,
                  x = ~dates, 
                  name = "new cases", 
@@ -266,8 +266,8 @@ server <- function(input, output, session) {
         layout(yaxis = list(title = list(text = "New cases"))
         )  
       
-      # Plot dailiy deaths
-      fig2 <- plot_ly(newCases, mode = "none") %>%
+      # Plot daily deaths
+      fig2 <- plot_ly(newCases) %>%
         add_bars(y = ~dailyDeaths,
                  x = ~dates,
                  name = "daily deaths",
@@ -277,7 +277,7 @@ server <- function(input, output, session) {
         ) %>%
         layout(xaxis = list(range = plotRange(),
                             title = list(text = "Date")),
-               yaxis = list(title = list(text = "Deaths"), side = 'right')
+               yaxis = list(title = list(text = "Deaths"), side = 'left')
         )
       
       # Composite
