@@ -29,26 +29,57 @@ source('functions.R')
 ## Get data
 server <- FALSE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
 if (server){
-  tsConf    <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-  tsConfUS  <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsDeath   <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-  tsDeathUS <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsRec     <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
+  tsConf       <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConfUS     <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+  tsConfIndia  <- "/srv/shiny-server/covid19/confirmed.csv"
+  tsDeath      <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeathUS    <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+  tsDeathIndia <- "/srv/shiny-server/covid19/deaths.csv"
+  tsRec        <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
 } else {  
-  tsConf    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-  tsConfUS  <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsDeath   <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-  tsDeathUS <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsRec     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+  tsConf       <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  tsConfUS     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+  tsConfIndia  <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
+#  tsConfIndia  <- "/home/unimelb.edu.au/miwals/confirmed.csv"
+  tsDeath      <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  tsDeathUS    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+  tsDeathIndia <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
+#  tsDeathIndia <- "/home/unimelb.edu.au/miwals/deaths.csv"
+  tsRec        <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
-timeSeriesInfections   <-loadData(tsConf)
-timeSeriesInfectionsUS <-loadData(tsConfUS)
-timeSeriesDeaths       <-loadData(tsDeath)
-timeSeriesDeathsUS     <-loadData(tsDeathUS)
-timeSeriesRecoveries   <-loadData(tsRec)
+timeSeriesInfections      <-loadData(tsConf)
+timeSeriesInfectionsUS    <-loadData(tsConfUS)
+timeSeriesInfectionsIndia <-loadData(tsConfIndia)
+timeSeriesDeaths          <-loadData(tsDeath)
+timeSeriesDeathsUS        <-loadData(tsDeathUS)
+timeSeriesDeathsIndia     <-loadData(tsDeathIndia)
+timeSeriesRecoveries      <-loadData(tsRec)
 
-rm(tsConf, tsConfUS, tsDeath, tsDeathUS, tsRec) # tidy up
+
+## get Date range from JHU
+dCols<-dateCols(timeSeriesInfections)
+dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
+
+# add in 32 Indian states
+# temporary patch to column names
+#colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
+#colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
+# enforce date range against JHU
+timeSeriesInfectionsIndia <- timeSeriesInfectionsIndia[, 1:ncol(timeSeriesInfections)]
+timeSeriesDeathsIndia <- timeSeriesDeathsIndia[, 1:ncol(timeSeriesInfections)]
+
+# data structure tests
+test4 <- sum((colnames(timeSeriesInfectionsIndia)!=colnames(timeSeriesInfections)) | 
+               (colnames(timeSeriesDeathsIndia)!=colnames(timeSeriesDeaths)))==0
+
+if (test4){
+  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
+  timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
+}
+
+
+rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec, timeSeriesInfectionsIndia, timeSeriesDeathsIndia) # tidy up
 
 #aggregate US data to Province.State
 timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
@@ -58,6 +89,7 @@ timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsU
   timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
   timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
 
+
 # Test for structural irregularities in data before proceeding any further
   # US and global data are up to the same date
 test1 <- ncol(timeSeriesDeaths)==ncol(timeSeriesDeathsUS) & ncol(timeSeriesInfections)==ncol(timeSeriesInfectionsUS) 
@@ -66,42 +98,50 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
   # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
-if (test1 & test2 & test3){
+if (test1 & test2 & test3 & test4){
+
   # Merge US data with global dataframes
-  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="US") , timeSeriesInfectionsUS)
-  timeSeriesDeaths <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="US") , timeSeriesDeathsUS)
+  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region != "US"), timeSeriesInfectionsUS)
+  timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     != "US"), timeSeriesDeathsUS)
+
   
   rm(timeSeriesDeathsUS, timeSeriesInfectionsUS) #tidy up
   
   # a check
   #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
   
-  # take US, Canada data, and generate recovery data assuming ttr
-  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US"))
-  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US"))
+  # take US, Canada, India and generate recovery data assuming ttr
+  recMissing <- c("Canada", "US", "India") # countries for which recovery data are missing
+  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% recMissing)
+  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% recMissing)
   recSub   <- recLag(infSub, deathSub, active = FALSE)
-  
-  # Merge US, Canada estimated recoveries on to known recoveries
-  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada"))) , recSub)
+
+
+  # Merge US, Canada, India estimated recoveries on to known recoveries
+  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% recMissing)) , recSub)
   
   # a check
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
   rm(infSub, deathSub, recSub) # tidy up
   
+  # exclude data where there are large errors in the cumulant
+  checkI <- cumulantCheck(timeSeriesInfections)
+  checkD <- cumulantCheck(timeSeriesDeaths)
+  checkR <- cumulantCheck(timeSeriesRecoveries)
+  cumSub <- checkI & checkD & checkR
+  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
+  timeSeriesInfections <- timeSeriesInfections[cumSub,]
+  timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
+  timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
+  
   
   ## standardise
-  
-  ## get Date range
-  dCols<-dateCols(timeSeriesInfections)
-  dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
-  
-  
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
   
   # Create a list to hold all data
-  available_countries <- c("Australia","China", "Canada", "US") # countries available for drill-down
+  available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
   dataList <- vector(mode = "list", length = length(available_countries)+1)
   names(dataList) <- c("Global", available_countries)
   
@@ -181,8 +221,8 @@ if (test1 & test2 & test3){
     timeSeriesActive <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
     
     ## Define menus
-    # get region names 
-    ddNames      <- timeSeriesActive$Region
+    # get region names with 20 or more cases as of yesterday
+    ddNames <- timeSeriesActive$Region[timeSeriesActive[[ncol(timeSeriesActive)-1]]>19]
     ddReg        <- ddNames
     names(ddReg) <- ddNames
     

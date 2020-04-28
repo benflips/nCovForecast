@@ -79,6 +79,9 @@ server <- function(input, output, session) {
         ddReg = ddReg[! ddReg %in% c('American Samoa')] # for some reason, these states do not work.  TOFIX.
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Michigan","New Jersey","New York"), choices = ddReg)
+      } else if (input$global_or_country == 'India') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)

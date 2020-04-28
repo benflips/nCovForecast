@@ -12,20 +12,11 @@ dat/estGlobal.RData
 dat/menuData.RData
 dat/dataList.RData
 
-dat/Global/cacheData.RData
-dat/Global/menuData.RData
-dat/Global/estDeconv.RData
+dat/Global/*.*
 
-dat/Australia/cacheData.RData
-dat/Australia/menuData.RData
-dat/Australia/estDeconv.RData
-dat/Canada/cacheData.RData
-dat/Canada/menuData.RData
-dat/Canada/estDeconv.RData
-dat/China/cacheData.RData
-dat/China/menuData.RData
-dat/China/estDeconv.RData
-dat/US/cacheData.RData
-dat/US/menuData.RData
-dat/US/estDeconv.RData
+dat/Australia/*.*
+dat/Canada/*.*
+dat/China/*.*
+dat/US/*.*
+dat/India/*.*
 
