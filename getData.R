@@ -122,28 +122,21 @@ if (test1 & test2 & test3 & test4){
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
   rm(infSub, deathSub, recSub) # tidy up
   
-  # exclude data where there are large errors in the infection and death cumulants
-  checkI <- cumulantCheck(timeSeriesInfections)
-  checkD <- cumulantCheck(timeSeriesDeaths)
-  cumSub <- checkI & checkD
-  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
-  timeSeriesInfections <- timeSeriesInfections[cumSub,]
-  timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
-  timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
-  rm(checkI, checkD, cumSub)
-  
-  # find large errors in recoveries cumulant and replace with reclag generated values
-  checkR <- cumulantCheck(timeSeriesRecoveries)
-  infSub   <- subset(timeSeriesInfections, !checkR)
-  deathSub <- subset(timeSeriesDeaths, !checkR)
-  recSub   <- recLag(infSub, deathSub, active = FALSE)
-  timeSeriesRecoveries[!checkR, ] <- recSub
-  rm(infSub, deathSub, recSub, checkR) # tidy up
-  
   ## standardise
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
+  # exclude data where there are large errors in the infection and death cumulants
+  checkI <- cumulantCheck(std$tsI)
+  checkD <- cumulantCheck(std$tsD)
+  cumSub <- checkI & checkD
+  print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+  std$tsI <- std$tsI[cumSub,]
+  std$tsD <- std$tsD[cumSub,]
+  std$tsR <- std$tsR[cumSub,]
+  std$tsA <- std$tsA[cumSub,]
+  rm(checkI, checkD, cumSub)
+
   
   # Create a list to hold all data
   available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
