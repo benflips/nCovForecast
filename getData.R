@@ -124,12 +124,11 @@ if (test1 & test2 & test3 & test4){
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
   rm(infSub, deathSub, recSub) # tidy up
   
-  # exclude data where there are large errors in the cumulant
+  # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(timeSeriesInfections)
   checkD <- cumulantCheck(timeSeriesDeaths)
-  checkR <- cumulantCheck(timeSeriesRecoveries)
-  cumSub <- checkI & checkD & checkR
-  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
+  cumSub <- checkI & checkD
+  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
   timeSeriesInfections <- timeSeriesInfections[cumSub,]
   timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
   timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
