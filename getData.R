@@ -111,8 +111,9 @@ if (test1 & test2 & test3 & test4){
   #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
   
   # take US, Canada, India and generate recovery data assuming ttr
-  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% c("Canada", "US", "India"))
-  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% c("Canada", "US", "India"))
+  recMissing <- c("Canada", "US", "India") # countries for which recovery data are missing
+  infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% recMissing)
+  deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% recMissing)
   recSub   <- recLag(infSub, deathSub, active = FALSE)
 
 
