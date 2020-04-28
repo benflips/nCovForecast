@@ -115,8 +115,6 @@ if (test1 & test2 & test3 & test4){
   infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% recMissing)
   deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% recMissing)
   recSub   <- recLag(infSub, deathSub, active = FALSE)
-
-
   # Merge US, Canada, India estimated recoveries on to known recoveries
   timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% recMissing)) , recSub)
   
@@ -132,7 +130,15 @@ if (test1 & test2 & test3 & test4){
   timeSeriesInfections <- timeSeriesInfections[cumSub,]
   timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
   timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
+  rm(checkI, checkD, cumSub)
   
+  # find large errors in recoveries cumulant and replace with reclag generated values
+  checkR <- cumulantCheck(timeSeriesRecoveries)
+  infSub   <- subset(timeSeriesInfections, !checkR)
+  deathSub <- subset(timeSeriesDeaths, !checkR)
+  recSub   <- recLag(infSub, deathSub, active = FALSE)
+  timeSeriesRecoveries[!checkR, ] <- recSub
+  rm(infSub, deathSub, recSub, checkR) # tidy up
   
   ## standardise
   # Standardise dataframes and compute active cases
