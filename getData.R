@@ -63,15 +63,20 @@ dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 
 # add in 32 Indian states
 # temporary patch to column names
-colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
-colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
+#colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
+#colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
 # enforce date range against JHU
 timeSeriesInfectionsIndia <- timeSeriesInfectionsIndia[, 1:ncol(timeSeriesInfections)]
 timeSeriesDeathsIndia <- timeSeriesDeathsIndia[, 1:ncol(timeSeriesInfections)]
 
-timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
-timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
+# data structure tests
+test4 <- sum((colnames(timeSeriesInfectionsIndia)!=colnames(timeSeriesInfections)) | 
+               (colnames(timeSeriesDeathsIndia)!=colnames(timeSeriesDeaths)))==0
 
+if (test4){
+  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
+  timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
+}
 
 
 rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec, timeSeriesInfectionsIndia, timeSeriesDeathsIndia) # tidy up
@@ -93,7 +98,7 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
   # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
-if (test1 & test2 & test3){
+if (test1 & test2 & test3 & test4){
 
   # Merge US data with global dataframes
   timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region != "US"), timeSeriesInfectionsUS)
