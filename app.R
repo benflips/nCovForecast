@@ -258,7 +258,7 @@ server <- function(input, output, session) {
       fig1 <- plot_ly(newCases) %>%
         add_bars(y = ~newCases,
                  x = ~dates, 
-                 name = "new cases", 
+                 name = "New cases", 
                  marker = list(color = clrOrange), 
                  text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
                  hoverinfo = "text+name"
@@ -270,7 +270,7 @@ server <- function(input, output, session) {
       fig2 <- plot_ly(newCases) %>%
         add_bars(y = ~dailyDeaths,
                  x = ~dates,
-                 name = "daily deaths",
+                 name = "Daily deaths",
                  marker = list(color = clrDark),
                  text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
                  hoverinfo = "text+name"
@@ -283,7 +283,8 @@ server <- function(input, output, session) {
       # Composite
       fig <- subplot(fig1, fig2, heights = c(0.8,0.2), nrows=2, shareX = TRUE, titleY = TRUE
       ) %>%
-        config(displayModeBar = FALSE)
+        config(displayModeBar = FALSE) %>%
+        layout(legend = list(x=0))
     }
   })
   
