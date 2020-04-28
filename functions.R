@@ -22,6 +22,22 @@
 
 ## function definitions
 
+# function to check that all data are (semi-strictly) increasing over time
+  # x is dataframe in JHU format
+  # tolerance is how large an error we can live with
+  # returns vector of rows that meet inclusion criteria
+cumulantCheck <- function(x, tolerance = 0.25){
+  d <- as.matrix(x[, dateCols(x)])
+  rcFun <- function(y){
+    out <- diff(y)/y[-length(y)]
+    out[is.nan(out)] <- 0
+    sum(out < (-tolerance) & y[-length(y)] > 10) # ignore bumps in early reporting
+  }
+  rowCheck <- apply(d, 1, rcFun)
+  rowCheck == 0
+}
+
+
 # Function to load data and standardise names, columns and so on
 loadData <- function(path){
   d <- read.csv(file = path, stringsAsFactors = FALSE) # read data

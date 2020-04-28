@@ -118,11 +118,21 @@ if (test1 & test2 & test3 & test4){
 
 
   # Merge US, Canada, India estimated recoveries on to known recoveries
-  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% c("US", "Canada", "India"))) , recSub)
-
+  timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% recMissing)) , recSub)
+  
   # a check
   #sum(!(table(timeSeriesRecoveries$Country.Region) == table(timeSeriesInfections$Country.Region)))
   rm(infSub, deathSub, recSub) # tidy up
+  
+  # exclude data where there are large errors in the cumulant
+  checkI <- cumulantCheck(timeSeriesInfections)
+  checkD <- cumulantCheck(timeSeriesDeaths)
+  checkR <- cumulantCheck(timeSeriesRecoveries)
+  cumSub <- checkI & checkD & checkR
+  print(cbind(timeSeriesInfections[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
+  timeSeriesInfections <- timeSeriesInfections[cumSub,]
+  timeSeriesDeaths <- timeSeriesDeaths[cumSub,]
+  timeSeriesRecoveries <- timeSeriesRecoveries[cumSub,]
   
   
   ## standardise
