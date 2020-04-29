@@ -185,7 +185,8 @@ server <- function(input, output, session) {
                           mode = "lines", 
                           line = list(color = clrLight),
                           name = "Estimated peak",
-                          hoverinfo = "text+name") %>%
+                          hoverinfo = "text+name",
+                          text = format(date_at_peak, "%b, %d")) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
                                     title = list(text = "Confirmed active cases"),
@@ -246,7 +247,8 @@ server <- function(input, output, session) {
                           mode = "lines", 
                           line = list(color = clrLight),
                           name = "Estimated peak",
-                          hoverinfo = "text+name") %>%
+                          hoverinfo = "text+name",
+                          text = format(date_at_peak, "%b, %d")) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
