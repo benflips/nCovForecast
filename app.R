@@ -320,15 +320,21 @@ server <- function(input, output, session) {
   
 ##### Forecast metrics ##### 
   output$forecastMetrics <- renderText({
+    if (input$countryFinder == '') {
+      please_select_a_country
+    } else {
     if (input$modelType) {
       if (is.null(projfCast()$value_at_peak)) {
         "Active cases estimated to peak beyond the forecast horizon"
+      } else if (is.null(projfCast()$date_at_peak)){
+        "Active cases peaked in the past"
       } else {
         paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
       }
     } else {
         pDat <- yfCast()$yA
         dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days.')
+    }
     }
   })
 

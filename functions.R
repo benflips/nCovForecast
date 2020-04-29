@@ -187,8 +187,10 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
     date_at_peak <- tail(tIn,n=1) + (round(-poly1 / (2*poly2)) - nn)
     value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
     if (poly2 > 0 | date_at_peak > max(x)) {
-      date_at_peak <- NULL
       value_at_peak <- NULL
+    }
+    if (date_at_peak < min(x)){
+      date_at_peak <-NULL
     }
   } else {
     mFit <- lm(lnN~tIn)
