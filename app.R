@@ -185,7 +185,7 @@ server <- function(input, output, session) {
                           mode = "lines", 
                           name = "Active cases",
                           hoverinfo = "text+name") %>%
-                layout(showlegend = TRUE, 
+                layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
                                     title = list(text = "Confirmed active cases"),
                                     fixedrange = TRUE),

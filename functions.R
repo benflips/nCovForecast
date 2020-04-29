@@ -191,7 +191,11 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   }
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
-  list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak, intercept = intercept, poly1 = poly1, poly2 = poly2)
+  if(timeVaryingGrowth) {
+    list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak)
+  } else {
+    list(lDat = data.frame(dates = x, y))
+  }
 
 }
 
