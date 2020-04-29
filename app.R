@@ -183,7 +183,8 @@ server <- function(input, output, session) {
                 add_trace(y = c(0,value_at_peak), 
                           x = c(date_at_peak,date_at_peak),
                           mode = "lines", 
-                          name = "Active cases",
+                          line = list(color = clrLight),
+                          name = "Estimated peak",
                           hoverinfo = "text+name") %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
@@ -243,7 +244,8 @@ server <- function(input, output, session) {
                 add_trace(y = c(0,value_at_peak), 
                           x = c(date_at_peak,date_at_peak),
                           mode = "lines", 
-                          name = "Active cases",
+                          line = list(color = clrLight),
+                          name = "Estimated peak",
                           hoverinfo = "text+name") %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
