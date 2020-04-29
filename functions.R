@@ -183,6 +183,14 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   } else {
     mFit <- lm(lnN~tIn)
   }
+print(mFit)
+print('BEFORE')
+poly1<-summary(mFit)$coefficients[2,1]
+poly2<-summary(mFit)$coefficients[3,1]
+print(poly1)
+print(poly2)
+print(-poly1 / (2* poly2))
+print('DONE')
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
   data.frame(dates = x, y)
