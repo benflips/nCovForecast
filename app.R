@@ -322,6 +322,10 @@ server <- function(input, output, session) {
     }
   })
   
+  output$estimatedDateOfPeak <- renderText({
+    format(projfCast()$date_at_peak, "%d %B %Y")
+  })
+
 ##### Detection rate #####    
   output$detRate <- renderText({
     if (input$countryFinder == '') {
