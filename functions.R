@@ -182,12 +182,29 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   tIn <- rawTime[ss]
   if (timeVaryingGrowth){
     mFit <- lm(lnN~poly(tIn, 2))
+    fit_based_on_integers_instead_of_dates <- lm(lnN ~ I(ss) + I(ss^2))
+    intercept <- summary(fit_based_on_integers_instead_of_dates)$coefficients[1,1]
+    poly1     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[2,1]
+    poly2     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[3,1]
+    date_at_peak <- tail(tIn,n=1) + (round(-poly1 / (2*poly2)) - nn)
+    value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
+    if (poly2 > 0 | date_at_peak > max(x)) {
+      value_at_peak <- NULL
+    }
+    if (date_at_peak < min(x)){
+      date_at_peak <-NULL
+    }
   } else {
     mFit <- lm(lnN~tIn)
   }
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
-  data.frame(dates = x, y)
+  if(timeVaryingGrowth) {
+    list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak)
+  } else {
+    list(lDat = data.frame(dates = x, y))
+  }
+
 }
 
 # Simple projection based on growth over last inWindow days

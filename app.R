@@ -143,7 +143,9 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
+      date_at_peak <- projfCast()$date_at_peak
+      value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       clrDark<-"#273D6E"
@@ -188,6 +190,15 @@ server <- function(input, output, session) {
                        title = list(text = input$countryFinder)
                 ) %>%
                 config(displayModeBar = FALSE)
+      if (!is.null(value_at_peak)){
+          fig %>% add_trace(y = c(0,value_at_peak), 
+                  x = c(date_at_peak,date_at_peak),
+                  mode = "lines", 
+                  line = list(color = clrLight),
+                  name = "Estimated peak",
+                  hoverinfo = "text+name",
+                  text = format(date_at_peak, "%b, %d"))
+      } else {fig}
     }
   })
   
@@ -196,7 +207,9 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
+      value_at_peak <- projfCast()$value_at_peak
+      date_at_peak <- projfCast()$date_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       clrDark<-"#273D6E"
@@ -241,6 +254,15 @@ server <- function(input, output, session) {
                                     fixedrange = TRUE)
                 ) %>%
                 config(displayModeBar = FALSE)
+      if (!is.null(value_at_peak)){
+        fig %>% add_trace(y = c(0,value_at_peak), 
+                  x = c(date_at_peak,date_at_peak),
+                  mode = "lines", 
+                  line = list(color = clrLight),
+                  name = "Estimated peak",
+                  hoverinfo = "text+name",
+                  text = format(date_at_peak, "%b, %d"))
+      } else {fig}
     }
   })
 
@@ -323,18 +345,27 @@ server <- function(input, output, session) {
     }
   })
   
-##### Doubling time ##### 
-  output$doubTime <- renderText({
+##### Forecast metrics ##### 
+  output$forecastMetrics <- renderText({
     if (input$countryFinder == '') {
       please_select_a_country
-    } else if (input$modelType){
-      "Not calculated under time-varying growth"
     } else {
-      pDat <- yfCast()$yA
-      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+    if (input$modelType) {
+      if (is.null(projfCast()$value_at_peak)) {
+        "Active cases estimated to peak beyond the forecast horizon"
+      } else if (is.null(projfCast()$date_at_peak)){
+        "Active cases peaked in the past"
+      } else {
+        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
+      }
+    } else {
+        pDat <- yfCast()$yA
+        dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days.')
+    }
     }
   })
-  
+
+
 ##### Detection rate #####    
   output$detRate <- renderText({
     if (input$countryFinder == '') {
@@ -351,7 +382,7 @@ server <- function(input, output, session) {
   output$tablePredConf <- renderTable({
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
       nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
       nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
       dim(nowThen) <- c(1, 2)
