@@ -183,17 +183,16 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   } else {
     mFit <- lm(lnN~tIn)
   }
-print(mFit)
-print('BEFORE')
-poly1<-summary(mFit)$coefficients[2,1]
-poly2<-summary(mFit)$coefficients[3,1]
-print(poly1)
-print(poly2)
-print(-poly1 / (2* poly2))
-print('DONE')
+  print(mFit)
+  intercept<-summary(mFit)$coefficients[1,1]
+  poly1<-summary(mFit)$coefficients[2,1]
+  poly2<-summary(mFit)$coefficients[3,1]
+  date_at_peak <- tIn[1] - poly1 / (2*poly2)
+  value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
-  data.frame(dates = x, y)
+  list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak)
+
 }
 
 # Simple projection based on growth over last inWindow days

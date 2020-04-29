@@ -143,7 +143,9 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
+      date_at_peak <- projfCast()$date_at_peak
+      value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       clrDark<-"#273D6E"
@@ -178,6 +180,11 @@ server <- function(input, output, session) {
                           name = "Active cases",
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                add_trace(y = c(0,value_at_peak), 
+                          x = c(date_at_peak,date_at_peak),
+                          mode = "lines", 
+                          name = "Active cases",
+                          hoverinfo = "text+name") %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
                                     title = list(text = "Confirmed active cases"),
@@ -196,7 +203,9 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
+      value_at_peak <- projfCast()$value_at_peak
+      date_at_peak <- projfCast()$date_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       clrDark<-"#273D6E"
@@ -231,6 +240,11 @@ server <- function(input, output, session) {
                           name = "Active cases",
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                add_trace(y = c(0,value_at_peak), 
+                          x = c(date_at_peak,date_at_peak),
+                          mode = "lines", 
+                          name = "Active cases",
+                          hoverinfo = "text+name") %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
@@ -324,7 +338,7 @@ server <- function(input, output, session) {
   output$tablePredConf <- renderTable({
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
-      lDat <- projfCast()
+      lDat <- projfCast()$lDat
       nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
       nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
       dim(nowThen) <- c(1, 2)
