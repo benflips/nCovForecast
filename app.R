@@ -180,13 +180,6 @@ server <- function(input, output, session) {
                           name = "Active cases",
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-                add_trace(y = c(0,value_at_peak), 
-                          x = c(date_at_peak,date_at_peak),
-                          mode = "lines", 
-                          line = list(color = clrLight),
-                          name = "Estimated peak",
-                          hoverinfo = "text+name",
-                          text = format(date_at_peak, "%b, %d")) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
                                     title = list(text = "Confirmed active cases"),
@@ -197,6 +190,15 @@ server <- function(input, output, session) {
                        title = list(text = input$countryFinder)
                 ) %>%
                 config(displayModeBar = FALSE)
+      if (is.numeric(value_at_peak)){
+          fig %>% add_trace(y = c(0,value_at_peak), 
+                  x = c(date_at_peak,date_at_peak),
+                  mode = "lines", 
+                  line = list(color = clrLight),
+                  name = "Estimated peak",
+                  hoverinfo = "text+name",
+                  text = format(date_at_peak, "%b, %d"))
+      }
     }
   })
   
@@ -242,13 +244,6 @@ server <- function(input, output, session) {
                           name = "Active cases",
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-                add_trace(y = c(0,value_at_peak), 
-                          x = c(date_at_peak,date_at_peak),
-                          mode = "lines", 
-                          line = list(color = clrLight),
-                          name = "Estimated peak",
-                          hoverinfo = "text+name",
-                          text = format(date_at_peak, "%b, %d")) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
@@ -259,6 +254,15 @@ server <- function(input, output, session) {
                                     fixedrange = TRUE)
                 ) %>%
                 config(displayModeBar = FALSE)
+      if (is.numeric(value_at_peak)){
+        fig %>% add_trace(y = c(0,value_at_peak), 
+                  x = c(date_at_peak,date_at_peak),
+                  mode = "lines", 
+                  line = list(color = clrLight),
+                  name = "Estimated peak",
+                  hoverinfo = "text+name",
+                  text = format(date_at_peak, "%b, %d"))
+      }
     }
   })
 
