@@ -318,25 +318,20 @@ server <- function(input, output, session) {
     }
   })
   
-##### Doubling time ##### 
-  output$doubTime <- renderText({
-    if (input$countryFinder == '') {
-      please_select_a_country
-    } else if (input$modelType){
-      "Not calculated under time-varying growth"
+##### Forecast metrics ##### 
+  output$forecastMetrics <- renderText({
+    if (input$modelType) {
+      if (is.null(projfCast()$value_at_peak)) {
+        "Active cases peak beyond the forecast horizon"
+      } else {
+        paste("Active cases peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
+      }
     } else {
-      pDat <- yfCast()$yA
-      dTime <- paste(round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), ' days')
+        pDat <- yfCast()$yA
+        dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days.')
     }
   })
-  
-  output$estimatedPeak <- renderText({
-    if (is.null(projfCast()$value_at_peak)) {
-      "Beyond forecast horizon"
-    } else {
-        paste(format(as.integer(projfCast()$value_at_peak), big.mark=","),"active cases on", format(projfCast()$date_at_peak, "%d %B %Y"))
-    }
-  })
+
 
 ##### Detection rate #####    
   output$detRate <- renderText({

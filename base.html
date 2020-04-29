@@ -127,11 +127,9 @@ function openTab(evt, tabName) {
         {{ tableOutput(outputId = "tablePredConf") }}
         <p>Active cases are total number of infections minus deaths and recoveries.</p>
         
-        <h3>Doubling time:</h3>
-        <div class="center">{{ textOutput(outputId = "doubTime") }}</div>
-        <h3>Estimated peak:</h3>
-        <div class="center">{{ textOutput(outputId = "estimatedPeak") }}</div>
-        <p>Negative doubling time indicates halving time.</p>
+        <h3>Forecast metrics:</h3>
+        <div class="center">{{ textOutput(outputId = "forecastMetrics") }}</div>
+  
         {{ checkboxInput(inputId = "modelType", label = "Time-varying growth (uncheck for constant growth)", value = TRUE)}}
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, label = "Fit window:", post = "days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
