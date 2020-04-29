@@ -190,7 +190,7 @@ server <- function(input, output, session) {
                        title = list(text = input$countryFinder)
                 ) %>%
                 config(displayModeBar = FALSE)
-      if (is.numeric(value_at_peak)){
+      if (!is.null(value_at_peak)){
           fig %>% add_trace(y = c(0,value_at_peak), 
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
@@ -198,7 +198,7 @@ server <- function(input, output, session) {
                   name = "Estimated peak",
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
-      }
+      } else {fig}
     }
   })
   
@@ -254,7 +254,7 @@ server <- function(input, output, session) {
                                     fixedrange = TRUE)
                 ) %>%
                 config(displayModeBar = FALSE)
-      if (is.numeric(value_at_peak)){
+      if (!is.null(value_at_peak)){
         fig %>% add_trace(y = c(0,value_at_peak), 
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
@@ -262,7 +262,7 @@ server <- function(input, output, session) {
                   name = "Estimated peak",
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
-      }
+      } else {fig}
     }
   })
 
@@ -331,7 +331,11 @@ server <- function(input, output, session) {
   })
   
   output$estimatedPeak <- renderText({
-    paste(format(as.integer(projfCast()$value_at_peak), big.mark=","),"active cases on", format(projfCast()$date_at_peak, "%d %B %Y"))
+    if (is.null(projfCast()$value_at_peak)) {
+      "Beyond forecast horizon"
+    } else {
+        paste(format(as.integer(projfCast()$value_at_peak), big.mark=","),"active cases on", format(projfCast()$date_at_peak, "%d %B %Y"))
+    }
   })
 
 ##### Detection rate #####    
