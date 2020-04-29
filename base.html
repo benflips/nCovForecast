@@ -131,7 +131,8 @@ function openTab(evt, tabName) {
         <div class="center">{{ textOutput(outputId = "doubTime") }}</div>
         <p>Negative doubling time indicates halving time.</p>
         {{ checkboxInput(inputId = "modelType", label = "Time-varying growth (uncheck for constant growth)", value = TRUE)}}
-        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, label = "Fit window:", post = "days") }}
+        <br>
+        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
 
         <h2>Detection</h2>
