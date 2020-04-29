@@ -146,6 +146,13 @@ server <- function(input, output, session) {
       lDat <- projfCast()$lDat
       date_at_peak <- projfCast()$date_at_peak
       value_at_peak <- projfCast()$value_at_peak
+intercept <- projfCast()$intercept
+poly1 <- projfCast()$poly1
+poly2 <- projfCast()$poly2
+print('date_at_peak')
+print(date_at_peak)
+print('value_at_peak')
+print(value_at_peak)
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       clrDark<-"#273D6E"
@@ -185,7 +192,7 @@ server <- function(input, output, session) {
                           mode = "lines", 
                           name = "Active cases",
                           hoverinfo = "text+name") %>%
-                layout(showlegend = FALSE, 
+                layout(showlegend = TRUE, 
                        yaxis = list(range = list(0, yMax),
                                     title = list(text = "Confirmed active cases"),
                                     fixedrange = TRUE),

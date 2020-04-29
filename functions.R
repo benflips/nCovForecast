@@ -179,19 +179,27 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   lnN[is.infinite(lnN)]<-NA
   tIn <- rawTime[ss]
   if (timeVaryingGrowth){
+print(tIn)
+print(ss)
     mFit <- lm(lnN~poly(tIn, 2))
+    fit_based_on_integers_instead_of_dates <- lm(lnN ~ I(ss) + I(ss^2))
+    intercept <- summary(fit_based_on_integers_instead_of_dates)$coefficients[1,1]
+    poly1     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[2,1]
+    poly2     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[3,1]
+print('t PEAK')
+print(round(-poly1 / (2*poly2)))
+print('final date')
+print(tail(tIn,n=1))
+print('final date plus 1')
+print(tail(tIn,n=1)+1)
+    date_at_peak <- tail(tIn,n=1) + (round(-poly1 / (2*poly2)) - nn)
+    value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
   } else {
     mFit <- lm(lnN~tIn)
   }
-  print(mFit)
-  intercept<-summary(mFit)$coefficients[1,1]
-  poly1<-summary(mFit)$coefficients[2,1]
-  poly2<-summary(mFit)$coefficients[3,1]
-  date_at_peak <- tIn[1] - poly1 / (2*poly2)
-  value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
-  list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak)
+  list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak, intercept = intercept, poly1 = poly1, poly2 = poly2)
 
 }
 
