@@ -322,9 +322,9 @@ server <- function(input, output, session) {
   output$forecastMetrics <- renderText({
     if (input$modelType) {
       if (is.null(projfCast()$value_at_peak)) {
-        "Active cases peak beyond the forecast horizon"
+        "Active cases estimated to peak beyond the forecast horizon"
       } else {
-        paste("Active cases peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
+        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
       }
     } else {
         pDat <- yfCast()$yA
