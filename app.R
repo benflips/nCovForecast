@@ -324,8 +324,8 @@ server <- function(input, output, session) {
     }
   })
   
-  output$estimatedDateOfPeak <- renderText({
-    format(projfCast()$date_at_peak, "%d %B %Y")
+  output$estimatedPeak <- renderText({
+    paste(format(as.integer(projfCast()$value_at_peak), big.mark=","),"active cases on", format(projfCast()$date_at_peak, "%d %B %Y"))
   })
 
 ##### Detection rate #####    
