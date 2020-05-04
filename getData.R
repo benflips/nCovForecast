@@ -2,7 +2,12 @@
 ##
 ## Script name: getData.R
 ##
-## Purpose of script: Scrape data from gitHub repository established to track nCov20
+## Purpose of script: 
+## 1. Get data from JHU;
+## 2. Build directory structure for all state-level data;
+## 3. If dataList doesn't already exist, create it
+## 4. Build global dataset and state-level for countries available in JHU dataset
+## 5. If dataList doesn't exist run retrieval of state-level data for other (non-JHU) datasets.
 ##
 ## Author: Ben Phillips
 ##
@@ -73,7 +78,7 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
   # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
-if (test1 & test2 & test3 & test4){
+if (test1 & test2 & test3){
 
   # Merge US data with global dataframes
   timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region != "US"), timeSeriesInfectionsUS)
@@ -127,6 +132,7 @@ if (test1 & test2 & test3 & test4){
   
   
   ###### GLOBAL ######
+  print("Global") # report to console
   
   timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
   timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 

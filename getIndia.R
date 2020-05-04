@@ -26,7 +26,6 @@ source('functions.R')
 ## ---------------------------
 
 focusCountry <- "India" # define country string
-print(focusCountry) # report to console
 
 tsConfIndia  <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
 tsDeathIndia <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
@@ -45,6 +44,8 @@ test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths)))==0
 
 if (test1 & test2 & test3) {
 
+  print(focusCountry) # report to console
+  
   ## get Date range 
   dCols<-dateCols(timeSeriesInfections)
   dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
