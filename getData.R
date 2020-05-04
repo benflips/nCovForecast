@@ -138,10 +138,15 @@ if (test1 & test2 & test3 & test4){
   rm(checkI, checkD, cumSub)
 
   
-  # Create a list to hold all data
+  # Open dataList object, or create it
   available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
-  dataList <- vector(mode = "list", length = length(available_countries)+1)
-  names(dataList) <- c("Global", available_countries)
+  if (file.exists("dat/dataList.RData")) {
+    load("dat/dataList.RData")
+  } else {
+    dataList <- vector(mode = "list", length = length(available_countries)+1)
+    names(dataList) <- c("Global", available_countries)
+  }
+  
   
   
   ###### GLOBAL ######
