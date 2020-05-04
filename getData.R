@@ -194,7 +194,9 @@ if (test1 & test2 & test3 & test4){
   
   for(focusCountry in available_countries) {
     
+    if (focusCountry=="India") next # do India independently, in getIndia.R
     print(focusCountry)
+    
     # set dataframes back to standards
     tsI <- std$tsI
     tsD <- std$tsD
@@ -243,5 +245,8 @@ if (test1 & test2 & test3 & test4){
   }
   
   save(dataList, file = "dat/dataList.RData")
+  
+  # run getIndia.R
+  system("Rscript getIndia.R", wait = TRUE)
   
 } else { print('there was an error!') } # end of first data test if statement (test1, test2) ...need to add our else notification here
