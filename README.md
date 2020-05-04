@@ -39,3 +39,5 @@ Otherwise, go into getData.R, set `server <- FALSE`.  This will then obtain data
 `Rscript getData.R`
 
 Which will take about 10 minutes to run.  This script will generate a directory structure inside /dat (if that structure doesn't already exist) and populate it with data required by the app.
+
+In subsequent days, to update data after this initial run you will need to run both `getData.R` and `getIndia.R` separately.
