@@ -2,7 +2,12 @@
 ##
 ## Script name: getData.R
 ##
-## Purpose of script: Scrape data from gitHub repository established to track nCov20
+## Purpose of script: 
+## 1. Get data from JHU;
+## 2. Build directory structure for all state-level data;
+## 3. If dataList doesn't already exist, create it
+## 4. Build global dataset and state-level for countries available in JHU dataset
+## 5. If dataList doesn't exist run retrieval of state-level data for other (non-JHU) datasets.
 ##
 ## Author: Ben Phillips
 ##
@@ -31,29 +36,21 @@ server <- FALSE ## if you are drawing data directly over internet, set this to F
 if (server){
   tsConf       <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsConfUS     <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsConfIndia  <- "/srv/shiny-server/covid19/confirmed.csv"
   tsDeath      <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   tsDeathUS    <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsDeathIndia <- "/srv/shiny-server/covid19/deaths.csv"
   tsRec        <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
 } else {  
   tsConf       <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   tsConfUS     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsConfIndia  <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
-#  tsConfIndia  <- "/home/unimelb.edu.au/miwals/confirmed.csv"
   tsDeath      <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   tsDeathUS    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsDeathIndia <- "https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
-#  tsDeathIndia <- "/home/unimelb.edu.au/miwals/deaths.csv"
   tsRec        <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
 
 timeSeriesInfections      <-loadData(tsConf)
 timeSeriesInfectionsUS    <-loadData(tsConfUS)
-timeSeriesInfectionsIndia <-loadData(tsConfIndia)
 timeSeriesDeaths          <-loadData(tsDeath)
 timeSeriesDeathsUS        <-loadData(tsDeathUS)
-timeSeriesDeathsIndia     <-loadData(tsDeathIndia)
 timeSeriesRecoveries      <-loadData(tsRec)
 
 
@@ -61,25 +58,8 @@ timeSeriesRecoveries      <-loadData(tsRec)
 dCols<-dateCols(timeSeriesInfections)
 dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 
-# add in 32 Indian states
-# temporary patch to column names
-#colnames(timeSeriesInfectionsIndia) <- colnames(timeSeriesInfections)
-#colnames(timeSeriesDeathsIndia) <- colnames(timeSeriesDeaths)
-# enforce date range against JHU
-timeSeriesInfectionsIndia <- timeSeriesInfectionsIndia[, 1:ncol(timeSeriesInfections)]
-timeSeriesDeathsIndia <- timeSeriesDeathsIndia[, 1:ncol(timeSeriesInfections)]
 
-# data structure tests
-test4 <- sum((colnames(timeSeriesInfectionsIndia)!=colnames(timeSeriesInfections)) | 
-               (colnames(timeSeriesDeathsIndia)!=colnames(timeSeriesDeaths)))==0
-
-if (test4){
-  timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region!="India"), timeSeriesInfectionsIndia)
-  timeSeriesDeaths     <- rbind(subset(timeSeriesDeaths, timeSeriesDeaths$Country.Region!="India"),  timeSeriesDeathsIndia)
-}
-
-
-rm(tsConf, tsConfUS, tsConfIndia, tsDeath, tsDeathUS, tsDeathIndia, tsRec, timeSeriesInfectionsIndia, timeSeriesDeathsIndia) # tidy up
+rm(tsConf, tsConfUS, tsDeath, tsDeathUS, tsRec) # tidy up
 
 #aggregate US data to Province.State
 timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
@@ -98,7 +78,7 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
   # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
-if (test1 & test2 & test3 & test4){
+if (test1 & test2 & test3){
 
   # Merge US data with global dataframes
   timeSeriesInfections <- rbind(subset(timeSeriesInfections, timeSeriesInfections$Country.Region != "US"), timeSeriesInfectionsUS)
@@ -110,12 +90,12 @@ if (test1 & test2 & test3 & test4){
   # a check
   #sum(!(table(timeSeriesDeaths$Country.Region, timeSeriesDeaths$Province.State) == table(timeSeriesInfections$Country.Region, timeSeriesInfections$Province.State)))
   
-  # take US, Canada, India and generate recovery data assuming ttr
-  recMissing <- c("Canada", "US", "India") # countries for which recovery data are missing
+  # take US, Canada and generate recovery data assuming ttr
+  recMissing <- c("Canada", "US") # countries for which recovery data are missing
   infSub   <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% recMissing)
   deathSub <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% recMissing)
   recSub   <- recLag(infSub, deathSub, active = FALSE)
-  # Merge US, Canada, India estimated recoveries on to known recoveries
+  # Merge US, Canada estimated recoveries on to known recoveries
   timeSeriesRecoveries <- rbind(subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% recMissing)) , recSub)
   
   # a check
@@ -138,13 +118,21 @@ if (test1 & test2 & test3 & test4){
   rm(checkI, checkD, cumSub)
 
   
-  # Create a list to hold all data
+  # Open dataList object, or create it
   available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
-  dataList <- vector(mode = "list", length = length(available_countries)+1)
-  names(dataList) <- c("Global", available_countries)
+  if (file.exists("dat/dataList.RData")) {
+    load("dat/dataList.RData")
+    runSeparately <- TRUE # if dataList exists, run country updates separately
+  } else {
+    dataList <- vector(mode = "list", length = length(available_countries)+1)
+    names(dataList) <- c("Global", available_countries)
+    runSeparately <- FALSE # if dataList exists, run country updates separately
+  }
+  
   
   
   ###### GLOBAL ######
+  print("Global") # report to console
   
   timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
   timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
@@ -193,8 +181,12 @@ if (test1 & test2 & test3 & test4){
   ###### LOCAL ######
   
   for(focusCountry in available_countries) {
+    # check country directory exists
+    dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     
+    if (focusCountry=="India") next # do India independently, in getIndia.R
     print(focusCountry)
+    
     # set dataframes back to standards
     tsI <- std$tsI
     tsD <- std$tsD
@@ -225,7 +217,6 @@ if (test1 & test2 & test3 & test4){
     names(ddReg) <- ddNames
     
     ## write data caches out
-    dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
@@ -243,5 +234,10 @@ if (test1 & test2 & test3 & test4){
   }
   
   save(dataList, file = "dat/dataList.RData")
+  
+  # run other countries
+  if (!runSeparately){
+    system("Rscript getIndia.R", wait = TRUE)
+  }
   
 } else { print('there was an error!') } # end of first data test if statement (test1, test2) ...need to add our else notification here
