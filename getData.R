@@ -198,6 +198,8 @@ if (test1 & test2 & test3 & test4){
   ###### LOCAL ######
   
   for(focusCountry in available_countries) {
+    # check country directory exists
+    dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     
     if (focusCountry=="India") next # do India independently, in getIndia.R
     print(focusCountry)
@@ -232,7 +234,6 @@ if (test1 & test2 & test3 & test4){
     names(ddReg) <- ddNames
     
     ## write data caches out
-    dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
