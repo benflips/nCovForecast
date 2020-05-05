@@ -33,9 +33,10 @@ options(scipen=9)
 server <- function(input, output, session) {
 
   please_select_a_country <- 'Please select a country or region...'
-  clrDark<-"#273D6E"
-  clrLight<-"#B2C3D5"
-  
+  clrDark   <- "#273D6E"
+  clrLight  <- "#B2C3D5"
+  clrOrange <- "#FF7F0E"  
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
 # #### Observer function -- set country names from url ####
@@ -342,7 +343,24 @@ server <- function(input, output, session) {
     }
   })
   
+
+  log100cases <- reactive({
+    subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
+  })
+
+
 output$log100casesPlot <- renderPlotly({
+      for (country in input$countryGrowthRate) {
+        myY <- subset(log100cases(), log100cases()$Region == country)
+        # remove column with name Region
+        myY <- myY[,-1]
+        # remove dates as these are unnecessary
+        myY <- as.vector(t(myY))
+        # only get values bigger than 100
+        myY <- subset(myY, myY >= 100)
+        print(country)
+        print(myY)
+      }
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
@@ -354,6 +372,7 @@ output$log100casesPlot <- renderPlotly({
                           name = "Best fit",
                           hoverinfo = "text+name", 
                           text = format(yI$yI, big.mark = ',')) %>%
+
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
@@ -436,6 +455,7 @@ output$log100casesPlot <- renderPlotly({
   growthSub <- reactive({
     subset(timeSeriesActive, timeSeriesActive$Region %in% input$countryGrowthRate)
   })
+
 
 ##### Curve-flattening #####    
   output$cfi <- renderPlotly({

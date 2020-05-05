@@ -155,7 +155,6 @@ function openTab(evt, tabName) {
       </div>
 
       <div class="right-panel">
-        {{ plotlyOutput("log100casesPlot") }}
         {{ plotlyOutput("rawPlot") }}
         <p></p>
         {{ plotlyOutput("logPlot") }}
@@ -185,6 +184,9 @@ function openTab(evt, tabName) {
 
       <div class="right-panel">
         <h3>Growth rate</h3>
+
+        {{ plotlyOutput("log100casesPlot") }}
+
         <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
         
