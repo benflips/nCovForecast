@@ -183,10 +183,12 @@ function openTab(evt, tabName) {
 
 
       <div class="right-panel">
-        <h3>Growth rate</h3>
-
+        <h3>Growth trajectories</h3>
+        <p>This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.</p>
+        <p>This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).</p>
         {{ plotlyOutput("log100casesPlot") }}
-
+        
+        <h3>Growth rate</h3>
         <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
         <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
         
