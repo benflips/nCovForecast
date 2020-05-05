@@ -377,7 +377,7 @@ server <- function(input, output, session) {
                                  mode = "lines",
                                  name = country)
       }
-      doubling_lines <- c(2,3,4)
+      doubling_lines <- c(2,3,5)
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
