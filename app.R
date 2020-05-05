@@ -348,7 +348,7 @@ server <- function(input, output, session) {
     subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
   })
 
-
+##### Log100 cases Plot ##### 
   output$log100casesPlot <- renderPlotly({
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
@@ -360,7 +360,8 @@ server <- function(input, output, session) {
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
-                                    fixedrange = TRUE)
+                                    fixedrange = TRUE),
+                       legend = list(x=0.7, y=0)
                 )
       fig <- fig %>% config(displayModeBar = FALSE)
       for (country in input$countryGrowthRate) {
