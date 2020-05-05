@@ -350,6 +350,7 @@ server <- function(input, output, session) {
 
 
 output$log100casesPlot <- renderPlotly({
+      myYs= list()
       for (country in input$countryGrowthRate) {
         myY <- subset(log100cases(), log100cases()$Region == country)
         # remove column with name Region
@@ -358,28 +359,32 @@ output$log100casesPlot <- renderPlotly({
         myY <- as.vector(t(myY))
         # only get values bigger than 100
         myY <- subset(myY, myY >= 100)
-        print(country)
-        print(myY)
+        myYs[[country]] = myY
       }
+      print(myYs)
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
-      yMax <- max(yI, na.rm = TRUE)*1.05
+#      yMax <- max(yI, na.rm = TRUE)*1.05
       fig <- plot_ly(yI, type = "scatter", mode = "none") %>%
-                add_trace(y = ~yI,
-                          mode = "lines", 
-                          line = list(color = clrDark), 
-                          name = "Best fit",
-                          hoverinfo = "text+name", 
-                          text = format(yI$yI, big.mark = ',')) %>%
-
+  add_trace(y=myYs[['China']],
+  mode="lines",
+  line=list(color = clrDark),
+  name = "China") %>%
+  add_trace(y=myYs[['Australia']],
+  mode="lines",
+  line=list(color = clrDark),
+  name = "Australia") %>%
+  add_trace(y=myYs[['Italy']],
+  mode="lines",
+  line=list(color = clrDark),
+  name = "Italy") %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
-                                    range = list(log10(0.1), log10(yMax)),
                                     title = list(text = "Confirmed active cases (log scale)"),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
-                                    title = list(text = ""),
+                                    title = list(text = "Number of days since 100 cases"),
                                     fixedrange = TRUE)
                 ) %>%
                 config(displayModeBar = FALSE)
