@@ -376,6 +376,24 @@ output$log100casesPlot <- renderPlotly({
                                  mode = "lines",
                                  name = country)
       }
+      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*2)/2)),
+                               x = c(0,13.55*2),
+                               mode = "lines",
+                               line = list(color = clrLight, dash = "dot"),
+                               hoverinfo = "name",
+                               name = 'Doubling every 2 days')
+      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*3)/3)),
+                               x = c(0,13.55*3),
+                               mode = "lines",
+                               line = list(color = clrLight, dash = "dot"),
+                               hoverinfo = "name",
+                               name = 'Doubling every 3 days')
+      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*7)/7)),
+                               x = c(0,13.55*7),
+                               mode = "lines",
+                               line = list(color = clrLight, dash = "dot"),
+                               hoverinfo = "name",
+                               name = 'Doubling every 7 days')
       fig
 })
 
