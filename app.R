@@ -356,7 +356,7 @@ output$log100casesPlot <- renderPlotly({
       fig <- plot_ly(yI, type = "scatter", mode = "none")
       fig <- fig %>% layout(showlegend = TRUE, 
                        yaxis = list(type = "log",
-                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    title = list(text = "Confirmed cases (log scale)"),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
@@ -376,24 +376,16 @@ output$log100casesPlot <- renderPlotly({
                                  mode = "lines",
                                  name = country)
       }
-      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*2)/2)),
-                               x = c(0,13.55*2),
-                               mode = "lines",
-                               line = list(color = clrLight, dash = "dot"),
-                               hoverinfo = "name",
-                               name = 'Doubling every 2 days')
-      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*3)/3)),
-                               x = c(0,13.55*3),
-                               mode = "lines",
-                               line = list(color = clrLight, dash = "dot"),
-                               hoverinfo = "name",
-                               name = 'Doubling every 3 days')
-      fig <- fig %>% add_trace(y = c(100,100*2^((13.55*7)/7)),
-                               x = c(0,13.55*7),
-                               mode = "lines",
-                               line = list(color = clrLight, dash = "dot"),
-                               hoverinfo = "name",
-                               name = 'Doubling every 7 days')
+      doubling_lines <- c(2,3,7)
+      topY = log2(1200000) # 1.2 million active cases is an arbitrary max number
+      for (doubling_line in doubling_lines) {
+        fig <- fig %>% add_trace(y = c(100,100*2^topY),
+                                 x = c(0,topY*doubling_line),
+                                 mode = "lines",
+                                 line = list(color = clrLight, dash = "dot"),
+                                 hoverinfo = "name",
+                                 name = paste('Doubling every',doubling_line,'days'))
+      }
       fig
 })
 
