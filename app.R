@@ -33,6 +33,8 @@ options(scipen=9)
 server <- function(input, output, session) {
 
   please_select_a_country <- 'Please select a country or region...'
+  clrDark<-"#273D6E"
+  clrLight<-"#B2C3D5"
   
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
@@ -150,8 +152,6 @@ server <- function(input, output, session) {
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      clrDark<-"#273D6E"
-      clrLight<-"#B2C3D5"
       #yTxt <- "Confirmed active cases"
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
@@ -214,9 +214,6 @@ server <- function(input, output, session) {
       date_at_peak <- projfCast()$date_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      clrDark<-"#273D6E"
-      clrLight<-"#B2C3D5"
-      #yTxt <- "Confirmed active cases"
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
                           x = ~dates,
@@ -273,8 +270,6 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yI <- yfCast()$yI # Infected
       yD <- yfCast()$yD # Deaths
-      clrDark<-"#273D6E"
-      clrOrange<-"#FF7F0E"
       
       # Calculate new cases
       newCases <- diff(yI) 
@@ -347,6 +342,32 @@ server <- function(input, output, session) {
     }
   })
   
+output$log100casesPlot <- renderPlotly({
+      print(yfCast()$yI)
+      yI <- yfCast()$yI
+      yI <- data.frame(dates = as.Date(names(yI), format = "%m.%d.%y"), yI)
+      yMax <- max(yI$yI, na.rm = TRUE)*1.05
+      fig <- plot_ly(yI, type = "scatter", mode = "none") %>%
+                add_trace(y = ~yI,
+                          x = ~dates,
+                          mode = "lines", 
+                          line = list(color = clrDark), 
+                          name = "Best fit",
+                          hoverinfo = "text+name", 
+                          text = format(dates, "%b %d")) %>%
+                layout(showlegend = FALSE, 
+                       yaxis = list(type = "log",
+                                    range = list(log10(0.1), log10(yMax)),
+                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    fixedrange = TRUE),
+                       xaxis = list(range = plotRange(),
+                                    title = list(text = ""),
+                                    fixedrange = TRUE)
+                ) %>%
+                config(displayModeBar = FALSE)
+})
+
+
 ##### Forecast metrics ##### 
   output$forecastMetrics <- renderText({
     if (input$countryFinder == '') {

@@ -155,6 +155,7 @@ function openTab(evt, tabName) {
       </div>
 
       <div class="right-panel">
+        {{ plotlyOutput("log100casesPlot") }}
         {{ plotlyOutput("rawPlot") }}
         <p></p>
         {{ plotlyOutput("logPlot") }}
