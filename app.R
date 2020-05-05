@@ -355,15 +355,27 @@ server <- function(input, output, session) {
       yI <- data.frame(yI)
       fig <- plot_ly(yI, type = "scatter", mode = "none")
       fig <- fig %>% layout(showlegend = TRUE, 
+                       height = 600,
                        yaxis = list(type = "log",
                                     title = list(text = "Confirmed cases (log scale)"),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
                                     fixedrange = TRUE),
-                       legend = list(x=0.7, y=0)
+                       legend = list(orientation="h", xanchor="center",x=0.5,y=-0.2)
                 )
       fig <- fig %>% config(displayModeBar = FALSE)
+      doubling_lines <- c(2,3,5)
+      ymax <- max(log100cases()[,-1],na.rm=TRUE)
+      ymax <- 2^(log2(ymax)*1.05) # just a little higher
+      for (doubling_line in doubling_lines) {
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
+                                 y    = c(100, ymax),
+                                 mode = "lines",
+                                 line = list(color = clrLight, dash = "dot"),
+                                 hoverinfo = "name",
+                                 name = paste('Doubling every',doubling_line,'days'))
+      }
       for (country in input$countryGrowthRate) {
         myY <- subset(log100cases(), log100cases()$Region == country)
         # remove column with name Region
@@ -376,17 +388,6 @@ server <- function(input, output, session) {
         fig <- fig %>% add_trace(y    = myY,
                                  mode = "lines",
                                  name = country)
-      }
-      doubling_lines <- c(2,3,5)
-      ymax <- max(log100cases()[,-1],na.rm=TRUE)
-      ymax <- 2^(log2(ymax)*1.05) # just a little higher
-      for (doubling_line in doubling_lines) {
-        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
-                                 y    = c(100, ymax),
-                                 mode = "lines",
-                                 line = list(color = clrLight, dash = "dot"),
-                                 hoverinfo = "name",
-                                 name = paste('Doubling every',doubling_line,'days'))
       }
       fig
 })
