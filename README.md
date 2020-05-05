@@ -1,11 +1,13 @@
 # nCovForecast
 Code for nCov forecasting tool (Shiny app)
 
-Takes data amalgamated for the John Hopkins nCov tracker, breaks it down by country and:
+Takes data from several sources (John Hopkins University, Indian Government), breaks it down by country/region and:
 
-1. gives simple projections of confirmed cases for next ten days;
-2. estimates (roughly) detection probability in each country and reports detection-corrected values
-3. shows growth rates in each country over last ten days (tracking success at curve flattening)
+1. gives simple projections of active confirmed cases for next ten days;
+2. estimates detection probability over time in each country and reports detection-corrected values
+3. shows growth rates in each country over last twenty days (tracking success at suppression)
+
+The app is under continual development.  Contributions and suggestions are welcome.  If you have data that you would like to see represented here, please get in contact. 
 
 ## To run in development mode
 
