@@ -349,7 +349,7 @@ server <- function(input, output, session) {
   })
 
 
-output$log100casesPlot <- renderPlotly({
+  output$log100casesPlot <- renderPlotly({
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
@@ -377,10 +377,11 @@ output$log100casesPlot <- renderPlotly({
                                  name = country)
       }
       doubling_lines <- c(2,3,7)
-      topY = log2(1200000) # 1.2 million active cases is an arbitrary max number
+      ymax <- max(log100cases()[,-1],na.rm=TRUE)
+      ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
-        fig <- fig %>% add_trace(y = c(100,100*2^topY),
-                                 x = c(0,topY*doubling_line),
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymax)*doubling_line),
+                                 y    = c(100, ymax),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
                                  hoverinfo = "name",
