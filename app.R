@@ -343,18 +343,17 @@ server <- function(input, output, session) {
   })
   
 output$log100casesPlot <- renderPlotly({
-      print(yfCast()$yI)
       yI <- yfCast()$yI
-      yI <- data.frame(dates = as.Date(names(yI), format = "%m.%d.%y"), yI)
-      yMax <- max(yI$yI, na.rm = TRUE)*1.05
+      yI <- subset(yI, yI >= 100)
+      yI <- data.frame(yI)
+      yMax <- max(yI, na.rm = TRUE)*1.05
       fig <- plot_ly(yI, type = "scatter", mode = "none") %>%
                 add_trace(y = ~yI,
-                          x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark), 
                           name = "Best fit",
                           hoverinfo = "text+name", 
-                          text = format(dates, "%b %d")) %>%
+                          text = format(yI$yI, big.mark = ',')) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
