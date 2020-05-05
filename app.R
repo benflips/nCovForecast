@@ -361,30 +361,25 @@ output$log100casesPlot <- renderPlotly({
         myY <- subset(myY, myY >= 100)
         myYs[[country]] = myY
       }
-      print(myYs)
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
 #      yMax <- max(yI, na.rm = TRUE)*1.05
-      fig <- plot_ly(yI, type = "scatter", mode = "none") %>%
-  add_trace(y=myYs[['China']],
-  mode="lines",
-  name = "China") %>%
-  add_trace(y=myYs[['Australia']],
-  mode="lines",
-  name = "Australia") %>%
-  add_trace(y=myYs[['Italy']],
-  mode="lines",
-  name = "Italy") %>%
-                layout(showlegend = TRUE, 
+      fig <- plot_ly(yI, type = "scatter", mode = "none")
+      fig <- fig %>% layout(showlegend = TRUE, 
                        yaxis = list(type = "log",
                                     title = list(text = "Confirmed active cases (log scale)"),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
                                     fixedrange = TRUE)
-                ) %>%
-                config(displayModeBar = FALSE)
+                )
+      fig <- fig %>% config(displayModeBar = FALSE)
+      #for (country in input$countryGrowthRate) {
+        fig <- fig %>% add_trace(y    = myYs[['China']],
+                                 mode = "lines",
+                                 name = 'China') 
+      #}
 })
 
 
