@@ -350,17 +350,6 @@ server <- function(input, output, session) {
 
 
 output$log100casesPlot <- renderPlotly({
-      myYs= list()
-      for (country in input$countryGrowthRate) {
-        myY <- subset(log100cases(), log100cases()$Region == country)
-        # remove column with name Region
-        myY <- myY[,-1]
-        # remove dates as these are unnecessary
-        myY <- as.vector(t(myY))
-        # only get values bigger than 100
-        myY <- subset(myY, myY >= 100)
-        myYs[[country]] = myY
-      }
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
@@ -375,7 +364,15 @@ output$log100casesPlot <- renderPlotly({
                 )
       fig <- fig %>% config(displayModeBar = FALSE)
       for (country in input$countryGrowthRate) {
-        fig <- fig %>% add_trace(y    = myYs[[country]],
+        myY <- subset(log100cases(), log100cases()$Region == country)
+        # remove column with name Region
+        myY <- myY[,-1]
+        # remove dates as these are unnecessary
+        myY <- as.vector(t(myY))
+        # only get values bigger than 100
+        myY <- subset(myY, myY >= 100)
+
+        fig <- fig %>% add_trace(y    = myY,
                                  mode = "lines",
                                  name = country)
       }
