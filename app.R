@@ -369,17 +369,14 @@ output$log100casesPlot <- renderPlotly({
       fig <- plot_ly(yI, type = "scatter", mode = "none") %>%
   add_trace(y=myYs[['China']],
   mode="lines",
-  line=list(color = clrDark),
   name = "China") %>%
   add_trace(y=myYs[['Australia']],
   mode="lines",
-  line=list(color = clrDark),
   name = "Australia") %>%
   add_trace(y=myYs[['Italy']],
   mode="lines",
-  line=list(color = clrDark),
   name = "Italy") %>%
-                layout(showlegend = FALSE, 
+                layout(showlegend = TRUE, 
                        yaxis = list(type = "log",
                                     title = list(text = "Confirmed active cases (log scale)"),
                                     fixedrange = TRUE),
