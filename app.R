@@ -33,7 +33,10 @@ options(scipen=9)
 server <- function(input, output, session) {
 
   please_select_a_country <- 'Please select a country or region...'
-  
+  clrDark   <- "#273D6E"
+  clrLight  <- "#B2C3D5"
+  clrOrange <- "#FF7F0E"  
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
 # #### Observer function -- set country names from url ####
@@ -150,8 +153,6 @@ server <- function(input, output, session) {
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      clrDark<-"#273D6E"
-      clrLight<-"#B2C3D5"
       #yTxt <- "Confirmed active cases"
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
@@ -214,9 +215,6 @@ server <- function(input, output, session) {
       date_at_peak <- projfCast()$date_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      clrDark<-"#273D6E"
-      clrLight<-"#B2C3D5"
-      #yTxt <- "Confirmed active cases"
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
                           x = ~dates,
@@ -273,8 +271,6 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yI <- yfCast()$yI # Infected
       yD <- yfCast()$yD # Deaths
-      clrDark<-"#273D6E"
-      clrOrange<-"#FF7F0E"
       
       # Calculate new cases
       newCases <- diff(yI) 
@@ -347,6 +343,56 @@ server <- function(input, output, session) {
     }
   })
   
+
+  log100cases <- reactive({
+    subset(timeSeriesInfections, timeSeriesInfections$Region %in% input$countryGrowthRate)
+  })
+
+##### Log100 cases Plot ##### 
+  output$log100casesPlot <- renderPlotly({
+      yI <- yfCast()$yI
+      yI <- subset(yI, yI >= 100)
+      yI <- data.frame(yI)
+      fig <- plot_ly(yI, type = "scatter", mode = "none")
+      fig <- fig %>% layout(showlegend = TRUE, 
+                       height = 600,
+                       yaxis = list(type = "log",
+                                    title = list(text = "Confirmed cases (log scale)"),
+                                    fixedrange = TRUE),
+                       xaxis = list(range = plotRange(),
+                                    title = list(text = "Number of days since 100 cases"),
+                                    fixedrange = TRUE),
+                       legend = list(orientation="h", xanchor="center",x=0.5,y=-0.2)
+                )
+      fig <- fig %>% config(displayModeBar = FALSE)
+      doubling_lines <- c(2,3,5)
+      ymax <- max(log100cases()[,-1],na.rm=TRUE)
+      ymax <- 2^(log2(ymax)*1.05) # just a little higher
+      for (doubling_line in doubling_lines) {
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
+                                 y    = c(100, ymax),
+                                 mode = "lines",
+                                 line = list(color = clrLight, dash = "dot"),
+                                 hoverinfo = "name",
+                                 name = paste('Doubling every',doubling_line,'days'))
+      }
+      for (country in input$countryGrowthRate) {
+        myY <- subset(log100cases(), log100cases()$Region == country)
+        # remove column with name Region
+        myY <- myY[,-1]
+        # remove dates as these are unnecessary
+        myY <- as.vector(t(myY))
+        # only get values bigger than 100
+        myY <- subset(myY, myY >= 100)
+
+        fig <- fig %>% add_trace(y    = myY,
+                                 mode = "lines",
+                                 name = country)
+      }
+      fig
+})
+
+
 ##### Forecast metrics ##### 
   output$forecastMetrics <- renderText({
     if (input$countryFinder == '') {
@@ -416,6 +462,7 @@ server <- function(input, output, session) {
   growthSub <- reactive({
     subset(timeSeriesActive, timeSeriesActive$Region %in% input$countryGrowthRate)
   })
+
 
 ##### Curve-flattening #####    
   output$cfi <- renderPlotly({
