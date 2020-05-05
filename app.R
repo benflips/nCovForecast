@@ -380,7 +380,7 @@ server <- function(input, output, session) {
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
-        fig <- fig %>% add_trace(x    = c(0,   log2(ymax)*doubling_line),
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
                                  y    = c(100, ymax),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
