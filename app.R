@@ -408,7 +408,12 @@ server <- function(input, output, session) {
       }
     } else {
         pDat <- yfCast()$yA
-        dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days.')
+        doubTime <- round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1)
+        if (doubTime > 0) {
+          dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+        } else {
+          dTime <- paste("Halving time", -round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+        }
     }
     }
   })
