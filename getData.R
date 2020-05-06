@@ -110,6 +110,7 @@ if (test1 & test2 & test3){
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   cumSub <- checkI & checkD
+  if (sum(!cumSub)>10) stop("More than ten suspect regions in JHU dataset.")
   print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
   std$tsI <- std$tsI[cumSub,]
   std$tsD <- std$tsD[cumSub,]
@@ -240,4 +241,4 @@ if (test1 & test2 & test3){
     system("Rscript getIndia.R", wait = TRUE)
   }
   
-} else { print('there was an error!') } # end of first data test if statement (test1, test2) ...need to add our else notification here
+} else { stop(paste('there was an error!', test1, test2, test3)) } # end of first data test if statement (test1, test2) ...need to add our else notification here

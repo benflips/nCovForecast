@@ -61,6 +61,7 @@ if (test1 & test2 & test3) {
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   cumSub <- checkI & checkD
+  if (sum(!cumSub)>5) stop("More than five suspect regions in India dataset.")
   print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
   tsI <- std$tsI[cumSub,]
   tsD <- std$tsD[cumSub,]
@@ -110,4 +111,4 @@ if (test1 & test2 & test3) {
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
   
-} else { print('there was an error!') }  
+} else { stop(paste('there was an error!', test1, test2, test3)) }  
