@@ -129,8 +129,12 @@ function openTab(evt, tabName) {
         
         <h3>Forecast metrics:</h3>
         <div class="center">{{ textOutput(outputId = "forecastMetrics") }}</div>
-  
-        {{ checkboxInput(inputId = "modelType", label = "Time-varying growth (uncheck for constant growth)", value = TRUE)}}
+
+        <fieldset>  
+          {{ radioButtons("modelType", "", choiceNames  = list('Time-varying growth','Constant growth'),
+                                           choiceValues = list('True',               'False')) }}
+        </fieldset>
+
         <br>
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
@@ -211,6 +215,8 @@ function openTab(evt, tabName) {
 </div>
 
 <style>
+
+input[type='radio'] { transform: scale(1.5); }
 
 section {
   width: 95%;

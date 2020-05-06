@@ -404,11 +404,16 @@ server <- function(input, output, session) {
       } else if (is.null(projfCast()$date_at_peak)){
         "Active cases peaked in the past"
       } else {
-        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B."))
+        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B"))
       }
     } else {
         pDat <- yfCast()$yA
-        dTime <- paste("Doubling time", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days.')
+        doubTime <- round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1)
+        if (doubTime > 0) {
+          dTime <- paste("Doubling time is", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+        } else {
+          dTime <- paste("Halving time is", -round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+        }
     }
     }
   })
