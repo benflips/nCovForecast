@@ -32,6 +32,7 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
+
   please_select_a_country <- 'Please select a country or region...'
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
@@ -382,12 +383,23 @@ server <- function(input, output, session) {
         myY <- myY[,-1]
         # remove dates as these are unnecessary
         myY <- as.vector(t(myY))
-        # only get values bigger than 100
-        myY <- subset(myY, myY >= 100)
 
-        fig <- fig %>% add_trace(y    = myY,
-                                 mode = "lines",
-                                 name = country)
+        if (input$totalCases) {
+          # only get values bigger than 100
+          myY <- subset(myY, myY >= 100)
+          fig <- fig %>% add_trace(y = myY, mode = "lines", name = country)
+        } else {
+          countryInPopDataStyle <- country
+          if (country == 'US') {
+            countryInPopDataStyle <- 'United States'
+          }
+          populationRecord <- subset(popDat, popDat$Country.Name == countryInPopDataStyle)
+          if (nrow(populationRecord) != 0)  {
+            myY <- myY/populationRecord[['totalN']]*100000
+            myY <- subset(myY, myY >= 0.05)
+            fig <- fig %>% add_trace(y = myY, mode = "lines", name = country)
+          }
+        }
       }
       fig
 })
