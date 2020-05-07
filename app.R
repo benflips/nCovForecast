@@ -351,6 +351,30 @@ server <- function(input, output, session) {
 
 ##### Log100 cases Plot ##### 
   output$log100casesPlot <- renderPlotly({
+      myYs = list()
+      for (country in input$countryGrowthRate) {
+        myY <- subset(log100cases(), log100cases()$Region == country)
+        # remove column with name Region
+        myY <- myY[,-1]
+        # remove dates as these are unnecessary
+        myY <- as.vector(t(myY))
+
+        if (input$totalCases) {
+          # only get values bigger than 100
+          myYs[[country]] <- subset(myY, myY >= 100)
+        } else {
+          countryInPopDataStyle <- country
+          if (country == 'US') {
+            countryInPopDataStyle <- 'United States'
+          }
+          populationRecord <- subset(popDat, popDat$Country.Name == countryInPopDataStyle)
+          if (nrow(populationRecord) != 0)  {
+            myY <- myY/populationRecord[['totalN']]*100000
+            myYs[[country]] <- subset(myY, myY >= 0.05)
+          }
+        }
+      }
+
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
@@ -369,9 +393,14 @@ server <- function(input, output, session) {
       doubling_lines <- c(2,3,5)
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
+      if (input$totalCases) {
+        y0 <- 100 
+      } else {
+        y0 <- 0.05 
+      }
       for (doubling_line in doubling_lines) {
         fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
-                                 y    = c(100, ymax),
+                                 y    = c(y0, ymax),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
                                  hoverinfo = "name",
