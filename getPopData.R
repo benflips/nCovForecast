@@ -36,6 +36,31 @@ colnames(popDat)[grepl(pattern = "SP", x = colnames(popDat))]<-c("x0014", "x1564
 popDat$Country.Name[popDat$Country.Name == 'United States'] <- 'US'
 popDat$Country.Name[popDat$Country.Name == 'Korea_ Rep.']   <- 'Korea, South'
 popDat$Country.Name[popDat$Country.Name == 'Bahamas_ The']  <- 'Bahamas'
+popDat$Country.Name[popDat$Country.Name == 'Brunei Darussalam'] <- 'Brunei'
+popDat$Country.Name[popDat$Country.Name == 'Congo_ Rep.'] <- 'Congo (Brazzaville)'
+popDat$Country.Name[popDat$Country.Name == 'Congo_ Dem. Rep.'] <- 'Congo (Kinshasa)'
+popDat$Country.Name[popDat$Country.Name == 'Czech Republic'] <- 'Czechia'
+popDat$Country.Name[popDat$Country.Name == 'Egypt_ Arab Rep.'] <- 'Egypt'
+popDat$Country.Name[popDat$Country.Name == 'Gambia_ The'] <- 'Gambia'
+popDat$Country.Name[popDat$Country.Name == 'Iran_ Islamic Rep.'] <- 'Iran'
+popDat$Country.Name[popDat$Country.Name == 'Kyrgyz Republic'] <- 'Kyrgyzstan'
+popDat$Country.Name[popDat$Country.Name == 'Lao PDR'] <- 'Laos'
+popDat$Country.Name[popDat$Country.Name == 'Russian Federation'] <- 'Russia'
+popDat$Country.Name[popDat$Country.Name == 'St. Kitts and Nevis'] <- 'Saint Kitts and Nevis'
+popDat$Country.Name[popDat$Country.Name == 'St. Lucia'] <- 'Saint Lucia'
+popDat$Country.Name[popDat$Country.Name == 'St. Vincent and the Grenadines'] <- 'Saint Vincent and the Grenadines'
+popDat$Country.Name[popDat$Country.Name == 'Slovak Republic'] <- 'Slovakia'
+popDat$Country.Name[popDat$Country.Name == 'Syrian Arab Republic'] <- 'Syria'
+popDat$Country.Name[popDat$Country.Name == 'Yemen_ Rep.'] <- 'Yemen'
 
 
 save(popDat, file = "dat/popData.RData")
+
+
+### Temporary stuff to find mismatches
+source("getDataLocal.R") #makes data available to the instance.
+list2env(dataList[["Global"]], envir = environment())
+JHUNames <- timeSeriesInfections$Region
+popDatNames <- popDat$Country.Name
+popDatNames[!(popDatNames %in% JHUNames)]
+JHUNames[!(JHUNames %in% popDatNames)]
