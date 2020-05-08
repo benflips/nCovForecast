@@ -370,9 +370,11 @@ server <- function(input, output, session) {
             myYs[[country]] <- subset(myY, myY >= 0.05) # 0.05 is threshold for showing on per capita graph
           }
         }
-        finalY <- tail(myYs[[country]], n=1)
-        if (finalY > ymaxOriginal) {
-          ymaxOriginal <- finalY
+        if (length(myYs[[country]]) > 0) {
+          finalY <- tail(myYs[[country]], n=1)
+          if (finalY > ymaxOriginal) {
+            ymaxOriginal <- finalY
+          }
         }
       }
       ymax <- 10^(log10(ymaxOriginal)*1.05) # just a little higher
