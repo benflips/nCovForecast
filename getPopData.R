@@ -71,9 +71,9 @@ save(popDat, file = "dat/popData.RData")
 
 
 ### Temporary stuff to find mismatches
-source("getDataLocal.R") #makes data available to the instance.
-list2env(dataList[["Global"]], envir = environment())
-JHUNames <- timeSeriesInfections$Region
-popDatNames <- popDat$Country.Name
-popDatNames[!(popDatNames %in% JHUNames)]
-JHUNames[!(JHUNames %in% popDatNames)]
+# source("getDataLocal.R") #makes data available to the instance.
+# list2env(dataList[["Global"]], envir = environment())
+# JHUNames <- timeSeriesInfections$Region
+# popDatNames <- popDat$Country.Name
+# popDatNames[!(popDatNames %in% JHUNames)]
+# JHUNames[!(JHUNames %in% popDatNames)]
