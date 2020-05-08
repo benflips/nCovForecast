@@ -191,6 +191,11 @@ function openTab(evt, tabName) {
         <p>This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.</p>
         <p>This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).</p>
         {{ plotlyOutput("log100casesPlot") }}
+        <fieldset>  
+          {{ radioButtons("totalCases", "", choiceNames  = list('Total cases','Cases per capita'),
+                                            choiceValues = list('True',       'False')) }}
+        </fieldset>
+
         <br><br><br><br><br><br><br><br><br>
         <h3>Growth rate</h3>
         <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
@@ -215,8 +220,6 @@ function openTab(evt, tabName) {
 </div>
 
 <style>
-
-input[type='radio'] { transform: scale(1.5); }
 
 section {
   width: 95%;

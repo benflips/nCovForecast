@@ -32,6 +32,7 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
+
   please_select_a_country <- 'Please select a country or region...'
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
@@ -350,6 +351,39 @@ server <- function(input, output, session) {
 
 ##### Log100 cases Plot ##### 
   output$log100casesPlot <- renderPlotly({
+      myYs = list()
+      ymaxOriginal = 10
+      for (country in input$countryGrowthRate) {
+        myY <- subset(log100cases(), log100cases()$Region == country)
+        # remove column with name Region
+        myY <- myY[,-1]
+        # remove dates as these are unnecessary
+        myY <- as.vector(t(myY))
+
+        if (input$totalCases) {
+          # only get values bigger than 100
+          myYs[[country]] <- subset(myY, myY >= 100)
+        } else {
+          populationRecord <- subset(popDat, popDat$Country.Name == country)
+          if (nrow(populationRecord) != 0)  {
+            myY <- myY/populationRecord$totalN*100000
+            myYs[[country]] <- subset(myY, myY >= 0.05) # 0.05 is threshold for showing on per capita graph
+          }
+        }
+        if (length(myYs[[country]]) > 0) {
+          finalY <- tail(myYs[[country]], n=1)
+          if (finalY > ymaxOriginal) {
+            ymaxOriginal <- finalY
+          }
+        }
+      }
+      ymax <- 10^(log10(ymaxOriginal)*1.05) # just a little higher
+      if (input$totalCases) {
+        ylabel <- "Confirmed cases (log scale)"
+      } else {
+        ylabel <- "Confirmed cases per 100,000 population (log scale)"
+      }
+
       yI <- yfCast()$yI
       yI <- subset(yI, yI >= 100)
       yI <- data.frame(yI)
@@ -357,7 +391,7 @@ server <- function(input, output, session) {
       fig <- fig %>% layout(showlegend = TRUE, 
                        height = 600,
                        yaxis = list(type = "log",
-                                    title = list(text = "Confirmed cases (log scale)"),
+                                    title = list(text = ylabel),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
@@ -366,28 +400,21 @@ server <- function(input, output, session) {
                 )
       fig <- fig %>% config(displayModeBar = FALSE)
       doubling_lines <- c(2,3,5)
-      ymax <- max(log100cases()[,-1],na.rm=TRUE)
-      ymax <- 2^(log2(ymax)*1.05) # just a little higher
+      if (input$totalCases) {
+        y0 <- 100 
+      } else {
+        y0 <- 0.05 
+      }
       for (doubling_line in doubling_lines) {
-        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
-                                 y    = c(100, ymax),
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymaxOriginal/y0)*doubling_line),
+                                 y    = c(y0, ymaxOriginal),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
                                  hoverinfo = "name",
                                  name = paste('Doubling every',doubling_line,'days'))
       }
       for (country in input$countryGrowthRate) {
-        myY <- subset(log100cases(), log100cases()$Region == country)
-        # remove column with name Region
-        myY <- myY[,-1]
-        # remove dates as these are unnecessary
-        myY <- as.vector(t(myY))
-        # only get values bigger than 100
-        myY <- subset(myY, myY >= 100)
-
-        fig <- fig %>% add_trace(y    = myY,
-                                 mode = "lines",
-                                 name = country)
+        fig <- fig %>% add_trace(y = myYs[[country]], mode = "lines", name = country)
       }
       fig
 })
