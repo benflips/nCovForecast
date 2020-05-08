@@ -369,12 +369,14 @@ server <- function(input, output, session) {
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
+        linename <- paste('Doubling every',doubling_line,'days')
         fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
                                  y    = c(100, ymax),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
-                                 hoverinfo = "name",
-                                 name = paste('Doubling every',doubling_line,'days'))
+                                 hoverinfo = "text",
+                                 text = linename,
+                                 name = linename)
       }
       for (country in input$countryGrowthRate) {
         myY <- subset(log100cases(), log100cases()$Region == country)
