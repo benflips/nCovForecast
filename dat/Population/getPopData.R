@@ -25,7 +25,7 @@ library(tidyverse)
 ## ---------------------------
 
 
-popDat <- read.csv(file = "dat/Data_Extract_From_World_Development_Indicators.csv", stringsAsFactors = FALSE)
+popDat <- read.csv(file = "dat/Population/Data_Extract_From_World_Development_Indicators.csv", stringsAsFactors = FALSE)
 popDat <- popDat %>% filter(grepl(pattern = "\\d", x = popDat$Series.Code)) %>% 
     select(Country.Name, Series.Code, X2018) %>% 
     group_by(Country.Name) %>% 
@@ -67,7 +67,7 @@ temp <- aggregate(temp[,1:4], by = list(Country.Name = temp$Continent), FUN = su
 popDat <- bind_rows(temp, popDat)
 
 # write out data file
-save(popDat, file = "dat/popData.RData")
+save(popDat, file = "dat/Population/popData.RData")
 
 
 ### Temporary stuff to find mismatches
