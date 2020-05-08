@@ -354,7 +354,6 @@ server <- function(input, output, session) {
       myYs = list()
       ymaxOriginal = 10
       for (country in input$countryGrowthRate) {
-        print(country)
         myY <- subset(log100cases(), log100cases()$Region == country)
         # remove column with name Region
         myY <- myY[,-1]
@@ -365,14 +364,10 @@ server <- function(input, output, session) {
           # only get values bigger than 100
           myYs[[country]] <- subset(myY, myY >= 100)
         } else {
-          countryInPopDataStyle <- country
-          if      (country == 'US'          ) { populationRecord <- subset(popDat, popDat$Country.Name == 'United States') }
-          else if (country == 'Korea, South') { populationRecord <- subset(popDat, popDat$Country.Name == 'Korea_ Rep.')   }
-          else {                                populationRecord <- subset(popDat, popDat$Country.Name == country)         }
-
+          populationRecord <- subset(popDat, popDat$Country.Name == country)
           if (nrow(populationRecord) != 0)  {
-            myY <- myY/populationRecord[['totalN']]*100000
-            myYs[[country]] <- subset(myY, myY >= 0.05)
+            myY <- myY/populationRecord$totalN*100000
+            myYs[[country]] <- subset(myY, myY >= 0.05) # 0.05 is threshold for showing on per capita graph
           }
         }
         finalY <- tail(myYs[[country]], n=1)
@@ -394,7 +389,7 @@ server <- function(input, output, session) {
       fig <- fig %>% layout(showlegend = TRUE, 
                        height = 600,
                        yaxis = list(type = "log",
-                                    title = list(text = "Confirmed cases (log scale)"),
+                                    title = list(text = ylabel),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = "Number of days since 100 cases"),
@@ -417,28 +412,7 @@ server <- function(input, output, session) {
                                  name = paste('Doubling every',doubling_line,'days'))
       }
       for (country in input$countryGrowthRate) {
-        myY <- subset(log100cases(), log100cases()$Region == country)
-        # remove column with name Region
-        myY <- myY[,-1]
-        # remove dates as these are unnecessary
-        myY <- as.vector(t(myY))
-
-        if (input$totalCases) {
-          # only get values bigger than 100
-          myY <- subset(myY, myY >= 100)
-          fig <- fig %>% add_trace(y = myY, mode = "lines", name = country)
-        } else {
-          countryInPopDataStyle <- country
-          if (country == 'US') {
-            countryInPopDataStyle <- 'United States'
-          }
-          populationRecord <- subset(popDat, popDat$Country.Name == countryInPopDataStyle)
-          if (nrow(populationRecord) != 0)  {
-            myY <- myY/populationRecord[['totalN']]*100000
-            myY <- subset(myY, myY >= 0.05)
-            fig <- fig %>% add_trace(y = myY, mode = "lines", name = country)
-          }
-        }
+        fig <- fig %>% add_trace(y = myYs[[country]], mode = "lines", name = country)
       }
       fig
 })

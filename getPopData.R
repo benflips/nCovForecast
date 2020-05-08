@@ -33,4 +33,9 @@ popDat <- popDat %>% filter(grepl(pattern = "\\d", x = popDat$Series.Code)) %>%
     mutate(totalN = SP.POP.0014.TO + SP.POP.1564.TO + SP.POP.65UP.TO)
 colnames(popDat)[grepl(pattern = "SP", x = colnames(popDat))]<-c("x0014", "x1564", "x65UP")
 
+popDat$Country.Name[popDat$Country.Name == 'United States'] <- 'US'
+popDat$Country.Name[popDat$Country.Name == 'Korea_ Rep.']   <- 'Korea, South'
+popDat$Country.Name[popDat$Country.Name == 'Bahamas_ The']  <- 'Bahamas'
+
+
 save(popDat, file = "dat/popData.RData")
