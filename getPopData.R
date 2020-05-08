@@ -33,6 +33,7 @@ popDat <- popDat %>% filter(grepl(pattern = "\\d", x = popDat$Series.Code)) %>%
     mutate(totalN = SP.POP.0014.TO + SP.POP.1564.TO + SP.POP.65UP.TO)
 colnames(popDat)[grepl(pattern = "SP", x = colnames(popDat))]<-c("x0014", "x1564", "x65UP")
 
+# align country names between World Bank and JHU
 popDat$Country.Name[popDat$Country.Name == 'United States'] <- 'US'
 popDat$Country.Name[popDat$Country.Name == 'Korea_ Rep.']   <- 'Korea, South'
 popDat$Country.Name[popDat$Country.Name == 'Bahamas_ The']  <- 'Bahamas'
@@ -53,7 +54,19 @@ popDat$Country.Name[popDat$Country.Name == 'Slovak Republic'] <- 'Slovakia'
 popDat$Country.Name[popDat$Country.Name == 'Syrian Arab Republic'] <- 'Syria'
 popDat$Country.Name[popDat$Country.Name == 'Yemen_ Rep.'] <- 'Yemen'
 
+# Make continent aggregates
+load("dat/Continents/continentData.RData")
+# get countries with continent associations
+temp <- subset(popDat, popDat$Country.Name %in% continentData$Country)
+# append continent to dataframe
+temp$Continent <- continentData$Continent[match(temp$Country.Name, continentData$Country)]
+# make continent aggregates
+temp <- temp %>% group_by(Continent) %>% select(-Country.Name)# %>% summarise_all(sum(), na.rm=TRUE)
+temp <- aggregate(temp[,1:4], by = list(Country.Name = temp$Continent), FUN = sum, na.rm = TRUE)
+# bind onto popDat
+popDat <- bind_rows(temp, popDat)
 
+# write out data file
 save(popDat, file = "dat/popData.RData")
 
 
