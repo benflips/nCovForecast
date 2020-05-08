@@ -352,7 +352,9 @@ server <- function(input, output, session) {
 ##### Log100 cases Plot ##### 
   output$log100casesPlot <- renderPlotly({
       myYs = list()
+      ymaxOriginal = 10
       for (country in input$countryGrowthRate) {
+        print(country)
         myY <- subset(log100cases(), log100cases()$Region == country)
         # remove column with name Region
         myY <- myY[,-1]
@@ -364,15 +366,25 @@ server <- function(input, output, session) {
           myYs[[country]] <- subset(myY, myY >= 100)
         } else {
           countryInPopDataStyle <- country
-          if (country == 'US') {
-            countryInPopDataStyle <- 'United States'
-          }
-          populationRecord <- subset(popDat, popDat$Country.Name == countryInPopDataStyle)
+          if      (country == 'US'          ) { populationRecord <- subset(popDat, popDat$Country.Name == 'United States') }
+          else if (country == 'Korea, South') { populationRecord <- subset(popDat, popDat$Country.Name == 'Korea_ Rep.')   }
+          else {                                populationRecord <- subset(popDat, popDat$Country.Name == country)         }
+
           if (nrow(populationRecord) != 0)  {
             myY <- myY/populationRecord[['totalN']]*100000
             myYs[[country]] <- subset(myY, myY >= 0.05)
           }
         }
+        finalY <- tail(myYs[[country]], n=1)
+        if (finalY > ymaxOriginal) {
+          ymaxOriginal <- finalY
+        }
+      }
+      ymax <- 10^(log10(ymaxOriginal)*1.05) # just a little higher
+      if (input$totalCases) {
+        ylabel <- "Confirmed cases (log scale)"
+      } else {
+        ylabel <- "Confirmed cases per 100,000 population (log scale)"
       }
 
       yI <- yfCast()$yI
@@ -391,16 +403,14 @@ server <- function(input, output, session) {
                 )
       fig <- fig %>% config(displayModeBar = FALSE)
       doubling_lines <- c(2,3,5)
-      ymax <- max(log100cases()[,-1],na.rm=TRUE)
-      ymax <- 2^(log2(ymax)*1.05) # just a little higher
       if (input$totalCases) {
         y0 <- 100 
       } else {
         y0 <- 0.05 
       }
       for (doubling_line in doubling_lines) {
-        fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
-                                 y    = c(y0, ymax),
+        fig <- fig %>% add_trace(x    = c(0,   log2(ymaxOriginal/y0)*doubling_line),
+                                 y    = c(y0, ymaxOriginal),
                                  mode = "lines",
                                  line = list(color = clrLight, dash = "dot"),
                                  hoverinfo = "name",
