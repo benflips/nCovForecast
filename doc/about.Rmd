@@ -23,7 +23,7 @@ Our global data come from the [John Hopkins University dataset](https://github.c
 
 ### Current active cases
 
-Active cases ($A_t$) are simply $A_t = I_t-D_t-R_t$ where $t$ denotes time.  As of 23 March, however, JHU no longer report recoveries in the US and Canada at State/Province level, and recovery data ate State level are not available for India.  As a consequence, for these countries. we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
+Active cases ($A_t$) are simply $A_t = I_t-D_t-R_t$ where $t$ denotes time.  As of 23 March, however, JHU no longer report recoveries in the US and Canada at State/Province level, and recovery data at State level are not available for India.  As a consequence, for these countries. we have had to assume that active cases take 22 days to resolve.  Thus, $A_t = I_t-D_t-(I_{t-22}-D_{t-22})$.
 
 ### Growth models and forecast of active cases
 
