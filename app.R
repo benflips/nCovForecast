@@ -139,7 +139,7 @@ server <- function(input, output, session) {
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
     dim(out) <-c(1,2)
-    colnames(out) <- c("Total", "Deaths")
+    colnames(out) <- c("Infections", "Deaths")
     format(out, big.mark = ",")
   }, rownames = FALSE)
   
