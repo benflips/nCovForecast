@@ -1,0 +1,33 @@
+---
+title: "How to Use"
+author:
+date: "12/05/2020"
+output: html_document
+---
+
+# How to use
+
+## Select global or country:
+This web site defaults to the use of Global data, so the initial view shows plots and forecast data for the world; in the “Select global or country” dropbox you can select one of the predefined countries, it then will update plots and forecast with the correspondent data.
+
+## Select Country or Region:
+If your country of choice is not on the global list, then here you can choose your country, continent or region, plots and forecast will update with the data of your selection.
+
+## Active Cases
+
+### Forecast metrics:
+
+#### Time-varying growth:
+Select this model for locations where there are preventable measures in place such: restrictions, social distancing, etc.  where the transmission could be steady. This option uses a linear growth model.
+
+#### Constant growth:
+Select this model for locations that are unprepared for the pandemic, where the prevention is or has been low, where rapid transmission is likely. This option uses an exponential growth model.
+
+#### Fit Window:
+How many of the recent days are going to influence the model, number of active cases in 10 days, for instance when the last days are volatile and you select the fit window to be these days then the modelled range for active cases in 10 days will be bigger to consider the fluctuation.
+
+## Detection:
+
+### Case fatality ratio:
+The percentage of people who has died of those that have been infected.
+Using a low percentage, small amount of people died from the infection, considers there are undetected cases in the community, the model will calculate the total possible number of active cases higher than the ones diagnosed. Whereas if you use a high case fatality ratio means that active cases are been successfully detected, hence the possible number of active cases will be similar to the number of diagnosed cases.
