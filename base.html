@@ -106,6 +106,7 @@ function openTab(evt, tabName) {
     <nav role="tablist">
       <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
       <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rates</a>
+      <a href="#howto"                            onclick="openTab(event, 'howto')"                            role="tab" class="tablinks">How to use</a>
       <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
     </nav>
   </div>
@@ -204,6 +205,12 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("cfi") }}
         <p>For more details see the 'About' tab.</p>
       </div>
+    </section>
+  </div>
+
+  <div class="tab" id="howto" role="tabpanel">
+    <section>
+      {{ includeMarkdown("doc/howto.rmd") }}
     </section>
   </div>
 
