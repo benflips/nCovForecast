@@ -52,65 +52,57 @@
   <div class="uomcontent">
     <div class="page-inner" style="padding-top:0px!important;">
       <div role="main">
-<br><br><br><br>
-        <h1 class="center" style="padding-top:40px;">{{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast</h1>
-        <h2>As of  {{ textOutput(outputId = "asOfDate", container = span) }} </h2>
-        <p>Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University</p>
+        <br><br><br><br>
 
-<script>
-function openTab(evt, tabName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tab");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
+        <header>
+          <h1 class="center" style="padding-top:20px;">
+            {{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast<br><br>
+            As of {{ textOutput(outputId = "asOfDate", container=span) }}
+          </h1>
+          <p>
+            Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, 
+            updated daily, based on global data collated by John Hopkins University
+          </p>
+        </header>
 
-<div class="form-group shiny-input-container center" id="div_global_or_country">
-  {{ selectizeInput(inputId = "global_or_country",
-                    label   = "Select global or country:",
-                    choices = c("Global","Australia","Canada","China", "India", "US"),
-                    selected = "Global") }}
-  <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
-</div>
-<div id="go_to_main_site" style="display:none;">
-  <p>Are you interested in other countries?  This site is locked to one country, but go to <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.</p>
-</div>
-<div id="other_country_sites">
-  <p>We have specific sites for certain countries.  Please visit 
-       <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
-       <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
-       <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
-       <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>, or
-       <a href="http://in.covid19forecast.science.unimelb.edu.au">our Indian site</a>.
-</div>
+        <br>
 
+        <div class="form-group shiny-input-container center" id="div_global_or_country">
+          {{ selectizeInput(inputId = "global_or_country",
+                            label   = "Select global or country:",
+                            choices = c("Global","Australia","Canada","China", "India", "US"),
+                            selected = "Global") }}
+          <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
+        </div>
 
-<script>
-  var hostname = window.location.hostname;
-  if (['covid19forecast','127','localhost'].indexOf(hostname.split('.')[0]) == -1) {
-    document.getElementById('div_global_or_country').style.display = 'none';
-    document.getElementById('go_to_main_site').style.display = 'block';
-  }
-</script>
+        <div id="go_to_main_site" style="display:none;">
+          <p>Are you interested in other countries?  This site is locked to one country, but go to <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.</p>
+        </div>
 
-<div class="tabbed-nav" data-tabbed="" id="nav">
-  <div class="full-width">
-    <nav role="tablist">
-      <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
-      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rates</a>
-      <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
-    </nav>
-  </div>
-  <div class="tab" id="10-day-forecast" role="tabpanel">
+        <div id="other_country_sites">
+          <p>
+            We have specific sites for certain countries.  Please visit 
+            <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
+            <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
+            <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
+            <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>, or
+            <a href="http://in.covid19forecast.science.unimelb.edu.au">our Indian site</a>.
+          </p>
+        </div>
+
+        <script>
+          var hostname = window.location.hostname;
+          if (['covid19forecast','127','localhost'].indexOf(hostname.split('.')[0]) == -1) {
+            document.getElementById('div_global_or_country').style.display = 'none';
+            document.getElementById('go_to_main_site').style.display = 'block';
+          }
+        </script>
+
     <section>
+      <header>
+        <h1>10-day forecasts</h1>
+      </header>
+
       <div class="left-panel">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
@@ -168,10 +160,11 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("detPlot") }}
       </div>
     </section>
-  </div>
 
-  <div class="tab" id="growth-rate-and-curve-flattening" role="tabpanel">
     <section>
+      <header>
+        <h1>Growth rates</h1>
+      </header>
       <div class="left-panel" style="width:700px!important;">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
@@ -184,7 +177,6 @@ function openTab(evt, tabName) {
         <p></p>
 
       </div>
-
 
       <div class="right-panel">
         <h3>Growth trajectories</h3>
@@ -205,13 +197,13 @@ function openTab(evt, tabName) {
         <p>For more details see the 'About' tab.</p>
       </div>
     </section>
-  </div>
 
-  <div class="tab" id="about" role="tabpanel">
     <section>
+    <header>
+      <h1>About</h1>
+    </header>
       {{ includeMarkdown("doc/about.Rmd") }}
     </section>
-  </div>
 </div>
 
 <style>
