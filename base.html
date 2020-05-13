@@ -52,65 +52,66 @@
   <div class="uomcontent">
     <div class="page-inner" style="padding-top:0px!important;">
       <div role="main">
-<br><br><br><br>
-        <h1 class="center" style="padding-top:40px;">{{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast</h1>
-        <h2>As of  {{ textOutput(outputId = "asOfDate", container = span) }} </h2>
-        <p>Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University</p>
+        <br><br><br><br>
 
-<script>
-function openTab(evt, tabName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tab");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
+        <header>
+          <h1 class="center" style="padding-top:20px;">
+            {{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast<br><br>
+            As of {{ textOutput(outputId = "asOfDate", container=span) }}
+          </h1>
+          <p>
+            Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, 
+            updated daily, based on global data collated by John Hopkins University
+          </p>
+        </header>
 
-<div class="form-group shiny-input-container center" id="div_global_or_country">
-  {{ selectizeInput(inputId = "global_or_country",
-                    label   = "Select global or country:",
-                    choices = c("Global","Australia","Canada","China", "India", "US"),
-                    selected = "Global") }}
-  <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
-</div>
-<div id="go_to_main_site" style="display:none;">
-  <p>Are you interested in other countries?  This site is locked to one country, but go to <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.</p>
-</div>
-<div id="other_country_sites">
-  <p>We have specific sites for certain countries.  Please visit 
-       <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
-       <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
-       <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
-       <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>, or
-       <a href="http://in.covid19forecast.science.unimelb.edu.au">our Indian site</a>.
-</div>
+        <br>
 
+        <div class="form-group shiny-input-container center" id="div_global_or_country">
+          {{ selectizeInput(inputId = "global_or_country",
+                            label   = "Select global or country:",
+                            choices = c("Global","Australia","Canada","China", "India", "US"),
+                            selected = "Global") }}
+          <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
+        </div>
 
-<script>
-  var hostname = window.location.hostname;
-  if (['covid19forecast','127','localhost'].indexOf(hostname.split('.')[0]) == -1) {
-    document.getElementById('div_global_or_country').style.display = 'none';
-    document.getElementById('go_to_main_site').style.display = 'block';
-  }
-</script>
+        <div id="go_to_main_site" style="display:none;">
+          <p>
+            Are you interested in other countries?  This site is locked to one country, but go to 
+           <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.
+          </p>
+        </div>
 
-<div class="tabbed-nav" data-tabbed="" id="nav">
-  <div class="full-width">
-    <nav role="tablist">
-      <a href="#10-day-forecast"                  onclick="openTab(event,'10-day-forecast')"                   role="tab" class="tablinks">10-day forecast</a>
-      <a href="#growth-rate-and-curve-flattening" onclick="openTab(event, 'growth-rate-and-curve-flattening')" role="tab" class="tablinks">Growth rates</a>
-      <a href="#about"                            onclick="openTab(event, 'about')"                            role="tab" class="tablinks">About</a>
-    </nav>
-  </div>
-  <div class="tab" id="10-day-forecast" role="tabpanel">
-    <section>
+        <div id="other_country_sites">
+          <p>
+            We have specific sites for certain countries.  Please visit 
+            <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
+            <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
+            <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
+            <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>, or
+            <a href="http://in.covid19forecast.science.unimelb.edu.au">our Indian site</a>.
+          </p>
+        </div>
+
+        <div>
+          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
+                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+        </div>
+
+        <script>
+          var hostname = window.location.hostname;
+          if (['covid19forecast','127','localhost'].indexOf(hostname.split('.')[0]) == -1) {
+            document.getElementById('div_global_or_country').style.display = 'none';
+            document.getElementById('go_to_main_site').style.display = 'block';
+          }
+        </script>
+
+    <section id="10-day-forecast">
+      <header>
+        <h1>10-day forecasts</h1>
+      </header>
+      <br>
+
       <div class="left-panel">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
@@ -152,10 +153,7 @@ function openTab(evt, tabName) {
 
         <p>The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
         <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.</p>
-        
-        <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
-
-        <p>For more information, see 'About' tab.</p>
+       <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
       </div>
 
       <div class="right-panel">
@@ -168,10 +166,14 @@ function openTab(evt, tabName) {
         {{ plotlyOutput("detPlot") }}
       </div>
     </section>
-  </div>
 
-  <div class="tab" id="growth-rate-and-curve-flattening" role="tabpanel">
     <section>
+      <br><br>
+      <header>
+        <h1 id="growth-rates">Growth rates</h1>
+      </header>
+      <br>
+
       <div class="left-panel" style="width:700px!important;">
         <h2>Location</h2>
         <div class="form-group shiny-input-container">
@@ -181,10 +183,13 @@ function openTab(evt, tabName) {
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
-        <p></p>
+        <p><p>
+        <div>
+          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+        </div>
 
       </div>
-
 
       <div class="right-panel">
         <h3>Growth trajectories</h3>
@@ -202,21 +207,24 @@ function openTab(evt, tabName) {
         <p>This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
         <p>Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.</p>
         {{ plotlyOutput("cfi") }}
-        <p>For more details see the 'About' tab.</p>
+        <p>For more details see the <a href="#about">About</a> section.</p>
       </div>
     </section>
-  </div>
 
-  <div class="tab" id="about" role="tabpanel">
     <section>
+      <header>
+        <h1 id="about">About</h1>
+      </header>
+      <br>
       {{ includeMarkdown("doc/about.Rmd") }}
+      <div>
+          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a>.</p>
+        </div>
     </section>
-  </div>
 </div>
 
 <style>
-
-input[type='radio'] { transform: scale(1.5); }
 
 section {
   width: 95%;

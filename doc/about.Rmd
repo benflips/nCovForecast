@@ -5,8 +5,6 @@ date: "30/03/2020"
 output: html_document
 ---
 
-## About
-
 This app was built to give people a sense of how the coronavirus epidemic is progressing in each country.  The initial impetus was to move the conversation past daily updates on case numbers, and towards the near future.  The hope was that doing so might help move us past the paralysis of daily shock, and towards important action.  
 
 As action is taken, the app gives us a sense of how well our actions are working.  Difficult decisions have been made at all levels, from the individual to the nation, and it is important that we get feedback on those decisions as soon as possible.
@@ -76,13 +74,13 @@ The denominator in this index does make it very sensitive as growth rates come c
 
 ## Media enquiries
 
-
 [University of Melbourne Newsroom](https://about.unimelb.edu.au/newsroom)
 
 Phone: +61 3 8344 4123
 
 Email: [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=covid19forecast.science.unimelb.edu.au>)
 
+For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
 
 ## Acknowledgements
 
