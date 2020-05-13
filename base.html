@@ -153,10 +153,7 @@
 
         <p>The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
         <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.</p>
-        
-        <p>For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
-
-        <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
+       <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
       </div>
 
       <div class="right-panel">
@@ -186,7 +183,11 @@
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
-        <p></p>
+        <p><p>
+        <div>
+          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+        </div>
 
       </div>
 
@@ -216,6 +217,10 @@
       </header>
       <br>
       {{ includeMarkdown("doc/about.Rmd") }}
+      <div>
+          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a>.</p>
+        </div>
     </section>
 </div>
 
