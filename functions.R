@@ -89,7 +89,7 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   } else {
     if (length(ttr) != nrow(infections)) stop("ttr vector is not of correct length")
     matR <- matrix(NA, nrow = nrow(infections), ncol = ncol(infections))
-    for (ii in 1:nrow(infections)){
+    for (ii in 1:nrow(matR)){
       matR[ii,] <- c(rep(0, ttr[ii]), matA[ii, -((ncol(matA)-(ttr[ii]-1)):ncol(matA))]) # lagged by theta days
     }
   }

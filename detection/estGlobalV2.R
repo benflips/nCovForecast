@@ -66,10 +66,18 @@ projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative c
 cumulative.projections<-data.frame(timeSeriesInfections[,1], projections)
 colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
 
+# estimate best time to recovery, given recovery data, for each region
+recTime <- rep(NA, nrow(timeSeriesInfections))
+for (rr in 1:length(recTime)){
+  recTime[rr]<-recLagOptim(unlist(timeSeriesInfections[rr, -1]),
+                           unlist(timeSeriesDeaths[rr, -1]),
+                           unlist(timeSeriesRecoveries[rr, -1]))
+}
 
-active.cases <- recLag(cumulative.infections, timeSeriesDeaths)
+
+active.cases <- recLag(cumulative.infections, timeSeriesDeaths, ttr = recTime)
 colnames(active.cases)<- colnames(cumulative.infections)
 
 #save output 
-save(cumulative.infections,active.cases, cumulative.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
+save(cumulative.infections, active.cases, cumulative.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
