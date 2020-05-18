@@ -60,8 +60,7 @@ infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
-#The following code produces cumulative projections and appends them to the cumulative observed cases
-
+#Produce cumulative projections 
 projections<-apply(infect.total, 2, project, inc.dist, designF, inf.extrap = 7) #daily new cases over projection period
 projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
 cumulative.projections<-data.frame(timeSeriesInfections[,1], projections)
