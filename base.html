@@ -129,12 +129,10 @@
         <p>Active cases are total number of infections minus deaths and recoveries.</p>
         
         <h5>Forecast metrics:</h5>
-        <div class="center">{{ textOutput(outputId = "forecastMetrics") }}</div>
+        <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
 
-        <fieldset>  
           {{ radioButtons("modelType", "", choiceNames  = list('Time-varying growth','Constant growth'),
                                            choiceValues = list('True',               'False')) }}
-        </fieldset>
 
         <br>
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
@@ -143,7 +141,7 @@
         <h2>Detection</h2>
 
         <p>Cases successfully detected:</p>
-        <div class="center">{{ textOutput(outputId = "detRate") }}</div>
+        <div class="center" style="padding-bottom: 24px">{{ textOutput(outputId = "detRate") }}</div>
 
         <p>Possible number of active cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
         
