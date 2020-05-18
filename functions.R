@@ -95,6 +95,20 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   out
 }
 
+# given time series data on recoveries, establishes optimum value for time to recovery in recLag function
+   # assumes 
+recLagOptim <- function(infections, deaths, recoveries){
+  errorFunc <- function(theta, infections, deaths, recoveries){
+    activeTrue <- infections - deaths - recoveries
+    estR <- infections - deaths # non-deaths
+    estR <- c(rep(0, theta), estR[-((length(estR)-(theta-1)):length(estR))]) # lagged by theta days
+    activeEst <- infections - deaths - estR
+    ss <- activeTrue!=0 & activeEst>0
+    sum(log(activeEst[ss]/activeTrue[ss])^2) # sum squared error (log transformed data)
+  }
+  round(optimize(f = errorFunc, interval = c(10, 32), infections=infections, deaths=deaths, recoveries=recoveries)$minimum, 0) # get the optimum
+}
+
 # growth rate
 growthRate <- function(cases, inWindow=10){
   nn <- length(cases)
