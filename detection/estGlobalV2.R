@@ -89,8 +89,8 @@ active.cases <- recLag(cumulative.infections, timeSeriesDeaths, ttr = recTime)
 colnames(active.cases)<- colnames(cumulative.infections)
 
 # produce projected active cases
-  ## TO DO
-
+active.projections <- recLag(cumulative.projections, death.projections, ttr = recTime)
+colnames(active.projections)<- colnames(cumulative.projections)
 #save output 
-save(cumulative.infections, active.cases, cumulative.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
+save(cumulative.infections, active.cases, cumulative.projections, death.projections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
