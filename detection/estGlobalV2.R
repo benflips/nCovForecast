@@ -61,14 +61,20 @@ cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
 #Produce infection projections 
-projections<-apply(infect.total, 2, project, inc.dist, designF, inf.extrap = 7) #daily new cases over projection period
+projectTo <- 5 # days to project forward
+projections<-apply(infect.total, 2, project, inc.dist, designF, proj.days = projectTo, inf.extrap = 7) #daily new cases over projection period
 projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
 cumulative.projections<-data.frame(timeSeriesInfections[,1], projections) # form dataframe
 colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
-cumulative.projections <- cbind(cumulative.infections, cumulative.projections)
+cumulative.projections <- cbind(cumulative.infections, cumulative.projections[,-1])
 
 # produce death projections
- ##TO DO
+infMat <- as.matrix(timeSeriesInfections[, -1])
+newCasesMat <- infMat - cbind(rep(0, nrow(infMat)), infMat[,-ncol(infMat)])
+deathProj <- round(newCasesMat[, (ncol(newCasesMat)-(17+projectTo-1)):(ncol(newCasesMat)-17)]*0.025, 0)
+deathProj <- t(apply(deathProj, 1, cumsum))+timeSeriesDeaths[,ncol(timeSeriesDeaths)]
+death.projections <- data.frame(timeSeriesDeaths, deathProj)
+colnames(death.projections) <- colnames(cumulative.projections)
 
 # estimate best time to recovery, given recovery data, for each region
 recTime <- rep(NA, nrow(timeSeriesInfections))
