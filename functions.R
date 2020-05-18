@@ -186,12 +186,18 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
     intercept <- summary(fit_based_on_integers_instead_of_dates)$coefficients[1,1]
     poly1     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[2,1]
     poly2     <- summary(fit_based_on_integers_instead_of_dates)$coefficients[3,1]
-    date_at_peak <- tail(tIn,n=1) + (round(-poly1 / (2*poly2)) - nn)
-    value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
-    if (poly2 > 0 | date_at_peak > max(x)) {
-      value_at_peak <- NULL
-    }
-    if (date_at_peak < min(x)){
+    if (poly2 != 0){
+      date_at_peak <- tail(tIn,n=1) + (round(-poly1 / (2*poly2)) - nn)
+      value_at_peak <- exp(intercept)*exp(poly1^2/(2*(-poly2)))*exp(poly2*(poly1/(2*poly2))^2)
+    
+      if (poly2 > 0 | date_at_peak > max(x)) {
+       value_at_peak <- NULL
+      }
+      if (date_at_peak < min(x)){
+        date_at_peak <-NULL
+      }
+    } else if (poly1 == 0 & intercept == 0) {
+      value_at_peak <- NA
       date_at_peak <-NULL
     }
   } else {
