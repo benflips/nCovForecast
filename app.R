@@ -409,12 +409,11 @@ server <- function(input, output, session) {
         paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B"))
       }
     } else {
-        pDat <- yfCast()$yA
-        doubTime <- round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1)
+        doubTime <- round(projfCast()$doubling_time, 1)
         if (doubTime > 0) {
-          dTime <- paste("Doubling time is", round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+          dTime <- paste("Doubling time is", doubTime, 'days')
         } else {
-          dTime <- paste("Halving time is", -round(doubTime(pDat, dates, inWindow = input$fitWinSlider), 1), 'days')
+          dTime <- paste("Halving time is", -doubTime, 'days')
         }
     }
     }
