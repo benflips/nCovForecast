@@ -60,11 +60,15 @@ infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
-#Produce cumulative projections 
+#Produce infection projections 
 projections<-apply(infect.total, 2, project, inc.dist, designF, inf.extrap = 7) #daily new cases over projection period
 projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
-cumulative.projections<-data.frame(timeSeriesInfections[,1], projections)
+cumulative.projections<-data.frame(timeSeriesInfections[,1], projections) # form dataframe
 colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
+cumulative.projections <- cbind(cumulative.infections, cumulative.projections)
+
+# produce death projections
+ ##TO DO
 
 # estimate best time to recovery, given recovery data, for each region
 recTime <- rep(NA, nrow(timeSeriesInfections))
@@ -74,9 +78,12 @@ for (rr in 1:length(recTime)){
                            unlist(timeSeriesRecoveries[rr, -1]))
 }
 
-
+# generate active cases given variable ttr
 active.cases <- recLag(cumulative.infections, timeSeriesDeaths, ttr = recTime)
 colnames(active.cases)<- colnames(cumulative.infections)
+
+# produce projected active cases
+  ## TO DO
 
 #save output 
 save(cumulative.infections, active.cases, cumulative.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
