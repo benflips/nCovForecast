@@ -95,13 +95,6 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   out
 }
 
-# calculates doubling time over the last inWindow days.
-doubTime <- function(cases, time, inWindow = 10){
-  r <- projSimpleSlope(cases, time, inWindow = inWindow)[2]
-  log(2)/r
-}
-
-
 # growth rate
 growthRate <- function(cases, inWindow=10){
   nn <- length(cases)
@@ -177,7 +170,12 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   nn <- length(rawN)
   ss <- (nn-inWindow+1):nn
   x <- c(rawTime[ss], rawTime[nn]+1:extWindow)
-  lnN <- log(rawN[ss])
+  if (sum(rawN[ss]==0)>=(length(rawN[ss])-1)){ #if there is one or fewer non-zero data points...
+    yPieces <- rep(0, length(x))
+    y <- data.frame(fit = yPieces, lwr = yPieces, upr = yPieces)
+    return(list(lDat = data.frame(dates = x, y), date_at_peak = NULL, value_at_peak = -99, doubling_time = Inf))
+  }
+  lnN <- log(rawN[ss]) 
   lnN[is.infinite(lnN)]<-NA
   tIn <- rawTime[ss]
   if (timeVaryingGrowth){
@@ -197,33 +195,22 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
         date_at_peak <-NULL
       }
     } else if (poly1 == 0 & intercept == 0) {
-      value_at_peak <- NA
+      value_at_peak <- -99
       date_at_peak <-NULL
     }
   } else {
     mFit <- lm(lnN~tIn)
+    r <- coefficients(mFit)[2]
+    doubling_time <- log(2)/r
   }
   extFit <- predict(mFit, newdata = list(tIn = x), interval = "confidence")
   y <- exp(extFit)
   if(timeVaryingGrowth) {
     list(lDat = data.frame(dates = x, y), date_at_peak = date_at_peak, value_at_peak = value_at_peak)
   } else {
-    list(lDat = data.frame(dates = x, y))
+    list(lDat = data.frame(dates = x, y), doubling_time = doubling_time)
   }
 
-}
-
-# Simple projection based on growth over last inWindow days
-# returns coefficients
-projSimpleSlope<-function(rawN, rawTime, inWindow=10){
-  nn <- length(rawN)
-  ss <- (nn-inWindow+1):nn
-  x <- c(rawTime[ss], rawTime[nn]+1:inWindow)
-  lnN <- log(rawN[ss])
-  lnN[is.infinite(lnN)]<-NA
-  tIn <- rawTime[ss]
-  mFit <- lm(lnN~tIn)
-  coefficients(mFit)
 }
 
 # to identify the date columns in ts dataframes
