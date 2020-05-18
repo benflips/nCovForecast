@@ -60,20 +60,19 @@ infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
+#The following code produces cumulative projections and appends them to the cumulative observed cases
+
+projections<-apply(infect.total,2,project,inc.dist,designF) #daily new cases over projection period
+projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
+cumulative.projections<-data.frame(timeSeriesInfections[,1], projections)
+colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
+
+
 active.cases <- recLag(cumulative.infections, timeSeriesDeaths)
 colnames(active.cases)<- colnames(cumulative.infections)
 
-
-save(cumulative.infections,active.cases, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
-
-#The following currently disabled code can be used to
-#produce cumulative projections and append them to the cumulative observed cases
-
-#projections<-apply(infect.total,2,project,inc.dist,designF) #daily new cases over projection period
-#projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
-#cumulative.projections<-cbind(tsI,projections)
-
 #save output 
-#cumulative<-list(infections=cumulative.infections,projections=cumulative.projections)
-#save(cumulative,file="estGlobal.RData")
+
+
+save(cumulative.infections,active.cases, cumulative.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
