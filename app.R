@@ -18,7 +18,9 @@
 ## --------------------------
 ## load up the packages we will need 
 library(shiny)
+library(shiny.i18n)
 library(plotly)
+
 ## ---------------------------
 
 ## source files
@@ -31,6 +33,9 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
+
+  i18n <- Translator$new(translation_json_path = "translations.json")
+  observe({i18n$set_translation_language(input$translationLanguage)})
 
   please_select_a_country <- 'Please select a country or region...'
   clrDark   <- "#273D6E"
@@ -139,7 +144,7 @@ server <- function(input, output, session) {
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
     dim(out) <-c(1,2)
-    colnames(out) <- c("Total infections", "Deaths")
+    colnames(out) <- c(i18n$t("Total infections"), i18n$t("Deaths"))
     format(out, big.mark = ",")
   }, rownames = FALSE)
   

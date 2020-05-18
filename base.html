@@ -67,6 +67,10 @@
 
         <br>
 
+          {{ radioButtons("translationLanguage", "", choiceNames  = list('English', 'Turkish'),
+                                             choiceValues = list('en', 'pl')) }}
+
+
         <div class="form-group shiny-input-container center" id="div_global_or_country">
           {{ selectizeInput(inputId = "global_or_country",
                             label   = "Select global or country:",
