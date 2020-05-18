@@ -104,7 +104,7 @@ recLagOptim <- function(infections, deaths, recoveries){
     estR <- c(rep(0, theta), estR[-((length(estR)-(theta-1)):length(estR))]) # lagged by theta days
     activeEst <- infections - deaths - estR
     ss <- activeTrue!=0 & activeEst>0
-    sum(log(activeEst[ss]/activeTrue[ss])^2) # sum squared error (log transformed data)
+    sum(log(activeEst[ss]/activeTrue[ss])^2)/sum(ss) # mean squared error (log transformed data)
   }
   round(optimize(f = errorFunc, interval = c(10, 32), infections=infections, deaths=deaths, recoveries=recoveries)$minimum, 0) # get the optimum
 }
