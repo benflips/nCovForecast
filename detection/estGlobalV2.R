@@ -67,36 +67,39 @@ undiag <- cumMat - infMat
 undiagnosed.infections <- data.frame(timeSeriesInfections[,1], undiag)
 colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
 
-#Produce infection projections 
+#Produce projections of active cases  -- aggregate undiagnosed cases onto future times
 projectTo <- 5 # days to project forward
 projections<-apply(infect.total, 2, project, inc.dist, designF, proj.days = projectTo, inf.extrap = 7) #daily new cases over projection period
-projections<-(as.numeric(cases.all[T,]))+t(projections) #convert to cumulative cases over projection period
-cumulative.projections<-data.frame(timeSeriesInfections[,1], projections) # form dataframe
-colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
-cumulative.projections <- cbind(cumulative.infections, cumulative.projections[,-1])
+projections<-timeSeriesActive[,T]+t(projections) #add projected new cases on to active cases
 
-# produce death projections
+# produce death projections and subtract from projection
+  # assumes 17 days from diagnosis to death and 2.5% case fatality ratio in diagnosed cohort
 newCasesMat <- infMat - cbind(rep(0, nrow(infMat)), infMat[,-ncol(infMat)])
 deathProj <- round(newCasesMat[, (ncol(newCasesMat)-(17+projectTo-1)):(ncol(newCasesMat)-17)]*0.025, 0)
-deathProj <- t(apply(deathProj, 1, cumsum))+timeSeriesDeaths[,ncol(timeSeriesDeaths)]
-death.projections <- data.frame(timeSeriesDeaths, deathProj)
-colnames(death.projections) <- colnames(cumulative.projections)
+projections <- projections - deathProj # subtract deaths
 
+# produce recovery projections and subtract from projection
 # estimate best time to recovery, given recovery data, for each region
-recTime <- rep(NA, nrow(timeSeriesInfections))
+deathMat <- as.matrix(timeSeriesDeaths[, -1])
+recTime <- rep(NA, nrow(timeSeriesInfections)) # vector to take best recovery time
+pad <- matrix(0, nrow = length(recTime), ncol = projectTo) # data to pad matrix with
+matI <- cbind(infMat-deathMat, pad) # padded infection matrix
+recProj <- matrix(NA, nrow = nrow(matI), ncol = ncol(matI)) #matrix to take recoveries
 for (rr in 1:length(recTime)){
   recTime[rr]<-recLagOptim(unlist(timeSeriesInfections[rr, -1]),
                            unlist(timeSeriesDeaths[rr, -1]),
                            unlist(timeSeriesRecoveries[rr, -1]))
+  recProj[rr,] <- c(rep(0, recTime[rr]), matI[rr, -((ncol(matI)-(recTime[rr]-1)):ncol(matI))]) # lagged by recLag days
 }
+recProj <- recProj - cbind(rep(0, nrow(recProj)), recProj[,-ncol(recProj)]) # recoveries on each day
+recProj <- recProj[,(ncol(recProj)-projectTo+1):ncol(recProj)] # at projected times
+projections <- projections - recProj # subtract recoveries
 
-# generate active cases given variable ttr
-active.cases <- recLag(cumulative.infections, timeSeriesDeaths, ttr = recTime)
-colnames(active.cases)<- colnames(cumulative.infections)
 
-# produce projected active cases
-active.projections <- recLag(cumulative.projections, death.projections, ttr = recTime)
-colnames(active.projections)<- colnames(cumulative.projections)
+active.projections<-data.frame(timeSeriesActive[,1], projections) # form dataframe
+colnames(active.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m.%d.%y"))
+
+
 #save output 
-save(cumulative.infections, undiagnosed.infections, active.cases, cumulative.projections, death.projections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
+save(cumulative.infections, undiagnosed.infections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
