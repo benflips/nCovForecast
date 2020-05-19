@@ -48,7 +48,7 @@
 {"en": "Raw case numbers:", "tr": "Güncel vaka sayıları:"},
 {"en": "Active cases:", "tr": "Aktif vakalar:"},
 {"en": "Active cases are total number of infections minus deaths and recoveries.", "tr": "Aktif vaka sayısı, toplam vaka sayısından toplam vefat sayısı ve toplam iyileşen hasta sayısı çıkartılarak elde edilmiştir."},
-{"en": "Forecast metrics:", "tr": "Tahmin metrikleri"},
+{"en": "Forecast metrics:", "tr": "Tahmin metrikleri:"},
 {"en": "Time-varying growth", "tr": "Zamana bağlı büyüme "},
 {"en": "Constant growth", "tr": "Sabit büyüme"},
 {"en": "When growth rates are changing fast, reduce the fit window to average growth over more recent history", "tr": "Üreme katsayıları hızlı değişirse, gün sayısını düşürerek ortalamayı daha yakın tarihe getirin"},

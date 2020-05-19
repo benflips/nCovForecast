@@ -45,16 +45,19 @@ server <- function(input, output, session) {
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
-  output$siteName        <- renderText({i18n$t('Coronavirus 10-day forecast')})
-  output$byline          <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
-  output$specificSites   <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
-  output$TenDayForecasts <- renderText({i18n$t('10-day forecasts')})
-  output$growthRates     <- renderText({i18n$t('Growth rates')})
-  output$about           <- renderText({i18n$t('About')})
-  output$location        <- renderText({i18n$t('Location')})
-  output$otherCountries  <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
+  output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
+  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
+  output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
+  output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
+  output$growthRates      <- renderText({i18n$t('Growth rates')})
+  output$about            <- renderText({i18n$t('About')})
+  output$location         <- renderText({i18n$t('Location')})
+  output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
                                               a(i18n$t('our main site'), href="https://covid19forecast.science.unimelb.edu.au"),
                                               i18n$t('for all countries with more than 20 cases of covid19.'))})
+  output$rawCaseNumbers   <- renderText({i18n$t('Raw case numbers:')})
+  output$activeCases      <- renderText({i18n$t('Active cases:')})
+  output$forecastMetricsH <- renderText({i18n$t('Forecast metrics:')})
 
 # #### Observer function -- set country names from url ####
    observe({
