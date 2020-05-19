@@ -129,7 +129,7 @@
 
         <h3>{{ textOutput(outputId = "activeCases") }}</h3>
         {{ tableOutput(outputId = "tablePredConf") }}
-        <p>Active cases are total number of infections minus deaths and recoveries.</p>
+        <p>{{ textOutput(outputId = "activeCasesP") }}</p>
         
         <h5>{{ textOutput(outputId = "forecastMetricsH") }}</h5>
         <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
@@ -139,7 +139,7 @@
 
         <br>
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
-        <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
+        <p>{{ textOutput(outputId = "growthRatesP") }}</p>
 
         <h2>{{ textOutput(outputId = "detection") }}</h2>
 
