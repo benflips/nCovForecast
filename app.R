@@ -34,10 +34,10 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-  i18n <- Translator$new(translation_json_path = "translations.json")
-  observe({i18n$set_translation_language(input$translationLanguage)})
+  i18n <- Translator$new(translation_json_path = "translations/translations.json")
+  observe({i18n$set_translation_language('tr')})
 
-  please_select_a_country <- 'Please select a country or region...'
+  please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
@@ -164,33 +164,33 @@ server <- function(input, output, session) {
                           x = ~dates, 
                           mode = "lines", 
                           line = list(color = clrDark), 
-                          name = "Best fit", 
+                          name = i18n$t("Best fit"), 
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr,
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
-                          name = "CI lower bound",
+                          name = i18n$t("CI lower bound"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
                 add_trace(y = ~upr, 
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
-                          name = "CI upper bound",
+                          name = i18n$t("CI upper bound"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
                 add_trace(y = ~yA, 
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
-                          name = "Active cases",
+                          name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
-                                    title = list(text = "Confirmed active cases"),
+                                    title = list(text = i18n$t("Confirmed active cases")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
@@ -203,7 +203,7 @@ server <- function(input, output, session) {
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
                   line = list(color = clrLight),
-                  name = "Estimated peak",
+                  name = i18n$t("Estimated peak"),
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
       } else {fig}
@@ -225,34 +225,34 @@ server <- function(input, output, session) {
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark), 
-                          name = "Best fit",
+                          name = i18n$t("Best fit"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr, 
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
-                          name = "CI lower bound",
+                          name = i18n$t("CI lower bound"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
                 add_trace(y = ~upr, 
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
-                          name = "CI upper bound",
+                          name = i18n$t("CI upper bound"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
                 add_trace(y = ~yA, 
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
-                          name = "Active cases",
+                          name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
-                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    title = list(text = i18n$t("Confirmed active cases (log scale)")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
@@ -264,7 +264,7 @@ server <- function(input, output, session) {
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
                   line = list(color = clrLight),
-                  name = "Estimated peak",
+                  name = i18n$t("Estimated peak"),
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
       } else {fig}
@@ -289,26 +289,26 @@ server <- function(input, output, session) {
       fig1 <- plot_ly(newCases) %>%
         add_bars(y = ~newCases,
                  x = ~dates, 
-                 name = "New cases", 
+                 name = i18n$t("New cases"), 
                  marker = list(color = clrOrange), 
                  text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
-        layout(yaxis = list(title = list(text = "New cases"))
+        layout(yaxis = list(title = list(text = i18n$t("New cases")))
         )  
       
       # Plot daily deaths
       fig2 <- plot_ly(newCases) %>%
         add_bars(y = ~dailyDeaths,
                  x = ~dates,
-                 name = "Daily deaths",
+                 name = i18n$t("Daily deaths"),
                  marker = list(color = clrDark),
                  text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(xaxis = list(range = plotRange(),
-                            title = list(text = "Date")),
-               yaxis = list(title = list(text = "Deaths"), side = 'left')
+                            title = list(text = i18n$t("Date"))),
+               yaxis = list(title = list(text = i18n$t("Deaths")), side = 'left')
         )
       
       # Composite
@@ -337,12 +337,12 @@ server <- function(input, output, session) {
       fig <- fig %>% add_trace(y = ~detVec,
                                x = ~dates,
                                mode = "lines+markers", 
-                               name = "Detection",
+                               name = i18n$t("Detection"),
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
                                          range = xRange),
-                            yaxis = list(title = list(text = "Cases successfully detected %"))
+                            yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
       ) %>%
         config(displayModeBar = FALSE)
     }
@@ -362,10 +362,10 @@ server <- function(input, output, session) {
       fig <- fig %>% layout(showlegend = TRUE, 
                        height = 600,
                        yaxis = list(type = "log",
-                                    title = list(text = "Confirmed cases (log scale)"),
+                                    title = list(text = i18n$t("Confirmed cases (log scale)")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
-                                    title = list(text = "Number of days since 100 cases"),
+                                    title = list(text = i18n$t("Number of days since 100 cases")),
                                     fixedrange = TRUE),
                        legend = list(orientation="h", xanchor="center",x=0.5,y=-0.2)
                 )
@@ -374,7 +374,7 @@ server <- function(input, output, session) {
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
-        linename <- paste('Doubling every',doubling_line,'days')
+        linename <- paste(i18n$t('Doubling every'),doubling_line,i18n$t('days'))
         fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
                                  y    = c(100, ymax),
                                  mode = "lines",
@@ -407,18 +407,18 @@ server <- function(input, output, session) {
     } else {
     if (input$modelType) {
       if (is.null(projfCast()$value_at_peak)) {
-        "Active cases estimated to peak beyond the forecast horizon"
+        i18n$t("Active cases estimated to peak beyond the forecast horizon")
       } else if (is.null(projfCast()$date_at_peak)){
-        "Active cases peaked in the past"
+        i18n$t("Active cases peaked in the past")
       } else {
-        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B"))
+        paste(i18n$t("Active cases estimated to peak at"), format(as.integer(projfCast()$value_at_peak), big.mark=","),i18n$t("cases on"), format(projfCast()$date_at_peak, "%d %B"))
       }
     } else {
         doubTime <- round(projfCast()$doubling_time, 1)
         if (doubTime > 0) {
-          dTime <- paste("Doubling time is", doubTime, 'days')
+          dTime <- paste(i18n$t("Doubling time is"), doubTime, i18n$t('days'))
         } else {
-          dTime <- paste("Halving time is", -doubTime, 'days')
+          dTime <- paste(i18n$t("Halving time is"), -doubTime, i18n$t('days'))
         }
     }
     }
@@ -433,7 +433,7 @@ server <- function(input, output, session) {
       yI <- yfCast()$yI
       yD <- yfCast()$yD
       dR<-round(detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider), 4)*100
-      if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+      if (is.na(dR)) i18n$t("Insufficient data for estimation") else paste(dR,'%')
     }
   })
   
@@ -445,7 +445,7 @@ server <- function(input, output, session) {
       nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
       nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
       dim(nowThen) <- c(1, 2)
-      colnames(nowThen)<-c("Now", "In 10 days (min-max)")
+      colnames(nowThen)<-c(i18n$t("Now"), i18n$t("In 10 days (min-max)"))
       nowThen
     }
   }, rownames = FALSE)
@@ -464,7 +464,7 @@ server <- function(input, output, session) {
       nowTotal <- nowDiag+nowUndiag+nowUndet
       nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
       dim(nowTable) <- c(4, 1)
-      rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
+      rownames(nowTable)<-c(i18n$t("Diagnosed"), i18n$t("Undiagnosed"), i18n$t("Undetected"), i18n$t("Total"))
       nowTable
     }
   }, rownames = TRUE, colnames = FALSE)
@@ -498,8 +498,8 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(cfiDat$dates, "%b %d"), round(cfiDat[,cc], 2)))
     }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Curve-flattening index"),
+    fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
+                          yaxis = list(title = list(text = i18n$t("Curve-flattening index")),
                                        range = yRange)
                     ) %>%
                     config(displayModeBar = FALSE)
