@@ -56,7 +56,7 @@
 
         <header>
           <h1 class="center" style="padding-top:20px;">
-            {{ textOutput(outputId = "country_name_in_header") }} {{ textOutput(outputId = "site_name") }}<br><br>
+            {{ textOutput(outputId = "country_name_in_header") }} {{ textOutput(outputId = "siteName") }}<br><br>
             {{ textOutput(outputId = "asOfDate", container=span) }}
           </h1>
           <br>
@@ -86,9 +86,9 @@
           </p>
         </div>
 
-        <div id="other_country_sites">
+        <div class="center">
           <p>
-            We have specific sites for certain countries.  Please visit 
+            {{ textOutput(outputId = "specificSites") }}
             <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
             <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
             <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
