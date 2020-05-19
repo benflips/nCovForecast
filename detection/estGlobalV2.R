@@ -64,6 +64,7 @@ colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 infMat <- as.matrix(timeSeriesInfections[, -1])
 cumMat <- as.matrix(cumulative.infections[, -1])
 undiag <- cumMat - infMat
+undiag[undiag<0] <- 0
 undiagnosed.infections <- data.frame(timeSeriesInfections[,1], undiag)
 colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
 
