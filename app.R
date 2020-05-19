@@ -51,6 +51,7 @@ server <- function(input, output, session) {
   output$TenDayForecasts <- renderText({i18n$t('10-day forecasts')})
   output$growthRates     <- renderText({i18n$t('Growth rates')})
   output$about           <- renderText({i18n$t('About')})
+  output$location        <- renderText({i18n$t('Location')})
 
 # #### Observer function -- set country names from url ####
    observe({
