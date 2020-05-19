@@ -58,6 +58,7 @@ server <- function(input, output, session) {
   output$rawCaseNumbers   <- renderText({i18n$t('Raw case numbers:')})
   output$activeCases      <- renderText({i18n$t('Active cases:')})
   output$forecastMetricsH <- renderText({i18n$t('Forecast metrics:')})
+  output$detection       <- renderText({i18n$t('Detection')})
 
 # #### Observer function -- set country names from url ####
    observe({

@@ -141,7 +141,7 @@
         {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
         <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
 
-        <h2>Detection</h2>
+        <h2>{{ textOutput(outputId = "detection") }}</h2>
 
         <p>Cases successfully detected:</p>
         <div class="center" style="padding-bottom: 24px">{{ textOutput(outputId = "detRate") }}</div>
