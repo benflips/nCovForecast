@@ -73,7 +73,7 @@ server <- function(input, output, session) {
   observe({
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
-    output$asOfDate <- renderText(format(dates[length(dates)], "%d %B %Y"))
+    output$asOfDate <- renderText(paste(i18n$t("As of"),format(dates[length(dates)], "%d %B %Y")))
     
 
     if (input$global_or_country == 'Global') {
