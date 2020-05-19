@@ -60,6 +60,13 @@ infect.total<-apply(cases.all,2,infect.est,inc.dist,designF)
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(infect.total))
 colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 
+#produce undiagnosed cases
+infMat <- as.matrix(timeSeriesInfections[, -1])
+cumMat <- as.matrix(cumulative.infections[, -1])
+undiag <- cumMat - infMat
+undiagnosed.infections <- data.frame(timeSeriesInfections[,1], undiag)
+colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
+
 #Produce infection projections 
 projectTo <- 5 # days to project forward
 projections<-apply(infect.total, 2, project, inc.dist, designF, proj.days = projectTo, inf.extrap = 7) #daily new cases over projection period
@@ -69,7 +76,6 @@ colnames(cumulative.projections) <- c("Region", format(dates[length(dates)]+1:5,
 cumulative.projections <- cbind(cumulative.infections, cumulative.projections[,-1])
 
 # produce death projections
-infMat <- as.matrix(timeSeriesInfections[, -1])
 newCasesMat <- infMat - cbind(rep(0, nrow(infMat)), infMat[,-ncol(infMat)])
 deathProj <- round(newCasesMat[, (ncol(newCasesMat)-(17+projectTo-1)):(ncol(newCasesMat)-17)]*0.025, 0)
 deathProj <- t(apply(deathProj, 1, cumsum))+timeSeriesDeaths[,ncol(timeSeriesDeaths)]
@@ -92,5 +98,5 @@ colnames(active.cases)<- colnames(cumulative.infections)
 active.projections <- recLag(cumulative.projections, death.projections, ttr = recTime)
 colnames(active.projections)<- colnames(cumulative.projections)
 #save output 
-save(cumulative.infections, active.cases, cumulative.projections, death.projections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
+save(cumulative.infections, undiagnosed.infections, active.cases, cumulative.projections, death.projections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
 
