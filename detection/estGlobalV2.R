@@ -94,6 +94,7 @@ for (rr in 1:length(recTime)){
 recProj <- recProj - cbind(rep(0, nrow(recProj)), recProj[,-ncol(recProj)]) # recoveries on each day
 recProj <- recProj[,(ncol(recProj)-projectTo+1):ncol(recProj)] # at projected times
 projections <- projections - recProj # subtract recoveries
+projections[projections < 0] <- 0 #bound results
 
 
 active.projections<-data.frame(timeSeriesActive[,1], projections) # form dataframe

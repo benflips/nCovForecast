@@ -113,7 +113,9 @@ recLagOptim <- function(infections, deaths, recoveries){
     ss <- activeTrue!=0 & activeEst>0
     sum(log(activeEst[ss]/activeTrue[ss])^2)/sum(ss) # mean squared error (log transformed data)
   }
-  round(optimize(f = errorFunc, interval = c(10, 32), infections=infections, deaths=deaths, recoveries=recoveries)$minimum, 0) # get the optimum
+  out <- round(optimize(f = errorFunc, interval = c(10, 32), infections=infections, deaths=deaths, recoveries=recoveries)$minimum, 0) # get the optimum
+  if (out==32) out <- 23 # catch cases where optimize has crashed
+  out
 }
 
 
