@@ -35,7 +35,8 @@ options(scipen=9)
 server <- function(input, output, session) {
 
   i18n <- Translator$new(translation_json_path = "translations/translations.json")
-  observe({i18n$set_translation_language('tr')})
+  selected_language <- 'tr'
+  observe({i18n$set_translation_language(selected_language)})
 
   please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
@@ -74,7 +75,13 @@ server <- function(input, output, session) {
   observe({
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
-    output$asOfDate <- renderText(paste(i18n$t("As of"),format(dates[length(dates)], "%d %B %Y")))
+    output$asOfDate <- renderText(
+      if (selected_language == 'en') {
+        paste("As of",format(dates[length(dates)], "%d %B %Y"))
+      } else {
+        paste(format(dates[length(dates)], "%d/%m/%Y"),"itibariyle")
+      }
+    )
     
 
     if (input$global_or_country == 'Global') {
