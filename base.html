@@ -112,7 +112,7 @@
 
     <section id="10-day-forecast">
       <header>
-        <h1>10-day forecasts</h1>
+        <h1>{{ textOutput(outputId = "TenDayForecasts") }}</h1>
       </header>
       <br>
 
@@ -172,7 +172,7 @@
     <section>
       <br><br>
       <header>
-        <h1 id="growth-rates">Growth rates</h1>
+        <h1 id="growth-rates">{{ textOutput(outputId = "growthRates") }}</h1>
       </header>
       <br>
 
@@ -215,7 +215,7 @@
 
     <section>
       <header>
-        <h1 id="about">About</h1>
+        <h1 id="about">{{ textOutput(outputId = "about") }}</h1>
       </header>
       <br>
       {{ includeMarkdown("doc/about.Rmd") }}
