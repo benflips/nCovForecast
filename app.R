@@ -44,6 +44,8 @@ server <- function(input, output, session) {
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
+  output$site_name <- renderText({i18n$t('Coronavirus 10-day forecast')})
+
 # #### Observer function -- set country names from url ####
    observe({
      cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
