@@ -57,7 +57,7 @@ loadData <- function(path){
   names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
   d <- d[c(2, 1, 3:ncol(d))] # reorder so country.region is first
   # remove unwanted rows
-  unwanted <- c("Diamond Princess", "MS Zaandam")
+  unwanted <- c("Diamond Princess", "MS Zaandam") # cruise ships
   d <- subset(d, !(d$Country.Region %in% unwanted | d$Province.State %in% unwanted))
   # rename Burma
   d$Country.Region[d$Country.Region=="Burma"] <- "Myanmar"
