@@ -77,6 +77,9 @@ activeCases <- function(infections, deaths, recoveries){
   recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
   orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
   if (orderTest) stop("Region labels do not align")
+  # check for countries with inadequate reporting of recoveries, and apply recLag estimation
+  recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
+  recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
   # subset to case data
   infMat <- infections[,ssCol]
   deathMat <- deaths[,ssCol]

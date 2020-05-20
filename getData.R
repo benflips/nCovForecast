@@ -106,11 +106,6 @@ if (test1 & test2 & test3){
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
-  # find countries where recoveries are not being adequately reported in last ten days
-    # apply recLag estimates of recoveries to these countries
-  recCheck <- recoveryCheck(std$tsR, std$tsI, tolerance = 7)
-  std$tsR[recCheck,] <- recLag(std$tsI[recCheck,], std$tsD[recCheck,], active = FALSE)
-  
   # exclude data where there are large errors in the infection death and recovery cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
