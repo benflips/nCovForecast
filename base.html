@@ -193,9 +193,9 @@
       </div>
 
       <div class="right-panel">
-        <h3>Growth trajectories</h3>
-        <p>This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.</p>
-        <p>This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).</p>
+        <h3>{{ textOutput(outputId = "growthTrajectories") }}</h3>
+        <p>{{ textOutput(outputId = "thisIsTheGrowth") }}</p>
+        <p>{{ textOutput(outputId = "thisPlotDoesNot") }}</p>
         {{ plotlyOutput("log100casesPlot") }}
         <br><br><br><br><br><br><br><br><br>
         <h3>Growth rate</h3>
