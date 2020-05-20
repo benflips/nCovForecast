@@ -38,13 +38,14 @@ cumulantCheck <- function(x, tolerance = 0.25){
 }
 
 # function to catch when regions stop reporting recoveries
-recoveryCheck <- function(recoveries, infections){
+recoveryCheck <- function(recoveries, infections, tolerance = 7){
   dR <- as.matrix(recoveries[, dateCols(recoveries)])
   dI <- as.matrix(infections[, dateCols(infections)])
-  diffR <- t(apply(dR, 1, diff))
-  rcFun <- function(x){
-    out <- diff(x) == 0
-  }
+  diffR <- dR-cbind(rep(0, nrow(dR)), dR[,-ncol(dR)]) # change in recoveries 
+  diffI <- dI-cbind(rep(0, nrow(dI)), dI[,-ncol(dI)]) # change in infections
+  test <- diffR == 0 & diffI != 0 # no change in recoveries, and change in infections
+  test <- test[, (ncol(test)-9): ncol(test)] # last ten days
+  apply(test, 1, sum) > tolerance
 }
 
 
