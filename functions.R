@@ -37,6 +37,16 @@ cumulantCheck <- function(x, tolerance = 0.25){
   rowCheck == 0
 }
 
+# function to catch when regions stop reporting recoveries
+recoveryCheck <- function(recoveries, infections){
+  dR <- as.matrix(recoveries[, dateCols(recoveries)])
+  dI <- as.matrix(infections[, dateCols(infections)])
+  diffR <- t(apply(dR, 1, diff))
+  rcFun <- function(x){
+    out <- diff(x) == 0
+  }
+}
+
 
 # Function to load data and standardise names, columns and so on
 loadData <- function(path){
