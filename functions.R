@@ -43,7 +43,7 @@ recoveryCheck <- function(recoveries, infections, tolerance = 7){
   dI <- as.matrix(infections[, dateCols(infections)])
   diffR <- dR-cbind(rep(0, nrow(dR)), dR[,-ncol(dR)]) # change in recoveries 
   diffI <- dI-cbind(rep(0, nrow(dI)), dI[,-ncol(dI)]) # change in infections
-  test <- diffR == 0 & diffI != 0 # no change in recoveries, and change in infections
+  test <- diffR == 0 & diffI != 0 & dR != dI # no change in recoveries, and change in infections, and recoveries not equal to infections
   test <- test[, (ncol(test)-9): ncol(test)] # last ten days
   apply(test, 1, sum) > tolerance
 }
