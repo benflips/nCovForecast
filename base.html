@@ -143,10 +143,10 @@
 
         <h2>{{ textOutput(outputId = "detection") }}</h2>
 
-        <p>Cases successfully detected:</p>
+        <p>{{ textOutput(outputId = "casesSuccessfullyDetected") }}</p>
         <div class="center" style="padding-bottom: 24px">{{ textOutput(outputId = "detRate") }}</div>
 
-        <p>Possible number of active cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
+        <p>{{ textOutput(outputId = "possibleNumberOf") }} {{ tableOutput(outputId = "tablePredTrue") }}</p>
         
          {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case fatality ratio:", post="%") }}
         <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>

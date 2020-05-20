@@ -61,6 +61,8 @@ server <- function(input, output, session) {
   output$detection        <- renderText({i18n$t('Detection')})
   output$activeCasesP     <- renderText({i18n$t('Active cases are total number of infections minus deaths and recoveries.')})
   output$growthRatesP     <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
+  output$casesSuccessfullyDetected <- renderText({i18n$t('Cases successfully detected:')})
+  output$possibleNumberOf <- renderText({i18n$t('Possible number of active cases now given imperfect detection:')})
 
 # #### Observer function -- set country names from url ####
    observe({
