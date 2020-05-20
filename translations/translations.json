@@ -66,7 +66,7 @@
 {"en": "Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.", "tr": "Pozitif değerler kötüyü, negatif değerler ise iyiyi göstermektedir. Üreme katsayısının negatif bölgede sabit bir düşüşte seyretmesi kontrol yöntemlerindeki başarıyı işaret eder."},
 {"en": "Curve flattening index", "tr": "Eğri düzleştime indeksi "},
 {"en": "This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.", "tr": "Bir bölgenin, zaman içinde pandemi eğrisini düzleştirmedeki başarısını gösterir. Pozitif değerler büyüme oranının düşüşe geçtiğini göstermektedir."},
-{"en": "Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.", "tr": "Not: son grafik sadece son yirmi günü değil bütün pandemi süresini kapsamaktadır"},
+{"en": "Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.", "tr": "Not: son grafik sadece son yirmi günü değil bütün pandemi süresini kapsamaktadır."},
 {"en": "For more details see the", "tr": "Daha fazla bilgi için, bakınız"},
 {"en": "section", "tr": "bölüm"}
   ]

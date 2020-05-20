@@ -199,14 +199,14 @@
         {{ plotlyOutput("log100casesPlot") }}
         <br><br><br><br><br><br><br><br><br>
         <h3>Growth rate</h3>
-        <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
-        <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
+        <p>{{ textOutput(outputId = "thisIsTheDaily") }}</p>
+        <p>{{ textOutput(outputId = "positiveIsBad") }}</p>
         
         {{ plotlyOutput("growthRate") }}
 
-        <h3>Curve flattening index</h3>
-        <p>This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
-        <p>Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.</p>
+        <h3>{{ textOutput(outputId = "curveFlatteningIndex") }}</h3>
+        <p>{{ textOutput(outputId = "thisIsAMeasure") }}</p>
+        <p>{{ textOutput(outputId = "noteThisLast") }}</p>
         {{ plotlyOutput("cfi") }}
         <p>For more details see the <a href="#about">About</a> section.</p>
       </div>

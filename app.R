@@ -70,7 +70,11 @@ server <- function(input, output, session) {
   output$thisIsTheGrowth  <- renderText({i18n$t('This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.')})
   output$growthTrajectories <- renderText({i18n$t('Growth trajectories')})
   output$thisPlotDoesNot  <- renderText({i18n$t('This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).')})
-
+  output$thisIsTheDaily   <- renderText({i18n$t('This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.')})
+  output$positiveIsBad    <- renderText({i18n$t('Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.')})
+  output$curveFlatteningIndex <- renderText({i18n$t('Curve flattening index')})
+  output$thisIsAMeasure   <- renderText({i18n$t('This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.')})
+  output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
 #  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####
