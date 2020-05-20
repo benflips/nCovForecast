@@ -37,6 +37,17 @@ cumulantCheck <- function(x, tolerance = 0.25){
   rowCheck == 0
 }
 
+# function to catch when regions stop reporting recoveries
+recoveryCheck <- function(recoveries, infections, tolerance = 7){
+  dR <- as.matrix(recoveries[, dateCols(recoveries)])
+  dI <- as.matrix(infections[, dateCols(infections)])
+  diffR <- dR-cbind(rep(0, nrow(dR)), dR[,-ncol(dR)]) # change in recoveries 
+  diffI <- dI-cbind(rep(0, nrow(dI)), dI[,-ncol(dI)]) # change in infections
+  test <- diffR == 0 & diffI != 0 & dR != dI # no change in recoveries, and change in infections, and recoveries not equal to infections
+  test <- test[, (ncol(test)-9): ncol(test)] # last ten days
+  apply(test, 1, sum) > tolerance
+}
+
 
 # Function to load data and standardise names, columns and so on
 loadData <- function(path){
@@ -46,7 +57,7 @@ loadData <- function(path){
   names(d)[dateCols(d)] <- gsub(pattern = "X", replacement = "", x = names(d)[dateCols(d)])
   d <- d[c(2, 1, 3:ncol(d))] # reorder so country.region is first
   # remove unwanted rows
-  unwanted <- c("Diamond Princess", "MS Zaandam", "Netherlands", "United Kingdom")
+  unwanted <- c("Diamond Princess", "MS Zaandam") # cruise ships
   d <- subset(d, !(d$Country.Region %in% unwanted | d$Province.State %in% unwanted))
   # rename Burma
   d$Country.Region[d$Country.Region=="Burma"] <- "Myanmar"
@@ -66,6 +77,9 @@ activeCases <- function(infections, deaths, recoveries){
   recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
   orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
   if (orderTest) stop("Region labels do not align")
+  # check for countries with inadequate reporting of recoveries, and apply recLag estimation
+  recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
+  recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
   # subset to case data
   infMat <- infections[,ssCol]
   deathMat <- deaths[,ssCol]

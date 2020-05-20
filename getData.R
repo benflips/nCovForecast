@@ -106,10 +106,10 @@ if (test1 & test2 & test3){
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
-  # exclude data where there are large errors in the infection and death cumulants
+  # exclude data where there are large errors in the infection death and recovery cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
-  checkR <- cumulantCheck(std$tsR, tolerance = 0.9)
+  checkR <- cumulantCheck(std$tsR, tolerance = 0.5)
   cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than ten suspect regions in JHU dataset.")
   print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
@@ -117,8 +117,10 @@ if (test1 & test2 & test3){
   std$tsD <- std$tsD[cumSub,]
   std$tsR <- std$tsR[cumSub,]
   std$tsA <- std$tsA[cumSub,]
-  rm(checkI, checkD, cumSub)
+  rm(checkI, checkD, checkR, cumSub)
 
+  
+  
   
   # Open dataList object, or create it
   available_countries <- c("Australia","China", "Canada", "US", "India") # countries available for drill-down
