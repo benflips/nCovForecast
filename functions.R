@@ -84,7 +84,15 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   matI<-as.matrix(infections[, datCols])
   matD<-as.matrix(deaths[, datCols])
   matA<-matI-matD #remove deaths
-  matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # "recovered"
+  if (length(ttr)==1){
+    matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # "recovered"
+  } else {
+    if (length(ttr) != nrow(infections)) stop("ttr vector is not of correct length")
+    matR <- matrix(NA, nrow = nrow(matI), ncol = ncol(matI))
+    for (ii in 1:nrow(matR)){
+      matR[ii,] <- c(rep(0, ttr[ii]), matA[ii, -((ncol(matA)-(ttr[ii]-1)):ncol(matA))]) # lagged by theta days
+    }
+  }
   matA <- matA - matR
   if (active) {
     out <- data.frame(infections[,!datCols], matA) # "active" cases
@@ -94,6 +102,24 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   colnames(out) <- colnames(infections)
   out
 }
+
+# given time series data on recoveries, establishes optimum value for time to recovery in recLag function
+recLagOptim <- function(infections, deaths, recoveries){
+  errorFunc <- function(theta, infections, deaths, recoveries){
+    activeTrue <- infections - deaths - recoveries
+    estR <- infections - deaths # non-deaths
+    estR <- c(rep(0, theta), estR[-((length(estR)-(theta-1)):length(estR))]) # lagged by theta days
+    activeEst <- infections - deaths - estR
+    ss <- activeTrue!=0 & activeEst>0
+    sum(log(activeEst[ss]/activeTrue[ss])^2)/sum(ss) # mean squared error (log transformed data)
+  }
+  out <- round(optimize(f = errorFunc, interval = c(10, 32), infections=infections, deaths=deaths, recoveries=recoveries)$minimum, 0) # get the optimum
+  if (out==32) out <- 23 # catch cases where optimize has crashed
+  out
+}
+
+
+
 
 # growth rate
 growthRate <- function(cases, inWindow=10){

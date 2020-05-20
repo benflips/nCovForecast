@@ -454,7 +454,7 @@ server <- function(input, output, session) {
       dRate <- detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider)
       nowDiag <- tail(yA[!is.na(yA)], 1)
       nowUndet <- nowDiag/dRate - nowDiag
-      nowUndiag <- active.cases[active.cases$Region==input$countryFinder, ncol(active.cases)] - nowDiag
+      nowUndiag <- undiagnosed.infections[undiagnosed.infections$Region==input$countryFinder, ncol(undiagnosed.infections)]
       if (nowUndiag<0) nowUndiag <- 0
       nowTotal <- nowDiag+nowUndiag+nowUndet
       nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")

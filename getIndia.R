@@ -106,7 +106,8 @@ if (test1 & test2 & test3) {
                                    ddReg = ddReg,
                                    ddNames = ddNames,
                                    cumulative.infections = cumulative.infections,
-                                   active.cases = active.cases)
+                                   undiagnosed.infections = undiagnosed.infections, 
+                                   active.projections = active.projections)
   
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
