@@ -63,6 +63,10 @@ server <- function(input, output, session) {
   output$growthRatesP     <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
   output$casesSuccessfullyDetected <- renderText({i18n$t('Cases successfully detected:')})
   output$possibleNumberOf <- renderText({i18n$t('Possible number of active cases now given imperfect detection:')})
+  output$toSeeHowThe      <- renderText({i18n$t('To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.')})
+  output$takeTheseLast    <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
+  output$theLastPlot      <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
+  output$detectionCanOnly <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
 
 # #### Observer function -- set country names from url ####
    observe({

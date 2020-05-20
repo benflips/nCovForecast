@@ -149,12 +149,12 @@
         <p>{{ textOutput(outputId = "possibleNumberOf") }} {{ tableOutput(outputId = "tablePredTrue") }}</p>
         
          {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case fatality ratio:", post="%") }}
-        <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
-        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
+        <p>{{ textOutput(outputId = "toSeeHowThe") }}</p>
+        <p>{{ textOutput(outputId = "takeTheseLast") }}</p>
 
-        <p>The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
-        <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.</p>
-       <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
+        <p>{{ textOutput(outputId = "theLastPlot") }}</p>
+        <p>{{ textOutput(outputId = "detectionCanOnly") }}</p>
+        <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
       </div>
 
       <div class="right-panel">
