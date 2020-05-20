@@ -109,9 +109,10 @@ if (test1 & test2 & test3){
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
-  cumSub <- checkI & checkD
+  checkR <- cumulantCheck(std$tsR, tolerance = 0.9)
+  cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than ten suspect regions in JHU dataset.")
-  print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+  print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
   std$tsI <- std$tsI[cumSub,]
   std$tsD <- std$tsD[cumSub,]
   std$tsR <- std$tsR[cumSub,]

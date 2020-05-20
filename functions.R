@@ -31,7 +31,7 @@ cumulantCheck <- function(x, tolerance = 0.25){
   rcFun <- function(y){
     out <- diff(y)/y[-length(y)]
     out[is.nan(out)] <- 0
-    sum(out < (-tolerance) & y[-length(y)] > 10) # ignore bumps in early reporting
+    sum(out < (-tolerance) & y[-length(y)] > 100) # ignore bumps in early reporting
   }
   rowCheck <- apply(d, 1, rcFun)
   rowCheck == 0
