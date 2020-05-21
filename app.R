@@ -82,6 +82,8 @@ server <- function(input, output, session) {
   output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
   output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
   output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
+  output$fitWindow        <- renderText({i18n$t('Fit window:')})
+  output$caseFatalityRatio <- renderText({i18n$t('Case fatality ratio:')})
 #  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####

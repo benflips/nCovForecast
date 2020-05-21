@@ -140,7 +140,8 @@
                                            choiceValues = list('True',               'False')) }}
 
         <br>
-        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
+        <label class="control-label" for="fitWinSlider">{{ textOutput(outputId = "fitWindow") }}</label>
+        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "", post = " days") }}
         <p>{{ textOutput(outputId = "growthRatesP") }}</p>
 
         <h2>{{ textOutput(outputId = "detection") }}</h2>
@@ -149,8 +150,9 @@
         <div class="center" style="padding-bottom: 24px">{{ textOutput(outputId = "detRate") }}</div>
 
         <p>{{ textOutput(outputId = "possibleNumberOf") }} {{ tableOutput(outputId = "tablePredTrue") }}</p>
-        
-         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case fatality ratio:", post="%") }}
+
+        <label class="control-label" for="fatalityRatioSlider">{{ textOutput(outputId = "caseFatalityRatio") }}</label>
+         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "", post="%") }}
         <p>{{ textOutput(outputId = "toSeeHowThe") }}</p>
         <p>{{ textOutput(outputId = "takeTheseLast") }}</p>
 
