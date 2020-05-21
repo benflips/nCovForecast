@@ -291,7 +291,7 @@ server <- function(input, output, session) {
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
-                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    title = list(text = paste(i18n$t("Confirmed active cases"), "(log scale)")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
@@ -379,7 +379,7 @@ server <- function(input, output, session) {
                                name = i18n$t("Detection"),
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
-      fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
+      fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
                                          range = xRange),
                             yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
       ) %>%
@@ -567,8 +567,8 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
     }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Growth rate (% per day)"))
+    fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
+                          yaxis = list(title = list(text = i18n$t("Growth rate (% per day)")))
                     ) %>%
                    config(displayModeBar = FALSE)
   })
