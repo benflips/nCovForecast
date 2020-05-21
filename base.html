@@ -67,8 +67,12 @@
 
         <br>
 
-          {{ radioButtons("translationLanguage", "", choiceNames  = list('English', 'Turkish'),
-                                                     choiceValues = list('en', 'tr')) }}
+        <fieldset>
+          {{ selectInput("translationLanguage", "Choose a language:", 
+                                                c('English' = 'en',
+                                                  'Turkish' = 'tr'),
+                                                selected     = 'en') }}
+        </fieldset>
 
 
         <div class="form-group shiny-input-container center" id="div_global_or_country">
