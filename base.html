@@ -97,8 +97,8 @@
         </div>
 
         <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+          <p>Skip to: <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
+                      <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a></p>
         </div>
 
         <script>
@@ -154,7 +154,7 @@
 
         <p>{{ textOutput(outputId = "theLastPlot") }}</p>
         <p>{{ textOutput(outputId = "detectionCanOnly") }}</p>
-        <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
+        <p>For more information, see <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top}, 1000);">About</a> section.</p>
       </div>
 
       <div class="right-panel">
@@ -186,8 +186,8 @@
         </div>
         <p><p>
         <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+          <p>Skip to: <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                      <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a></p>
         </div>
 
       </div>
@@ -219,8 +219,8 @@
       <br>
       {{ includeMarkdown("doc/about.Rmd") }}
       <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a>.</p>
+          <p>Skip to: <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                      <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a></p>
         </div>
     </section>
 </div>
