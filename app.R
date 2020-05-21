@@ -79,6 +79,9 @@ server <- function(input, output, session) {
   output$skipTo1          <- renderText({i18n$t('Skip to:')})
   output$skipTo2          <- renderText({i18n$t('Skip to:')})
   output$skipTo3          <- renderText({i18n$t('Skip to:')})
+  output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
+  output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
+  output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
 #  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####

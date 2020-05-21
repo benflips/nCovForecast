@@ -72,8 +72,9 @@
 
 
         <div class="form-group shiny-input-container center" id="div_global_or_country">
+          <label class="control-label" for="global_or_country">{{ textOutput(outputId = "selectGlobal") }}</label>
           {{ selectizeInput(inputId = "global_or_country",
-                            label   = "Select global or country:",
+                            label   = "",
                             choices = c("Global","Australia","Canada","China", "India", "US"),
                             selected = "Global") }}
           <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
@@ -118,8 +119,9 @@
       <div class="left-panel">
         <h2>{{ textOutput(outputId = "location") }}</h2>
         <div class="form-group shiny-input-container">
+          <label class="control-label" for="countryFinder">{{ textOutput(outputId = "selectCountryRegion1") }}</label>
           {{ selectizeInput(inputId  = "countryFinder",
-                         label    = "Select Country/Region:",
+                         label    = "",
                          choices  = ddReg) }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
@@ -178,8 +180,9 @@
       <div class="left-panel" style="width:700px!important;">
         <h2>{{ textOutput(outputId = "locationH2") }}</h2>
         <div class="form-group shiny-input-container">
+          <label class="control-label" for="countryGrowthRate">{{ textOutput(outputId = "selectCountryRegion2") }}</label>
           {{ selectizeInput(inputId  = "countryGrowthRate",
-                            label    = "Select Country/Region:",
+                            label    = "",
                             choices  = ddReg,
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
