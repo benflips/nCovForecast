@@ -27,7 +27,7 @@ library("addreg", quietly = TRUE)
 suppressPackageStartupMessages(library("turboEM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("SparseM", quietly = TRUE, warn.conflicts = FALSE))
 
-cat("Running deconvolutions...\n")
+cat("  Running deconvolutions...\n")
 #functions for estimation and projection
 source("detection/estFunctionsV3.R")
 source("functions.R")
@@ -107,4 +107,4 @@ colnames(active.projections) <- c("Region", format(dates[length(dates)]+1:5, "%m
 
 #save output 
 save(cumulative.infections, undiagnosed.infections, active.projections, file=paste0("dat/",orgLevel,"/estDeconv.RData"))
-cat("Deconvolution complete.\n\n")
+cat("  Deconvolution complete.\n\n")

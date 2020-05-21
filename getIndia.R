@@ -24,6 +24,7 @@
 source('functions.R')
 
 ## ---------------------------
+cat("Loading India data...\n\n")
 
 focusCountry <- "India" # define country string
 
@@ -42,6 +43,10 @@ test2 <- ncol(timeSeriesDeaths)==ncol(timeSeriesInfections)
 # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths)))==0
 
+cat(paste("Death and infection data equal nrows:", test1, "\n"))
+cat(paste("Death and infection data equal ncols:", test2, "\n"))
+cat(paste("No NAs anywhere in the data:", test3, "\n\n"))
+
 if (test1 & test2 & test3) {
 
   print(focusCountry) # report to console
@@ -57,17 +62,24 @@ if (test1 & test2 & test3) {
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
+  # report to console countries that have been recLagged within activeCases()
+  cat("States failing recovery data test and treated with recLag: ", length(std$failedRecovery), "\n", paste(std$failedRecovery, "\n"), "\n\n")
+  
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   cumSub <- checkI & checkD
   if (sum(!cumSub)>5) stop("More than five suspect regions in India dataset.")
+  cat(paste("States excluded through failed cumulants:", sum(!cumSub), "\n"))
   print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+  cat("\n\n")
   tsI <- std$tsI[cumSub,]
   tsD <- std$tsD[cumSub,]
   tsR <- std$tsR[cumSub,]
   tsA <- std$tsA[cumSub,]
   rm(checkI, checkD, cumSub)
+  
+  cat("Organizing data for India...\n")
   
   # aggregate to region
   tsI <- regionAgg(tsI, regionCol = tsI$Province.State)
@@ -111,5 +123,5 @@ if (test1 & test2 & test3) {
   
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
-  
+  cat("getData complete.\n")  
 } else { stop(paste('there was an error!', test1, test2, test3)) }  
