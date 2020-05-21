@@ -52,6 +52,7 @@ server <- function(input, output, session) {
   output$growthRates      <- renderText({i18n$t('Growth rates')})
   output$about            <- renderText({i18n$t('About')})
   output$location         <- renderText({i18n$t('Location')})
+  output$locationH2       <- renderText({i18n$t('Location')})
   output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
                                               a(i18n$t('our main site'), href="https://covid19forecast.science.unimelb.edu.au"),
                                               i18n$t('for all countries with more than 20 cases of covid19.'))})
