@@ -1,8 +1,8 @@
 {
   "languages": ["en","tr"],
   "translation": [
-{"en": "Case fatality ratio:", "tr": "CASE FATALITY RATIO IN TURKISH:"},
-{"en": "Fit window:", "tr": "FIT WINDOW IN TURKISH:"},
+{"en": "Case fatality ratio:", "tr": "Vaka vefat oranı:"},
+{"en": "Fit window:", "tr": "Pencereyi ayarla:"},
 {"en": "Select global or country:", "tr": "Seçiniz (Dünya çapında veya ülke):"},
 {"en": "Skip to:", "tr": "Şuraya git:"},
 {"en": "Please select a country or region...", "tr": "Lütfen ülke ya da bölge seçiniz.."},
