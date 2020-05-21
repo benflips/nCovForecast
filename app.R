@@ -35,8 +35,22 @@ options(scipen=9)
 server <- function(input, output, session) {
 
   i18n <- Translator$new(translation_json_path = "translations/translations.json")
-  selected_language <- 'tr'
-  observe({i18n$set_translation_language(selected_language)})
+
+  observe({
+    url_search <- parseQueryString(session$clientData$url_search)
+    if ( is.null(names(url_search))) {
+      i18n$set_translation_language('en') # default to English
+    } else if ('lang' %in% names(url_search)) {
+      selectedLanguage <- parseQueryString(session$clientData$url_search)$lang
+      if (selectedLanguage == 'tr') {
+        i18n$set_translation_language(selectedLanguage)
+      } else {
+        i18n$set_translation_language('en') # default to English
+      }
+    } else {
+      i18n$set_translation_language('en') # default to English
+    }
+  })
 
   please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
@@ -113,11 +127,12 @@ server <- function(input, output, session) {
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
     output$asOfDate <- renderText(
-      if (selected_language == 'en') {
+#selectedLanguageT <- 'en'
+#      if (selectedLanguageT == 'en') {
         paste("As of",format(dates[length(dates)], "%d %B %Y"))
-      } else {
-        paste(format(dates[length(dates)], "%d/%m/%Y"),"itibariyle")
-      }
+#      } else {
+#        paste(format(dates[length(dates)], "%d/%m/%Y"),"itibariyle")
+#      }
     )
     
 
