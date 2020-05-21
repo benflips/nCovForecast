@@ -76,6 +76,9 @@ server <- function(input, output, session) {
   output$curveFlatteningIndex <- renderText({i18n$t('Curve flattening index')})
   output$thisIsAMeasure   <- renderText({i18n$t('This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.')})
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
+  output$skipTo1          <- renderText({i18n$t('Skip to:')})
+  output$skipTo2          <- renderText({i18n$t('Skip to:')})
+  output$skipTo3          <- renderText({i18n$t('Skip to:')})
 #  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####

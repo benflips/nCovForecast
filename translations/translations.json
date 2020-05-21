@@ -1,6 +1,7 @@
 {
   "languages": ["en","tr"],
   "translation": [
+{"en": "Skip to:", "tr": "Şuraya git:"},
 {"en": "Please select a country or region...", "tr": "Lütfen ülke ya da bölge seçiniz.."},
 {"en": "Total infections", "tr": "Toplam vaka sayısı "},
 {"en": "Deaths", "tr": "Toplam vefat sayısı "},
