@@ -103,12 +103,12 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
   matD<-as.matrix(deaths[, datCols])
   matA<-matI-matD #remove deaths
   if (length(ttr)==1){
-    matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA))]) # "recovered"
+    matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA)), drop = FALSE]) # "recovered"
   } else {
     if (length(ttr) != nrow(infections)) stop("ttr vector is not of correct length")
     matR <- matrix(NA, nrow = nrow(matI), ncol = ncol(matI))
     for (ii in 1:nrow(matR)){
-      matR[ii,] <- c(rep(0, ttr[ii]), matA[ii, -((ncol(matA)-(ttr[ii]-1)):ncol(matA))]) # lagged by theta days
+      matR[ii,] <- c(rep(0, ttr[ii]), matA[ii, -((ncol(matA)-(ttr[ii]-1)):ncol(matA)), drop = FALSE]) # lagged by theta days
     }
   }
   matA <- matA - matR

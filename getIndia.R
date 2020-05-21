@@ -48,8 +48,6 @@ cat(paste("Death and infection data equal ncols:", test2, "\n"))
 cat(paste("No NAs anywhere in the data:", test3, "\n\n"))
 
 if (test1 & test2 & test3) {
-
-  print(focusCountry) # report to console
   
   ## get Date range 
   dCols<-dateCols(timeSeriesInfections)
