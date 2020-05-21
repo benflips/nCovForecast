@@ -88,7 +88,11 @@ activeCases <- function(infections, deaths, recoveries){
   active <- infections
   active[,ssCol] <- infMat - deathMat - recMat
   # return standardised data frames
-  list(tsI = infections, tsD = deaths, tsR = recoveries, tsA = active)
+  list(tsI = infections, 
+       tsD = deaths, 
+       tsR = recoveries, 
+       tsA = active, 
+       failedRecovery = infections$Country.Region[recCheck])
 }
 
 # Adjusts cumulative infections to get active cases

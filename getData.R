@@ -46,7 +46,7 @@ if (server){
   tsDeathUS    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   tsRec        <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 }
-
+cat("Loading JHU data...\n\n")
 timeSeriesInfections      <-loadData(tsConf)
 timeSeriesInfectionsUS    <-loadData(tsConfUS)
 timeSeriesDeaths          <-loadData(tsDeath)
@@ -78,6 +78,10 @@ test2 <- nrow(timeSeriesDeathsUS)==nrow(timeSeriesInfectionsUS) & nrow(timeSerie
   # NAs anywhere in the data
 test3 <- (sum(is.na(timeSeriesInfections))+sum(is.na(timeSeriesDeaths))+sum(is.na(timeSeriesRecoveries))+sum(is.na(timeSeriesInfectionsUS))+sum(is.na(timeSeriesDeathsUS)))==0
 
+cat(paste("US and Global dates align:", test1, "\n"))
+cat(paste("Infection and death equal nrows:", test2, "\n"))
+cat(paste("No NAs anywhere in the data:", test3, "\n\n"))
+
 if (test1 & test2 & test3){
 
   # Merge US data with global dataframes
@@ -106,13 +110,18 @@ if (test1 & test2 & test3){
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
+  # report to console countries that have been recLagged within activeCases()
+  cat("Countries failing recovery data test and treated with recLag: ", length(std$failedRecovery), "\n", paste(std$failedRecovery, "\n"), "\n\n")
+  
   # exclude data where there are large errors in the infection death and recovery cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   checkR <- cumulantCheck(std$tsR, tolerance = 0.5)
   cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than ten suspect regions in JHU dataset.")
+  cat(paste("Countries excluded through failed cumulants:", sum(!cumSub), "\n"))
   print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
+  cat("\n\n")
   std$tsI <- std$tsI[cumSub,]
   std$tsD <- std$tsD[cumSub,]
   std$tsR <- std$tsR[cumSub,]
@@ -136,7 +145,8 @@ if (test1 & test2 & test3){
   
   
   ###### GLOBAL ######
-  print("Global") # report to console
+  cat("Organizing data for...\n")
+  cat("Global\n") # report to console
   
   timeSeriesInfections <- regionAgg(std$tsI, regionCol = std$tsI$Country.Region, regionName = "Region") # aggregated to country
   timeSeriesDeaths     <- regionAgg(std$tsD, regionCol = std$tsD$Country.Region, regionName = "Region") 
@@ -190,7 +200,7 @@ if (test1 & test2 & test3){
     dir.create(paste0("dat/", focusCountry), showWarnings = FALSE) # if the directory doesn't exist, create it.
     
     if (focusCountry=="India") next # do India independently, in getIndia.R
-    print(focusCountry)
+    cat(focusCountry, "\n")
     
     # set dataframes back to standards
     tsI <- std$tsI
@@ -245,5 +255,5 @@ if (test1 & test2 & test3){
   if (!runSeparately){
     system("Rscript getIndia.R", wait = TRUE)
   }
-  
+cat("getData complete.\n")  
 } else { stop(paste('there was an error!', test1, test2, test3)) } # end of first data test if statement (test1, test2) ...need to add our else notification here
