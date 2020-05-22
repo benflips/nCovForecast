@@ -68,12 +68,24 @@
         <br>
 
         <fieldset>
-          {{ selectInput("translationLanguage", "Choose a language:", 
-                                                c('English' = 'en',
-                                                  'Turkish' = 'tr'),
-                                                selected     = 'en') }}
+          <label class="control-label" for="translationLanguage">{{ textOutput(outputId = "selectALanguage") }}</label>
+          <select class="form-control" id="translationLanguage" onchange="window.location.href = '/?lang='.concat(this.value);">
+            <option value="en">English</option>
+            <option value="tr">Turkish</option>
+          </select>
         </fieldset>
 
+        <script>
+          const urlParams = new URLSearchParams(window.location.search);
+          const myParam = urlParams.get('lang');
+          if (myParam == 'tr') {
+            $('#translationLanguage').val('tr')
+          } else {
+            $('#translationLanguage').val('en')
+          }
+        </script>
+
+        <br>
 
         <div class="form-group shiny-input-container center" id="div_global_or_country">
           <label class="control-label" for="global_or_country">{{ textOutput(outputId = "selectGlobal") }}</label>
