@@ -102,6 +102,7 @@ server <- function(input, output, session) {
   output$locationH2       <- renderText({i18n$t('Location')})
   output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
   output$growthTrajectories <- renderText({i18n$t('Growth trajectories')})
+  output$growthRates2     <- renderText({i18n$t('Growth rates')})
   output$thisIsTheGrowth  <- renderText({i18n$t('This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.')})
   output$thisPlotDoesNot  <- renderText({i18n$t('This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).')})
   output$thisIsTheDaily   <- renderText({i18n$t('This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.')})
