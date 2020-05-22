@@ -74,37 +74,41 @@ server <- function(input, output, session) {
 
   ## section 0
   output$selectALanguage  <- renderText({i18n$t('Select a language:')})
+  output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
   output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
-  output$location         <- renderText({i18n$t('Location')})
-  output$locationH2       <- renderText({i18n$t('Location')})
   output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
                                               a(i18n$t('our main site'), href="https://covid19forecast.science.unimelb.edu.au"),
                                               i18n$t('for all countries with more than 20 cases of covid19.'))})
+
+  ## section 1
+  output$location         <- renderText({i18n$t('Location')})
+  output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
   output$rawCaseNumbers   <- renderText({i18n$t('Raw case numbers:')})
   output$activeCases      <- renderText({i18n$t('Active cases:')})
-  output$forecastMetricsH <- renderText({i18n$t('Forecast metrics:')})
-  output$detection        <- renderText({i18n$t('Detection')})
   output$activeCasesP     <- renderText({i18n$t('Active cases are total number of infections minus deaths and recoveries.')})
+  output$forecastMetricsH <- renderText({i18n$t('Forecast metrics:')})
+  output$fitWindow        <- renderText({i18n$t('Fit window:')})
   output$growthRatesP     <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
+  output$detection        <- renderText({i18n$t('Detection')})
   output$casesSuccessfullyDetected <- renderText({i18n$t('Cases successfully detected:')})
   output$possibleNumberOf <- renderText({i18n$t('Possible number of active cases now given imperfect detection:')})
+  output$caseFatalityRatio <- renderText({i18n$t('Case fatality ratio:')})
   output$toSeeHowThe      <- renderText({i18n$t('To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.')})
   output$takeTheseLast    <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
   output$theLastPlot      <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
   output$detectionCanOnly <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
-  output$thisIsTheGrowth  <- renderText({i18n$t('This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.')})
+
+  ## section 2
+  output$locationH2       <- renderText({i18n$t('Location')})
+  output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
   output$growthTrajectories <- renderText({i18n$t('Growth trajectories')})
+  output$thisIsTheGrowth  <- renderText({i18n$t('This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.')})
   output$thisPlotDoesNot  <- renderText({i18n$t('This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).')})
   output$thisIsTheDaily   <- renderText({i18n$t('This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.')})
   output$positiveIsBad    <- renderText({i18n$t('Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.')})
   output$curveFlatteningIndex <- renderText({i18n$t('Curve flattening index')})
   output$thisIsAMeasure   <- renderText({i18n$t('This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.')})
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
-  output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
-  output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
-  output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
-  output$fitWindow        <- renderText({i18n$t('Fit window:')})
-  output$caseFatalityRatio <- renderText({i18n$t('Case fatality ratio:')})
 #  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####
