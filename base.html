@@ -117,7 +117,7 @@
 
         <div class="center">
           {{ textOutput(outputId = "skipTo1") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
-                      <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>
         </div>
 
         <script>
@@ -176,7 +176,7 @@
 
         <p>{{ textOutput(outputId = "theLastPlot") }}</p>
         <p>{{ textOutput(outputId = "detectionCanOnly") }}</p>
-        <p>For more information, see <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top}, 1000);">About</a> section.</p>
+        <p>For more information, see <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top}, 1000);">About</a></p>
       </div>
 
       <div class="right-panel">
@@ -231,7 +231,7 @@
         <p>{{ textOutput(outputId = "thisIsAMeasure") }}</p>
         <p>{{ textOutput(outputId = "noteThisLast") }}</p>
         {{ plotlyOutput("cfi") }}
-        <p>For more details see the <a href="#about">About</a> section.</p>
+        <p>For more information, see <a class="button-small" href="#about">About</a></p>
       </div>
     </section>
 
