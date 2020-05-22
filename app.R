@@ -59,12 +59,22 @@ server <- function(input, output, session) {
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
+  ### the text is here rather than base.html so that it can easily be translated to other languages
+  ## header (anything on a dark blue background)
   output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
   output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
-  output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
   output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
   output$growthRates      <- renderText({i18n$t('Growth rates')})
   output$about            <- renderText({i18n$t('About')})
+
+  ## skip to (can't reuse these unfortunately)
+  output$skipTo1          <- renderText({i18n$t('Skip to:')})
+  output$skipTo2          <- renderText({i18n$t('Skip to:')})
+  output$skipTo3          <- renderText({i18n$t('Skip to:')})
+
+  ## section 0
+  output$selectALanguage  <- renderText({i18n$t('Select a language:')})
+  output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
   output$location         <- renderText({i18n$t('Location')})
   output$locationH2       <- renderText({i18n$t('Location')})
   output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
@@ -90,9 +100,6 @@ server <- function(input, output, session) {
   output$curveFlatteningIndex <- renderText({i18n$t('Curve flattening index')})
   output$thisIsAMeasure   <- renderText({i18n$t('This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.')})
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
-  output$skipTo1          <- renderText({i18n$t('Skip to:')})
-  output$skipTo2          <- renderText({i18n$t('Skip to:')})
-  output$skipTo3          <- renderText({i18n$t('Skip to:')})
   output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
   output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
   output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
