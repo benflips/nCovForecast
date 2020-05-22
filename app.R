@@ -137,15 +137,6 @@ server <- function(input, output, session) {
   observe({
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
-    output$asOfDate <- renderText(
-#selectedLanguageT <- 'en'
-#      if (selectedLanguageT == 'en') {
-        paste("As of",format(dates[length(dates)], "%d %B %Y"))
-#      } else {
-#        paste(format(dates[length(dates)], "%d/%m/%Y"),"itibariyle")
-#      }
-    )
-    
 
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",  choices = ddReg)

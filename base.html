@@ -57,7 +57,7 @@
         <header>
           <h1 class="center" style="padding-top:20px;">
             {{ textOutput(outputId = "country_name_in_header") }} {{ textOutput(outputId = "siteName") }}<br><br>
-            {{ textOutput(outputId = "asOfDate", container=span) }}
+            {{ format(dates[length(dates)], "%d/%m/%Y") }}
           </h1>
           <br>
           <h3>
