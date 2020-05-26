@@ -116,8 +116,9 @@
         </div>
 
         <div class="center">
-          {{ textOutput(outputId = "skipTo1") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
-                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>
+          {{ textOutput(outputId = "skipTo1") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10-day forecasts</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
         </div>
 
         <script>
@@ -210,7 +211,8 @@
         <p><p>
         <div class="center">
           {{ textOutput(outputId = "skipTo2") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
         </div>
 
       </div>
@@ -243,7 +245,8 @@
       {{ includeMarkdown("doc/about.Rmd") }}
       <div class="center">
         {{ textOutput(outputId = "skipTo3") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                                               <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a>
+                                               <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                               <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
       </div>
     </section>
 </div>
