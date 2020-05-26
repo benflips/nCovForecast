@@ -1,7 +1,7 @@
 {
   "languages": ["en","tr"],
   "translation": [
-{"en": "Select a language:", "tr": "Select a language IN TURKISH:"},
+{"en": "Select a language:", "tr": "Dil seçiniz:"},
 {"en": "Case fatality ratio:", "tr": "Vaka vefat oranı:"},
 {"en": "Fit window:", "tr": "Pencereyi ayarla:"},
 {"en": "Select global or country:", "tr": "Seçiniz (Dünya çapında veya ülke):"},
