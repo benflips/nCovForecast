@@ -88,7 +88,7 @@ First, to the people on the front line who are collecting these data.  You are a
 
 The app was conceived by [Ben Phillips](https://findanexpert.unimelb.edu.au/profile/652103-ben-phillips) at the University of Melbourne and has been greatly improved by Drs Melissa Makin and Uli Felzmann (University of Melbourne).  These three are the core development and maintenance team.  State-level data for India are curated by Drs Vipin Bhatnagar and Jyoti Tripathi (Panjab University).  The app has been improved by contributions from Matteo Tomasini (Michigan State University); Sergio Valqui (UoM); and several other contributors on github.  Ian Marschner (University of Sydney) provided deconvolution code for estimating undiagnosed infection numbers. Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Amy Hurford (Memorial University of Newfoundland), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but we thank them anyway).
 
-Thanks to Defne Şahin for the Turkish translation.
+Thanks to Defne Şahin from the University of Western Australia for the Turkish translation.
 
 
 
