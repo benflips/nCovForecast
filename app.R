@@ -66,6 +66,7 @@ server <- function(input, output, session) {
   output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
   output$growthRates      <- renderText({i18n$t('Growth rates')})
   output$about            <- renderText({i18n$t('About')})
+  output$asOf             <- renderText({paste(i18n$t('As of'),format(dates[length(dates)], "%d %B %Y"))})
 
   ## skip to (can't reuse these unfortunately)
   output$skipTo1          <- renderText({i18n$t('Skip to:')})

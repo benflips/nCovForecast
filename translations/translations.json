@@ -1,6 +1,7 @@
 {
   "languages": ["en","tr"],
   "translation": [
+{"en": "As of", "tr": ""},
 {"en": "Select a language:", "tr": "Dil seçiniz:"},
 {"en": "Case fatality ratio:", "tr": "Vaka vefat oranı:"},
 {"en": "Fit window:", "tr": "Pencereyi ayarla:"},
