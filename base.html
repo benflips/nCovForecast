@@ -155,8 +155,23 @@
         <h5>{{ textOutput(outputId = "forecastMetricsH") }}</h5>
         <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
 
-          {{ radioButtons("modelType", "", choiceNames  = list('Time-varying growth','Constant growth'),
-                                           choiceValues = list('True',               'False')) }}
+        <div id="modelType" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="modelType"></label>
+          <div class="shiny-options-group">
+            <div class="radio">
+              <input type="radio" name="modelType" value="True" checked="checked"/>
+              <label>
+                {{ textOutput(outputId = "timeVaryingGrowth") }}
+              </label>
+            </div>
+            <div class="radio">
+              <input type="radio" name="modelType" value="False"/>
+              <label>
+                {{ textOutput(outputId = "constantGrowth") }}
+              </label>
+            </div>
+          </div>
+        </div>
 
         <br>
         <label class="control-label" for="fitWinSlider">{{ textOutput(outputId = "fitWindow") }}</label>
