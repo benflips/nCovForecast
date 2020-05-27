@@ -56,20 +56,43 @@
 
         <header>
           <h1 class="center" style="padding-top:20px;">
-            {{ textOutput(outputId = "country_name_in_header") }} Coronavirus 10-day forecast<br><br>
-            As of {{ textOutput(outputId = "asOfDate", container=span) }}
+            {{ textOutput(outputId = "country_name_in_header") }} {{ textOutput(outputId = "siteName") }}<br>
+            {{ textOutput(outputId = "asOf") }}
           </h1>
-          <p>
-            Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, 
-            updated daily, based on global data collated by John Hopkins University
-          </p>
+          <br>
+          <h3>
+            {{ textOutput(outputId = "byline") }}
+          </h3>
         </header>
 
         <br>
 
+        <div class="form-group shiny-input-container center">
+          <fieldset>
+            <label class="control-label" for="translationLanguage">{{ textOutput(outputId = "selectALanguage") }}</label>
+            <select class="form-control" style="padding-bottom:6px;padding-top:6px;border-color:lightgray;background-color:white;border-radius:3px;" id="translationLanguage" onchange="window.location.href = '/?lang='.concat(this.value);">
+              <option value="en">English</option>
+              <option value="tr">Turkish</option>
+            </select>
+          </fieldset>
+        </div>
+
+        <script>
+          const urlParams = new URLSearchParams(window.location.search);
+          const myParam = urlParams.get('lang');
+          if (myParam == 'tr') {
+            $('#translationLanguage').val('tr')
+          } else {
+            $('#translationLanguage').val('en')
+          }
+        </script>
+
+        <br>
+
         <div class="form-group shiny-input-container center" id="div_global_or_country">
+          <label class="control-label" for="global_or_country">{{ textOutput(outputId = "selectGlobal") }}</label>
           {{ selectizeInput(inputId = "global_or_country",
-                            label   = "Select global or country:",
+                            label   = "",
                             choices = c("Global","Australia","Canada","China", "India", "US"),
                             selected = "Global") }}
           <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
@@ -77,14 +100,13 @@
 
         <div id="go_to_main_site" style="display:none;">
           <p>
-            Are you interested in other countries?  This site is locked to one country, but go to 
-           <a href="https://covid19forecast.science.unimelb.edu.au">our main site</a> for all countries with more than 20 cases of covid19.
+            {{ textOutput(outputId = "otherCountries") }}
           </p>
         </div>
 
-        <div id="other_country_sites">
+        <div class="center">
           <p>
-            We have specific sites for certain countries.  Please visit 
+            {{ textOutput(outputId = "specificSites") }}
             <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
             <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
             <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
@@ -93,9 +115,10 @@
           </p>
         </div>
 
-        <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top}, 1000);">Growth rates</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+        <div class="center">
+          {{ textOutput(outputId = "skipTo1") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10-day forecasts</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
         </div>
 
         <script>
@@ -108,50 +131,68 @@
 
     <section id="10-day-forecast">
       <header>
-        <h1>10-day forecasts</h1>
+        <h1>{{ textOutput(outputId = "TenDayForecasts") }}</h1>
       </header>
       <br>
 
       <div class="left-panel">
-        <h2>Location</h2>
+        <h2>{{ textOutput(outputId = "location") }}</h2>
         <div class="form-group shiny-input-container">
+          <label class="control-label" for="countryFinder">{{ textOutput(outputId = "selectCountryRegion1") }}</label>
           {{ selectizeInput(inputId  = "countryFinder",
-                         label    = "Select Country/Region:",
+                         label    = "",
                          choices  = ddReg) }}
           <script type="application/json" data-for="countryFinder" data-nonempty="">{}</script>
         </div>
 
-        <h3>Raw case numbers:</h3>
+        <h3>{{ textOutput(outputId = "rawCaseNumbers") }}</h3>
         {{ tableOutput(outputId = "rawStats") }}
 
-        <h3>Active cases:</h3>
+        <h3>{{ textOutput(outputId = "activeCases") }}</h3>
         {{ tableOutput(outputId = "tablePredConf") }}
-        <p>Active cases are total number of infections minus deaths and recoveries.</p>
+        <p>{{ textOutput(outputId = "activeCasesP") }}</p>
         
-        <h5>Forecast metrics:</h5>
+        <h5>{{ textOutput(outputId = "forecastMetricsH") }}</h5>
         <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
 
-          {{ radioButtons("modelType", "", choiceNames  = list('Time-varying growth','Constant growth'),
-                                           choiceValues = list('True',               'False')) }}
+        <div id="modelType" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="modelType"></label>
+          <div class="shiny-options-group">
+            <div class="radio">
+              <input type="radio" name="modelType" value="True" checked="checked"/>
+              <label>
+                {{ textOutput(outputId = "timeVaryingGrowth") }}
+              </label>
+            </div>
+            <div class="radio">
+              <input type="radio" name="modelType" value="False"/>
+              <label>
+                {{ textOutput(outputId = "constantGrowth") }}
+              </label>
+            </div>
+          </div>
+        </div>
 
         <br>
-        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "Fit window:", post = " days") }}
-        <p>When growth rates are changing fast, reduce the fit window to average growth over more recent history</p>
+        <label class="control-label" for="fitWinSlider">{{ textOutput(outputId = "fitWindow") }}</label>
+        {{ sliderInput(inputId = "fitWinSlider", min = 3, max = 10, value = 7, ticks = FALSE, label = "", post = " days") }}
+        <p>{{ textOutput(outputId = "growthRatesP") }}</p>
 
-        <h2>Detection</h2>
+        <h2>{{ textOutput(outputId = "detection") }}</h2>
 
-        <p>Cases successfully detected:</p>
+        <p>{{ textOutput(outputId = "casesSuccessfullyDetected") }}</p>
         <div class="center" style="padding-bottom: 24px">{{ textOutput(outputId = "detRate") }}</div>
 
-        <p>Possible number of active cases now given imperfect detection: {{ tableOutput(outputId = "tablePredTrue") }}</p>
-        
-         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "Case fatality ratio:", post="%") }}
-        <p>To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.</p>
-        <p>Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).</p>
+        <p>{{ textOutput(outputId = "possibleNumberOf") }} {{ tableOutput(outputId = "tablePredTrue") }}</p>
 
-        <p>The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection. </p>
-        <p>Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.</p>
-       <p>For more information, see <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a> section.</p>
+        <label class="control-label" for="fatalityRatioSlider">{{ textOutput(outputId = "caseFatalityRatio") }}</label>
+         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "", post="%") }}
+        <p>{{ textOutput(outputId = "toSeeHowThe") }}</p>
+        <p>{{ textOutput(outputId = "takeTheseLast") }}</p>
+
+        <p>{{ textOutput(outputId = "theLastPlot") }}</p>
+        <p>{{ textOutput(outputId = "detectionCanOnly") }}</p>
+        <p>For more information, see <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top}, 1000);">About</a></p>
       </div>
 
       <div class="right-panel">
@@ -168,57 +209,60 @@
     <section>
       <br><br>
       <header>
-        <h1 id="growth-rates">Growth rates</h1>
+        <h1 id="growth-rates">{{ textOutput(outputId = "growthRates") }}</h1>
       </header>
       <br>
 
       <div class="left-panel" style="width:700px!important;">
-        <h2>Location</h2>
+        <h2>{{ textOutput(outputId = "locationH2") }}</h2>
         <div class="form-group shiny-input-container">
+          <label class="control-label" for="countryGrowthRate">{{ textOutput(outputId = "selectCountryRegion2") }}</label>
           {{ selectizeInput(inputId  = "countryGrowthRate",
-                            label    = "Select Country/Region:",
+                            label    = "",
                             choices  = ddReg,
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
         <p><p>
-        <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},        1000);">About</a>.</p>
+        <div class="center">
+          {{ textOutput(outputId = "skipTo2") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                                 <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
         </div>
 
       </div>
 
       <div class="right-panel">
-        <h3>Growth trajectories</h3>
-        <p>This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.</p>
-        <p>This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).</p>
+        <h3>{{ textOutput(outputId = "growthTrajectories") }}</h3>
+        <p>{{ textOutput(outputId = "thisIsTheGrowth") }}</p>
+        <p>{{ textOutput(outputId = "thisPlotDoesNot") }}</p>
         {{ plotlyOutput("log100casesPlot") }}
         <br><br><br><br><br><br><br><br><br>
-        <h3>Growth rate</h3>
-        <p>This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.</p>
-        <p>Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.</p>
+        <h3>{{ textOutput(outputId = "growthRates2") }}</h3>
+        <p>{{ textOutput(outputId = "thisIsTheDaily") }}</p>
+        <p>{{ textOutput(outputId = "positiveIsBad") }}</p>
         
         {{ plotlyOutput("growthRate") }}
 
-        <h3>Curve flattening index</h3>
-        <p>This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.</p>
-        <p>Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.</p>
+        <h3>{{ textOutput(outputId = "curveFlatteningIndex") }}</h3>
+        <p>{{ textOutput(outputId = "thisIsAMeasure") }}</p>
+        <p>{{ textOutput(outputId = "noteThisLast") }}</p>
         {{ plotlyOutput("cfi") }}
-        <p>For more details see the <a href="#about">About</a> section.</p>
+        <p>For more information, see <a class="button-small" href="#about">About</a></p>
       </div>
     </section>
 
     <section>
       <header>
-        <h1 id="about">About</h1>
+        <h1 id="about">{{ textOutput(outputId = "about") }}</h1>
       </header>
       <br>
       {{ includeMarkdown("doc/about.Rmd") }}
-      <div>
-          <p>Skip to: <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
-                   or <a onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},        1000);">Growth rates</a>.</p>
-        </div>
+      <div class="center">
+        {{ textOutput(outputId = "skipTo3") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
+                                               <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
+                                               <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#about').offset().top},           1000);">About</a>
+      </div>
     </section>
 </div>
 

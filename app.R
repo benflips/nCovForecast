@@ -18,7 +18,9 @@
 ## --------------------------
 ## load up the packages we will need 
 library(shiny)
+library(shiny.i18n)
 library(plotly)
+
 ## ---------------------------
 
 ## source files
@@ -32,12 +34,86 @@ options(scipen=9)
 # Define server logic 
 server <- function(input, output, session) {
 
-  please_select_a_country <- 'Please select a country or region...'
+  i18n <- Translator$new(translation_json_path = "translations/translations.json")
+
+  observe({
+    url_search <- parseQueryString(session$clientData$url_search)
+    if ( is.null(names(url_search))) {
+      i18n$set_translation_language('en') # default to English
+    } else if ('lang' %in% names(url_search)) {
+      selectedLanguage <- parseQueryString(session$clientData$url_search)$lang
+      if (selectedLanguage == 'tr') {
+        i18n$set_translation_language(selectedLanguage)
+      } else {
+        i18n$set_translation_language('en') # default to English
+      }
+    } else {
+      i18n$set_translation_language('en') # default to English
+    }
+  })
+
+  please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
+
+  ### the text is here rather than base.html so that it can easily be translated to other languages
+  ## header (anything on a dark blue background)
+  output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
+  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
+  output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
+  output$growthRates      <- renderText({i18n$t('Growth rates')})
+  output$about            <- renderText({i18n$t('About')})
+  output$asOf             <- renderText({paste(i18n$t('As of'),format(dates[length(dates)], "%d %B %Y"))})
+
+  ## skip to (can't reuse these unfortunately)
+  output$skipTo1          <- renderText({i18n$t('Skip to:')})
+  output$skipTo2          <- renderText({i18n$t('Skip to:')})
+  output$skipTo3          <- renderText({i18n$t('Skip to:')})
+
+  ## section 0
+  output$selectALanguage  <- renderText({i18n$t('Select a language:')})
+  output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
+  output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
+  output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
+                                              a(i18n$t('our main site'), href="https://covid19forecast.science.unimelb.edu.au"),
+                                              i18n$t('for all countries with more than 20 cases of covid19.'))})
+
+  ## section 1
+  output$location          <- renderText({i18n$t('Location')})
+  output$selectCountryRegion1 <- renderText({i18n$t('Select Country/Region:')})
+  output$rawCaseNumbers    <- renderText({i18n$t('Raw case numbers:')})
+  output$activeCases       <- renderText({i18n$t('Active cases:')})
+  output$activeCasesP      <- renderText({i18n$t('Active cases are total number of infections minus deaths and recoveries.')})
+  output$forecastMetricsH  <- renderText({i18n$t('Forecast metrics:')})
+  output$timeVaryingGrowth <- renderText({i18n$t('Time-varying growth')})
+  output$constantGrowth    <- renderText({i18n$t('Constant growth')})
+  output$fitWindow         <- renderText({i18n$t('Fit window:')})
+  output$growthRatesP      <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
+  output$detection         <- renderText({i18n$t('Detection')})
+  output$casesSuccessfullyDetected <- renderText({i18n$t('Cases successfully detected:')})
+  output$possibleNumberOf  <- renderText({i18n$t('Possible number of active cases now given imperfect detection:')})
+  output$caseFatalityRatio <- renderText({i18n$t('Case fatality ratio:')})
+  output$toSeeHowThe       <- renderText({i18n$t('To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.')})
+  output$takeTheseLast     <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
+  output$theLastPlot       <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
+  output$detectionCanOnly  <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
+
+  ## section 2
+  output$locationH2       <- renderText({i18n$t('Location')})
+  output$selectCountryRegion2 <- renderText({i18n$t('Select Country/Region:')})
+  output$growthTrajectories <- renderText({i18n$t('Growth trajectories')})
+  output$growthRates2     <- renderText({i18n$t('Growth rates')})
+  output$thisIsTheGrowth  <- renderText({i18n$t('This is the growth trajectory of selected regions: growth in total cases standardised to start when a region reaches 100 cases.')})
+  output$thisPlotDoesNot  <- renderText({i18n$t('This plot does not account for detection.  Because it is on the log scale, the slope at any time is indicative of the doubling time in total cases at that point in time (indicative slopes shown).')})
+  output$thisIsTheDaily   <- renderText({i18n$t('This is the daily growth in active cases, plotted over the last 20 days.  It can be thought of as the interest rate, compounded daily.')})
+  output$positiveIsBad    <- renderText({i18n$t('Positive is bad, negative is good. Progress in control would be indicated by steady decline in growth rate over time, and holding in negative territory.')})
+  output$curveFlatteningIndex <- renderText({i18n$t('Curve flattening index')})
+  output$thisIsAMeasure   <- renderText({i18n$t('This is a measure of how well a region is flattening the pandemic curve at any point in time.  Positive values mean growth rates are declining at that point in time.')})
+  output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
+#  output$<- renderText({i18n$t('')})
 
 # #### Observer function -- set country names from url ####
    observe({
@@ -65,8 +141,6 @@ server <- function(input, output, session) {
   observe({
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
-    output$asOfDate <- renderText(format(dates[length(dates)], "%d %B %Y"))
-    
 
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",  choices = ddReg)
@@ -139,7 +213,7 @@ server <- function(input, output, session) {
     if (is.na(yA[nn])) nn <- nn-1
     out <- as.integer(c(yI[nn], yD[nn]))
     dim(out) <-c(1,2)
-    colnames(out) <- c("Total infections", "Deaths")
+    colnames(out) <- c(i18n$t("Total infections"), i18n$t("Deaths"))
     format(out, big.mark = ",")
   }, rownames = FALSE)
   
@@ -159,7 +233,7 @@ server <- function(input, output, session) {
                           x = ~dates, 
                           mode = "lines", 
                           line = list(color = clrDark), 
-                          name = "Best fit", 
+                          name = i18n$t("Best fit"), 
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr,
@@ -180,12 +254,12 @@ server <- function(input, output, session) {
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
-                          name = "Active cases",
+                          name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(range = list(0, yMax),
-                                    title = list(text = "Confirmed active cases"),
+                                    title = list(text = i18n$t("Confirmed active cases")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
@@ -198,7 +272,7 @@ server <- function(input, output, session) {
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
                   line = list(color = clrLight),
-                  name = "Estimated peak",
+                  name = i18n$t("Estimated peak"),
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
       } else {fig}
@@ -220,7 +294,7 @@ server <- function(input, output, session) {
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark), 
-                          name = "Best fit",
+                          name = i18n$t("Best fit"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr, 
@@ -241,13 +315,13 @@ server <- function(input, output, session) {
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
-                          name = "Active cases",
+                          name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type = "log",
                                     range = list(log10(0.1), log10(yMax)),
-                                    title = list(text = "Confirmed active cases (log scale)"),
+                                    title = list(text = paste(i18n$t("Confirmed active cases"), "(log scale)")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),
@@ -259,7 +333,7 @@ server <- function(input, output, session) {
                   x = c(date_at_peak,date_at_peak),
                   mode = "lines", 
                   line = list(color = clrLight),
-                  name = "Estimated peak",
+                  name = i18n$t("Estimated peak"),
                   hoverinfo = "text+name",
                   text = format(date_at_peak, "%b, %d"))
       } else {fig}
@@ -284,26 +358,26 @@ server <- function(input, output, session) {
       fig1 <- plot_ly(newCases) %>%
         add_bars(y = ~newCases,
                  x = ~dates, 
-                 name = "New cases", 
+                 name = i18n$t("New cases"), 
                  marker = list(color = clrOrange), 
                  text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
-        layout(yaxis = list(title = list(text = "New cases"))
+        layout(yaxis = list(title = list(text = i18n$t("New cases")))
         )  
       
       # Plot daily deaths
       fig2 <- plot_ly(newCases) %>%
         add_bars(y = ~dailyDeaths,
                  x = ~dates,
-                 name = "Daily deaths",
+                 name = i18n$t("Daily deaths"),
                  marker = list(color = clrDark),
                  text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(xaxis = list(range = plotRange(),
-                            title = list(text = "Date")),
-               yaxis = list(title = list(text = "Deaths"), side = 'left')
+                            title = list(text = i18n$t("Date"))),
+               yaxis = list(title = list(text = i18n$t("Deaths")), side = 'left')
         )
       
       # Composite
@@ -332,12 +406,12 @@ server <- function(input, output, session) {
       fig <- fig %>% add_trace(y = ~detVec,
                                x = ~dates,
                                mode = "lines+markers", 
-                               name = "Detection",
+                               name = i18n$t("Detection"),
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
-      fig <- fig %>% layout(xaxis = list(title = list(text = "Date"),
+      fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
                                          range = xRange),
-                            yaxis = list(title = list(text = "Cases successfully detected %"))
+                            yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
       ) %>%
         config(displayModeBar = FALSE)
     }
@@ -357,10 +431,10 @@ server <- function(input, output, session) {
       fig <- fig %>% layout(showlegend = TRUE, 
                        height = 600,
                        yaxis = list(type = "log",
-                                    title = list(text = "Confirmed cases (log scale)"),
+                                    title = list(text = i18n$t("Confirmed cases (log scale)")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
-                                    title = list(text = "Number of days since 100 cases"),
+                                    title = list(text = i18n$t("Number of days since 100 cases")),
                                     fixedrange = TRUE),
                        legend = list(orientation="h", xanchor="center",x=0.5,y=-0.2)
                 )
@@ -369,7 +443,7 @@ server <- function(input, output, session) {
       ymax <- max(log100cases()[,-1],na.rm=TRUE)
       ymax <- 2^(log2(ymax)*1.05) # just a little higher
       for (doubling_line in doubling_lines) {
-        linename <- paste('Doubling every',doubling_line,'days')
+        linename <- paste(i18n$t('Doubling every'),doubling_line,i18n$t('days'))
         fig <- fig %>% add_trace(x    = c(0,   log2(ymax/100)*doubling_line),
                                  y    = c(100, ymax),
                                  mode = "lines",
@@ -402,18 +476,18 @@ server <- function(input, output, session) {
     } else {
     if (input$modelType) {
       if (is.null(projfCast()$value_at_peak)) {
-        "Active cases estimated to peak beyond the forecast horizon"
+        i18n$t("Active cases estimated to peak beyond the forecast horizon")
       } else if (is.null(projfCast()$date_at_peak)){
-        "Active cases peaked in the past"
+        i18n$t("Active cases peaked in the past")
       } else {
-        paste("Active cases estimated to peak at", format(as.integer(projfCast()$value_at_peak), big.mark=","),"cases on", format(projfCast()$date_at_peak, "%d %B"))
+        paste(i18n$t("Active cases estimated to peak at"), format(as.integer(projfCast()$value_at_peak), big.mark=","),i18n$t("cases on"), format(projfCast()$date_at_peak, "%d %B"))
       }
     } else {
         doubTime <- round(projfCast()$doubling_time, 1)
         if (doubTime > 0) {
-          dTime <- paste("Doubling time is", doubTime, 'days')
+          dTime <- paste(i18n$t("Doubling time is"), doubTime, i18n$t('days'))
         } else {
-          dTime <- paste("Halving time is", -doubTime, 'days')
+          dTime <- paste(i18n$t("Halving time is"), -doubTime, i18n$t('days'))
         }
     }
     }
@@ -428,7 +502,7 @@ server <- function(input, output, session) {
       yI <- yfCast()$yI
       yD <- yfCast()$yD
       dR<-round(detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider), 4)*100
-      if (is.na(dR)) "Insufficient data for estimation" else paste(dR,'%')
+      if (is.na(dR)) i18n$t("Insufficient data for estimation") else paste(dR,'%')
     }
   })
   
@@ -440,7 +514,7 @@ server <- function(input, output, session) {
       nowThen <- format(as.integer(c(tail(yA[!is.na(yA)], 1), tail(lDat$lwr,1), tail(lDat$upr,1))), big.mark = ",")
       nowThen <- c(nowThen[1], paste(nowThen[2], "-", nowThen[3]))
       dim(nowThen) <- c(1, 2)
-      colnames(nowThen)<-c("Now", "In 10 days (min-max)")
+      colnames(nowThen)<-c(i18n$t("Now"), i18n$t("In 10 days (min-max)"))
       nowThen
     }
   }, rownames = FALSE)
@@ -459,7 +533,7 @@ server <- function(input, output, session) {
       nowTotal <- nowDiag+nowUndiag+nowUndet
       nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
       dim(nowTable) <- c(4, 1)
-      rownames(nowTable)<-c("Diagnosed", "Undiagnosed", "Undetected", "Total")
+      rownames(nowTable)<-c(i18n$t("Diagnosed"), i18n$t("Undiagnosed"), i18n$t("Undetected"), i18n$t("Total"))
       nowTable
     }
   }, rownames = TRUE, colnames = FALSE)
@@ -493,8 +567,8 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(cfiDat$dates, "%b %d"), round(cfiDat[,cc], 2)))
     }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Curve-flattening index"),
+    fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
+                          yaxis = list(title = list(text = i18n$t("Curve-flattening index")),
                                        range = yRange)
                     ) %>%
                     config(displayModeBar = FALSE)
@@ -523,8 +597,8 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
     }
-    fig <- fig %>% layout(xaxis = list(title = list(text = "Date")),
-                          yaxis = list(title = list(text = "Growth rate (% per day)"))
+    fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
+                          yaxis = list(title = list(text = i18n$t("Growth rate (% per day)")))
                     ) %>%
                    config(displayModeBar = FALSE)
   })
