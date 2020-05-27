@@ -77,9 +77,7 @@ server <- function(input, output, session) {
   output$selectALanguage  <- renderText({i18n$t('Select a language:')})
   output$selectGlobal     <- renderText({i18n$t('Select global or country:')})
   output$specificSites    <- renderText({i18n$t('We have specific sites for certain countries.  Please visit')})
-  output$otherCountries   <- renderText({paste(i18n$t('Are you interested in other countries?  This site is locked to one country, but go to'),
-                                              a(i18n$t('our main site'), href="https://covid19forecast.science.unimelb.edu.au"),
-                                              i18n$t('for all countries with more than 20 cases of covid19.'))})
+  output$otherCountries   <- renderText({i18n$t('Are you interested in other countries?  This site is locked to one country, but go to our main site for all countries with more than 20 cases of covid-19.')})
 
   ## section 1
   output$location          <- renderText({i18n$t('Location')})
