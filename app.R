@@ -42,7 +42,7 @@ server <- function(input, output, session) {
       i18n$set_translation_language('en') # default to English
     } else if ('lang' %in% names(url_search)) {
       selectedLanguage <- parseQueryString(session$clientData$url_search)$lang
-      if (selectedLanguage == 'tr') {
+      if (selectedLanguage %in% i18n$languages) {
         i18n$set_translation_language(selectedLanguage)
       } else {
         i18n$set_translation_language('en') # default to English
