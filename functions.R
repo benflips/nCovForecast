@@ -241,6 +241,9 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
     } else if (poly1 == 0 & intercept == 0) {
       value_at_peak <- -99
       date_at_peak <-NULL
+    } else {
+      value_at_peak <- -99
+      date_at_peak <- NULL
     }
   } else {
     mFit <- lm(lnN~tIn)
