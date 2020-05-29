@@ -214,7 +214,7 @@ projSimple<-function(rawN, rawTime, inWindow=10, extWindow=10, timeVaryingGrowth
   nn <- length(rawN)
   ss <- (nn-inWindow+1):nn
   x <- c(rawTime[ss], rawTime[nn]+1:extWindow)
-  if (sum(rawN[ss]==0)>=(length(rawN[ss])-1)){ #if there is one or fewer non-zero data points...
+  if (sum(rawN[ss]==0)>=(length(rawN[ss])-2)){ #if there are two or fewer non-zero data points...
     yPieces <- rep(0, length(x))
     y <- data.frame(fit = yPieces, lwr = yPieces, upr = yPieces)
     return(list(lDat = data.frame(dates = x, y), date_at_peak = NULL, value_at_peak = -99, doubling_time = Inf))
