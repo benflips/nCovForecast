@@ -61,7 +61,7 @@ if (test1 & test2 & test3) {
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
   # report to console countries that have been recLagged within activeCases()
-  cat("States failing recovery data test and treated with recLag: ", length(std$failedRecovery), "\n", paste(std$failedRecovery, "\n"), "\n\n")
+  cat("States failing recovery data test and treated with recLag: ", nrow(std$failedRecovery), "\n", paste(std$failedRecovery[,1], std$failedRecovery[,2], "\n"), "\n\n")
   
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)

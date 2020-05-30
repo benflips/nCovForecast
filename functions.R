@@ -92,7 +92,7 @@ activeCases <- function(infections, deaths, recoveries){
        tsD = deaths, 
        tsR = recoveries, 
        tsA = active, 
-       failedRecovery = infections$Country.Region[recCheck])
+       failedRecovery = infections[recCheck, 1:2])
 }
 
 # Adjusts cumulative infections to get active cases
