@@ -151,6 +151,9 @@ server <- function(input, output, session) {
      } else if (cname == "in") {
        output$country_name_in_header <- renderText({'India'})
        updateSelectizeInput(session, "global_or_country",  selected = "India")
+     } else if (cname == "de") {
+       output$country_name_in_header <- renderText({'Deutschland'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Deutschland")
      } 
    })
   
@@ -182,6 +185,9 @@ server <- function(input, output, session) {
       } else if (input$global_or_country == 'India') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
+      } else if (input$global_or_country == 'Deutschland') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bavaria","Hesse"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
