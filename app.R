@@ -208,7 +208,12 @@ server <- function(input, output, session) {
 
   output$daysSinceLast <- renderTable({
 
+    countryNames       <- c()
+    daysOfZeroNewCases <- c()
+    daysOfZeroDeaths   <- c()
+
     for (country in input$countryGrowthRate) {
+      countryNames <- append(countryNames, country)
       yI <- subset(log100cases(),             log100cases()$Region == country)
       yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
 
@@ -222,15 +227,13 @@ server <- function(input, output, session) {
       moreThanZeroNewCases <- which(dailyNewCases > 0)
       moreThanZeroDeaths   <- which(dailyDeaths > 0)
 
-      daysOfZeroNewCases <- length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1
-      daysOfZeroDeaths   <- length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1
+      daysOfZeroNewCases <- append(daysOfZeroNewCases,length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1)
+      daysOfZeroDeaths   <- append(daysOfZeroDeaths,  length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1)
 
     }
 
-
-    out <- c(daysOfZeroNewCases, daysOfZeroDeaths)
-    dim(out) <- c(1,2)
-    colnames(out) <- c("Days since last new case", "Days since last death")
+    out <- data.frame(countryNames, daysOfZeroNewCases, daysOfZeroDeaths)
+    colnames(out) <- c("Country/Region", "Days since last new case", "Days since last death")
     format(out, big.mark = ",")
 
   }, rownames = FALSE)
