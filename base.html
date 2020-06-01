@@ -72,6 +72,7 @@
             <label class="control-label" for="translationLanguage">{{ textOutput(outputId = "selectALanguage") }}</label>
             <select class="form-control" style="padding-bottom:6px;padding-top:6px;border-color:lightgray;background-color:white;border-radius:3px;" id="translationLanguage" onchange="window.location.href = '/?lang='.concat(this.value);">
               <option value="en">English</option>
+              <option value="de">Deutsch</option>
               <option value="tr">Turkish</option>
               <option value="hi">Hindi</option>
             </select>
@@ -127,6 +128,7 @@
             document.getElementById('div_global_or_country').style.display = 'none';
             document.getElementById('go_to_main_site').style.display = 'block';
           }
+          var language =  window.navigator.userLanguage || window.navigator.language;
         </script>
 
     <section id="10-day-forecast">
@@ -151,7 +153,7 @@
         <h3>{{ textOutput(outputId = "activeCases") }}</h3>
         {{ tableOutput(outputId = "tablePredConf") }}
         <p>{{ textOutput(outputId = "activeCasesP") }}</p>
-        
+
         <h5>{{ textOutput(outputId = "forecastMetricsH") }}</h5>
         <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
 
@@ -241,7 +243,7 @@
         <h3>{{ textOutput(outputId = "growthRates2") }}</h3>
         <p>{{ textOutput(outputId = "thisIsTheDaily") }}</p>
         <p>{{ textOutput(outputId = "positiveIsBad") }}</p>
-        
+
         {{ plotlyOutput("growthRate") }}
 
         <h3>{{ textOutput(outputId = "curveFlatteningIndex") }}</h3>
