@@ -72,15 +72,17 @@ The second plot on the "Growth rate and curve-flattening" tab places a smoother 
 
 The denominator in this index does make it very sensitive as growth rates come close to zero.
 
-## Media enquiries
+## The University
 
-[University of Melbourne Newsroom](https://about.unimelb.edu.au/newsroom)
+For more information about University of Melbourne's COVID-19 research visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
 
-Phone: +61 3 8344 4123
+If you would like to support the University's work, please consider giving to our [covid-19 emergency appeal](https://secure.alumni.unimelb.edu.au/s/1182/giving/form.aspx?sid=1182&gid=1&pgid=19033&cid=27067&DIDS=676.677&BLEDIT=&utm_source=WEB&utm_medium=believe&utm_campaign=covid19emergencyappeal).
 
-Email: [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=covid19forecast.science.unimelb.edu.au>)
 
-For more information about University's COVID-19 research, including modelling that contributed to the Australian Federal Government’s response, visit <a href="https://pursuit.unimelb.edu.au/" target="_blank">Pursuit</a>, and the <a href="https://www.doherty.edu.au/our-work/institute-themes/viral-infectious-diseases/emerging-infections/2019-novel-coronavirus/about-2019-novel-coronavirus" target="_blank">Doherty Institute</a>.
+### Media enquiries
+
+[University of Melbourne Newsroom](https://about.unimelb.edu.au/newsroom), Phone +61 3 8344 4123; Email [news@media.unimelb.edu.au](<mailto:news@media.unimelb.edu.au?subject=covid19forecast.science.unimelb.edu.au>)
+
 
 ## Acknowledgements
 
@@ -88,7 +90,7 @@ First, to the people on the front line who are collecting these data.  You are a
 
 The app was conceived by [Ben Phillips](https://findanexpert.unimelb.edu.au/profile/652103-ben-phillips) at the University of Melbourne and has been greatly improved by Drs Melissa Makin and Uli Felzmann (University of Melbourne).  These three are the core development and maintenance team.  State-level data for India are curated by Drs Vipin Bhatnagar and Jyoti Tripathi (Panjab University).  The app has been improved by contributions from Matteo Tomasini (Michigan State University); Sergio Valqui (UoM); and several other contributors on github.  Ian Marschner (University of Sydney) provided deconvolution code for estimating undiagnosed infection numbers. Valuable feedback has come from Daniel Bolnick (U Connecticut), Alison Hill (Harvard), Amy Hurford (Memorial University of Newfoundland), Taegan Calnan (Charles Darwin Uni), the Spatial Ecology and Evolution Lab (Melbourne), and a suite of people on the internet who are too numerous to name (but we thank them anyway).
 
-Thanks to Defne Şahin from the University of Western Australia for the Turkish translation, and Sanjana Rata from the University of Melbourne for the Hindi translation.
+Thanks to Defne Şahin from the University of Western Australia for the Turkish translation, and Sanjana Ratan from the University of Melbourne for the Hindi translation.
 
 
 
