@@ -201,19 +201,32 @@ server <- function(input, output, session) {
     }
     list(minDate, maxDate)
   })
-  
+
+  deathsInCountries <- reactive({
+    subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+  })
+
   output$daysSinceLast <- renderTable({
-    yI <- yfCast()$yI
-    yD <- yfCast()$yD
 
-    dailyNewCases <- diff(yI)
-    dailyDeaths   <- diff(yD)
+    for (country in input$countryGrowthRate) {
+      yI <- subset(log100cases(),             log100cases()$Region == country)
+      yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
 
-    moreThanZeroNewCases <- which(dailyNewCases > 0)
-    moreThanZeroDeaths   <- which(dailyDeaths > 0)
+      # remove column with name Region
+      yI <- yI[,-1]
+      yD <- yD[,-1]
 
-    daysOfZeroNewCases <- length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1
-    daysOfZeroDeaths   <- length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1
+      dailyNewCases <- diff(as.numeric(yI))
+      dailyDeaths   <- diff(as.numeric(yD))
+
+      moreThanZeroNewCases <- which(dailyNewCases > 0)
+      moreThanZeroDeaths   <- which(dailyDeaths > 0)
+
+      daysOfZeroNewCases <- length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1
+      daysOfZeroDeaths   <- length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1
+
+    }
+
 
     out <- c(daysOfZeroNewCases, daysOfZeroDeaths)
     dim(out) <- c(1,2)
