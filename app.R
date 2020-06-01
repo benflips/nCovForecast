@@ -178,7 +178,7 @@ server <- function(input, output, session) {
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
     list(yI = yI, yD = yD, yR = yR, yA = yA)
   })
-  
+
   projfCast <- reactive({ # projection for forecast
     projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
   })
@@ -202,6 +202,28 @@ server <- function(input, output, session) {
     list(minDate, maxDate)
   })
   
+  output$daysSinceLast <- renderTable({
+    yI <- yfCast()$yI
+    yD <- yfCast()$yD
+
+    dailyNewCases <- diff(yI)
+    dailyDeaths   <- diff(yD)
+
+    moreThanZeroNewCases <- which(dailyNewCases > 0)
+    moreThanZeroDeaths   <- which(dailyDeaths > 0)
+
+    daysOfZeroNewCases <- length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1
+    daysOfZeroDeaths   <- length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1
+
+    out <- c(daysOfZeroNewCases, daysOfZeroDeaths)
+    dim(out) <- c(1,2)
+    colnames(out) <- c("Days since last new case", "Days since last death")
+    format(out, big.mark = ",")
+
+  }, rownames = FALSE)
+ 
+
+
   ##### Raw stats #####  
   output$rawStats <- renderTable({
     yA <- yfCast()$yA

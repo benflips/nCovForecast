@@ -223,7 +223,8 @@
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
-        <p><p>
+        {{ tableOutput(outputId = "daysSinceLast") }}
+        <p></p>
         <div class="center">
           {{ textOutput(outputId = "skipTo2") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
                                                  <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
