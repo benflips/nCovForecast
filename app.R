@@ -57,6 +57,11 @@ server <- function(input, output, session) {
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
 
+  output$flagAustralia <- renderImage({
+    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),
+         alt = 'Australian flag')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ### the text is here rather than base.html so that it can easily be translated to other languages
