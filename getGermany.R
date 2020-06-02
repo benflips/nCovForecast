@@ -2,7 +2,7 @@
 ##
 ## Script name: getGermany.R
 ##
-## Purpose of script: to get Germany data from Vipin/Jyoti's repo, independently from JHU process
+## Purpose of script: to get Germany data from Uli's repo, independently from JHU process
 ##
 ## Author: Ben Phillips
 ##
@@ -26,10 +26,12 @@ source('functions.R')
 ## ---------------------------
 cat("Loading Germany data...\n\n")
 
-focusCountry <- "Germany" # define country string
+focusCountry <- "Deutschland" # define country string
 
-tsConfGermany  <- ''#"https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/confirmed.csv"
-tsDeathGermany <- ''#"https://raw.githubusercontent.com/vipinbhatnagar/covid19/master/deaths.csv"
+#tsConfGermany  <- 'https://gitlab.unimelb.edu.au/science-it-dev/covid19_rki_data/-/raw/master/confirmed.csv'
+tsConfGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/confirmed.csv'
+#tsDeathGermany <- 'https://gitlab.unimelb.edu.au/science-it-dev/covid19_rki_data/-/raw/master/deaths.csv'
+tsDeathGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/deaths.csv'
 
 
 timeSeriesInfections <-loadData(tsConfGermany)
