@@ -58,17 +58,23 @@ server <- function(input, output, session) {
   clrOrange <- "#FF7F0E"  
 
   output$flagAustralia <- renderImage({
-    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),
-         width=100,
-         height=50,
-         alt = 'Australian site')
+    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                width=100, height=50, alt = 'Australian site')
   }, deleteFile = FALSE)
 
   output$flagUS        <- renderImage({
-    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')),
-         width=100,
-         height=50,
-         alt = 'US site')
+    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')), width=100, height=50, alt = 'US site')
+  }, deleteFile = FALSE)
+
+  output$flagChina     <- renderImage({
+    list(src = normalizePath(file.path('./img/china-flag-xs.png')),                    width=100, height=50, alt = 'Chinese site')
+  }, deleteFile = FALSE)
+
+  output$flagIndia     <- renderImage({
+    list(src = normalizePath(file.path('./img/india-flag-xs.png')),                    width=100, height=50, alt = 'Indian site')
+  }, deleteFile = FALSE)
+
+  output$flagCanada    <- renderImage({
+    list(src = normalizePath(file.path('./img/canada-flag-xs.png')),                    width=100, height=50, alt = 'Canadian site')
   }, deleteFile = FALSE)
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
