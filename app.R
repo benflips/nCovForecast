@@ -187,7 +187,7 @@ server <- function(input, output, session) {
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
       } else if (input$global_or_country == 'Deutschland') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bavaria","Hesse"), choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bayern","Nordrhein-Westfalen","Baden-Württemberg"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
