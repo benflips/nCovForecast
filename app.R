@@ -64,6 +64,13 @@ server <- function(input, output, session) {
          alt = 'Australian site')
   }, deleteFile = FALSE)
 
+  output$flagUS        <- renderImage({
+    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')),
+         width=100,
+         height=50,
+         alt = 'US site')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ### the text is here rather than base.html so that it can easily be translated to other languages
