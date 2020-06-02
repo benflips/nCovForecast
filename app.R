@@ -217,6 +217,8 @@ server <- function(input, output, session) {
       yI <- subset(log100cases(),             log100cases()$Region == country)
       yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
 
+print(country)
+
       # remove column with name Region
       yI <- yI[,-1]
       yD <- yD[,-1]
@@ -227,8 +229,17 @@ server <- function(input, output, session) {
       moreThanZeroNewCases <- which(dailyNewCases > 0)
       moreThanZeroDeaths   <- which(dailyDeaths > 0)
 
-      daysOfZeroNewCases <- append(daysOfZeroNewCases,length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1)
-      daysOfZeroDeaths   <- append(daysOfZeroDeaths,  length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1)
+      if (length(moreThanZeroDeaths) == 0) {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,'N/A')
+      } else {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,  length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1)
+      }
+
+      if (length(moreThanZeroNewCases) == 0) {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases, 'N/A')
+      } else {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases,length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1)
+      }
 
     }
 
