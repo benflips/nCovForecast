@@ -32,12 +32,24 @@ focusCountry <- "Deutschland" # define country string
 tsConfGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/confirmed.csv'
 #tsDeathGermany <- 'https://gitlab.unimelb.edu.au/science-it-dev/covid19_rki_data/-/raw/master/deaths.csv'
 tsDeathGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/deaths.csv'
+#tsRecoveredGermany <- 'https://gitlab.unimelb.edu.au/science-it-dev/covid19_rki_data/-/raw/master/recovered.csv'
+tsRecoveredGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/recovered.csv'
 
+tsConfGermany <- '../githubRepos/covid19_rki_data/confirmed.csv'
+tsDeathGermany <- '../githubRepos/covid19_rki_data/deaths.csv'
+tsRecoveredGermany <- '../githubRepos/covid19_rki_data/recovered.csv'
 
 timeSeriesInfections <-loadData(tsConfGermany)
 timeSeriesDeaths     <-loadData(tsDeathGermany)
+timeSeriesRecoveries    <-loadData(tsRecoveredGermany)
 
-rm(tsConfGermany, tsDeathGermany)
+### TEMPORARY remove last column of NAs
+timeSeriesInfections <- timeSeriesInfections[,-ncol(timeSeriesInfections)]
+timeSeriesDeaths <- timeSeriesDeaths[,-ncol(timeSeriesDeaths)]
+timeSeriesRecoveries <- timeSeriesRecoveries[,-ncol(timeSeriesRecoveries)]
+
+
+rm(tsConfGermany, tsDeathGermany, tsRecoveredGermany)
 
 # test structural integrity of data
 test1 <- nrow(timeSeriesDeaths)==nrow(timeSeriesInfections)
@@ -54,10 +66,6 @@ if (test1 & test2 & test3) {
   ## get Date range 
   dCols<-dateCols(timeSeriesInfections)
   dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
-  
-  ## generate recovery data
-  timeSeriesRecoveries   <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
-  
   
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
