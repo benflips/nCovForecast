@@ -61,7 +61,7 @@ server <- function(input, output, session) {
     list(src = normalizePath(file.path('./img/australia-flag-xs.png')),
          width=100,
          height=50,
-         alt = 'Australian flag')
+         alt = 'Australian site')
   }, deleteFile = FALSE)
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
