@@ -237,8 +237,6 @@ server <- function(input, output, session) {
       yI <- subset(log100cases(),             log100cases()$Region == country)
       yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
 
-print(country)
-
       # remove column with name Region
       yI <- yI[,-1]
       yD <- yD[,-1]
