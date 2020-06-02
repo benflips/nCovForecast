@@ -81,9 +81,13 @@
 
         <script>
           const urlParams = new URLSearchParams(window.location.search);
-          const myParam = urlParams.get('lang');
-          if (myParam == 'tr') {
+          const urlLanguage = urlParams.get('lang');
+          if (urlLanguage == 'tr') {
             $('#translationLanguage').val('tr')
+          } else if (urlLanguage == 'hi') {
+            $('#translationLanguage').val('hi')
+          } else if (urlLanguage == 'de') {
+            $('#translationLanguage').val('de')
           } else {
             $('#translationLanguage').val('en')
           }
