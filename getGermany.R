@@ -35,18 +35,18 @@ tsDeathGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/deaths.csv'
 #tsRecoveredGermany <- 'https://gitlab.unimelb.edu.au/science-it-dev/covid19_rki_data/-/raw/master/recovered.csv'
 tsRecoveredGermany <- '/home/unimelb.edu.au/miwals/covid19_rki_data/recovered.csv'
 
-tsConfGermany <- '../githubRepos/covid19_rki_data/confirmed.csv'
-tsDeathGermany <- '../githubRepos/covid19_rki_data/deaths.csv'
-tsRecoveredGermany <- '../githubRepos/covid19_rki_data/recovered.csv'
+# tsConfGermany <- '../githubRepos/covid19_rki_data/confirmed.csv'
+# tsDeathGermany <- '../githubRepos/covid19_rki_data/deaths.csv'
+# tsRecoveredGermany <- '../githubRepos/covid19_rki_data/recovered.csv'
 
 timeSeriesInfections <-loadData(tsConfGermany)
 timeSeriesDeaths     <-loadData(tsDeathGermany)
 timeSeriesRecoveries    <-loadData(tsRecoveredGermany)
 
-### TEMPORARY remove last column of NAs
-timeSeriesInfections <- timeSeriesInfections[,-ncol(timeSeriesInfections)]
-timeSeriesDeaths <- timeSeriesDeaths[,-ncol(timeSeriesDeaths)]
-timeSeriesRecoveries <- timeSeriesRecoveries[,-ncol(timeSeriesRecoveries)]
+# ### TEMPORARY remove last column of NAs
+# timeSeriesInfections <- timeSeriesInfections[,-ncol(timeSeriesInfections)]
+# timeSeriesDeaths <- timeSeriesDeaths[,-ncol(timeSeriesDeaths)]
+# timeSeriesRecoveries <- timeSeriesRecoveries[,-ncol(timeSeriesRecoveries)]
 
 
 rm(tsConfGermany, tsDeathGermany, tsRecoveredGermany)
