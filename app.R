@@ -262,7 +262,7 @@ server <- function(input, output, session) {
     }
 
     out <- data.frame(countryNames, daysOfZeroNewCases, daysOfZeroDeaths)
-    colnames(out) <- c("Country/Region", "Days since last new case", "Days since last death")
+    colnames(out) <- c(i18n$t("Country/region"), i18n$t("Days since last new case"), i18n$t("Days since last death"))
     format(out, big.mark = ",")
 
   }, rownames = FALSE)
