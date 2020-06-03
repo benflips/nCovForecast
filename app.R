@@ -237,7 +237,6 @@ server <- function(input, output, session) {
   
 ##### Raw plot #####
   output$activeCasesPlot <- renderPlotly({
-    activeCasesPlotIsLinear <- FALSE
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
@@ -246,13 +245,11 @@ server <- function(input, output, session) {
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      if (activeCasesPlotIsLinear == TRUE) {
-        print('it is true')
+      if (input$activeCasesPlotIsLinear) {
         plotType <- 'linear'
         scaleType <- '(linear scale)'
         theRange <- list(0, yMax)
       } else {
-        print('it is false')
         plotType <- 'log'
         scaleType <- '(log scale)'
         theRange <- list(log10(0.1), log10(yMax))

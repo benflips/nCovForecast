@@ -168,15 +168,15 @@
           <label class="control-label" for="modelType"></label>
           <div class="shiny-options-group">
             <div class="radio">
-              <input type="radio" name="modelType" value="True" checked="checked"/>
               <label>
                 {{ textOutput(outputId = "timeVaryingGrowth") }}
+                <input type="radio" name="modelType" value="True" checked="checked"/>
               </label>
             </div>
             <div class="radio">
-              <input type="radio" name="modelType" value="False"/>
               <label>
                 {{ textOutput(outputId = "constantGrowth") }}
+                <input type="radio" name="modelType" value="False"/>
               </label>
             </div>
           </div>
@@ -206,6 +206,24 @@
 
       <div class="right-panel">
         {{ plotlyOutput("activeCasesPlot") }}
+        <div id="activeCasesPlotIsLinear" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="activeCasesPlotIsLinear"></label>
+          <div class="shiny-options-group">
+            <div class="radio">
+              <label>
+                Linear scale
+                <input type="radio" name="activeCasesPlotIsLinear" value="True" checked="checked"/>
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                Log scale
+                <input type="radio" name="activeCasesPlotIsLinear" value="False"/>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <p></p>
         {{ plotlyOutput("newCases") }}
         <p></p>
