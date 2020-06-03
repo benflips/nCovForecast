@@ -118,6 +118,8 @@ server <- function(input, output, session) {
   output$takeTheseLast     <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
   output$theLastPlot       <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
   output$detectionCanOnly  <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
+  output$logScale          <- renderText({i18n$t('Log scale')})
+  output$linearScale       <- renderText({i18n$t('Linear scale')})
 
   ## section 2
   output$locationH2       <- renderText({i18n$t('Location')})
@@ -247,11 +249,9 @@ server <- function(input, output, session) {
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
       if (input$activeCasesPlotIsLinear) {
         plotType <- 'linear'
-        scaleType <- '(linear scale)'
         theRange <- list(0, yMax)
       } else {
         plotType <- 'log'
-        scaleType <- '(log scale)'
         theRange <- list(log10(0.1), log10(yMax))
       }
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
@@ -286,7 +286,7 @@ server <- function(input, output, session) {
                 layout(showlegend = FALSE, 
                        yaxis = list(type  = plotType,
                                     range = theRange,
-                                    title = list(text = paste(i18n$t("Confirmed active cases"),scaleType)),
+                                    title = list(text = i18n$t("Confirmed active cases")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
                                     title = list(text = ""),

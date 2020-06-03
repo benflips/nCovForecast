@@ -211,13 +211,13 @@
           <div class="shiny-options-group">
             <div class="radio">
               <label>
-                Linear scale
+                {{ textOutput("linearScale") }}
                 <input type="radio" name="activeCasesPlotIsLinear" value="True" checked="checked"/>
               </label>
             </div>
             <div class="radio">
               <label>
-                Log scale
+                {{ textOutput("logScale") }}
                 <input type="radio" name="activeCasesPlotIsLinear" value="False"/>
               </label>
             </div>
