@@ -226,6 +226,8 @@ server <- function(input, output, session) {
     subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
   })
 
+  
+  ##### Days since last... Table #####
   output$daysSinceLast <- renderTable({
 
     countryNames       <- c()
@@ -265,7 +267,7 @@ server <- function(input, output, session) {
     colnames(out) <- c(i18n$t("Country/region"), i18n$t("Days since last new case"), i18n$t("Days since last death"))
     format(out, big.mark = ",")
 
-  }, rownames = FALSE)
+  }, rownames = FALSE, align = "lcc")
  
 
 
