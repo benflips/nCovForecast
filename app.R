@@ -252,7 +252,7 @@ server <- function(input, output, session) {
         theRange <- list(0, yMax)
       } else {
         plotType <- 'log'
-        theRange <- list(log10(0.1), log10(yMax))
+        theRange <- list(log10(1), log10(yMax))
       }
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
