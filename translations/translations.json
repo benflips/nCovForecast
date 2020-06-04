@@ -374,6 +374,16 @@
  "de": "Tage seit letztem Todesfall",
  "tr": "Son ölümden bu zamana kadar geçen gün sayısı",
  "hi": "अंतिम मृत्यु के बाद के दिन",
- "es": "Días desde la última muerte"}
+ "es": "Días desde la última muerte"},
+{"en": "Log scale",
+ "de": "Logarithmisch",
+ "tr": "Logaritmik ölçekte",
+ "hi": "लॉग स्केल",
+ "es": "Escala logarítmica"},
+{"en": "Linear scale",
+ "de": "Lineare Skala",
+ "tr": "Lineer ölçek",
+ "hi": "रैखिक पैमाने",
+ "es": "Escala lineal"}
   ]
 }
