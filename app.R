@@ -118,6 +118,8 @@ server <- function(input, output, session) {
   output$takeTheseLast     <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
   output$theLastPlot       <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
   output$detectionCanOnly  <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
+  output$logScale          <- renderText({i18n$t('Log scale')})
+  output$linearScale       <- renderText({i18n$t('Linear scale')})
 
   ## section 2
   output$locationH2       <- renderText({i18n$t('Location')})
@@ -236,7 +238,7 @@ server <- function(input, output, session) {
   }, rownames = FALSE)
   
 ##### Raw plot #####
-  output$rawPlot <- renderPlotly({
+  output$activeCasesPlot <- renderPlotly({
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
@@ -245,7 +247,13 @@ server <- function(input, output, session) {
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      #yTxt <- "Confirmed active cases"
+      if (input$activeCasesPlotIsLinear) {
+        plotType <- 'linear'
+        theRange <- list(0, yMax)
+      } else {
+        plotType <- 'log'
+        theRange <- list(log10(1), log10(yMax))
+      }
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
                           x = ~dates, 
@@ -276,7 +284,8 @@ server <- function(input, output, session) {
                           hoverinfo = "text+name", 
                           text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
-                       yaxis = list(range = list(0, yMax),
+                       yaxis = list(type  = plotType,
+                                    range = theRange,
                                     title = list(text = i18n$t("Confirmed active cases")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
@@ -297,67 +306,6 @@ server <- function(input, output, session) {
     }
   })
   
-##### Log plot #####
-  output$logPlot <- renderPlotly({
-    if (input$countryFinder != '') {
-      yA <- yfCast()$yA
-      yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()$lDat
-      value_at_peak <- projfCast()$value_at_peak
-      date_at_peak <- projfCast()$date_at_peak
-      pDat <- merge(yA, lDat, all = TRUE)
-      yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
-                add_trace(y = ~fit,
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark), 
-                          name = i18n$t("Best fit"),
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
-                add_trace(y = ~lwr, 
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark, dash = "dash"), 
-                          name = "CI lower bound",
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
-                add_trace(y = ~upr, 
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark, dash = "dash"), 
-                          name = "CI upper bound",
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
-                add_trace(y = ~yA, 
-                          x = ~dates,
-                          mode = "markers", 
-                          marker = list(color = clrLight), 
-                          name = i18n$t("Active cases"),
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-                layout(showlegend = FALSE, 
-                       yaxis = list(type = "log",
-                                    range = list(log10(0.1), log10(yMax)),
-                                    title = list(text = paste(i18n$t("Confirmed active cases"), "(log scale)")),
-                                    fixedrange = TRUE),
-                       xaxis = list(range = plotRange(),
-                                    title = list(text = ""),
-                                    fixedrange = TRUE)
-                ) %>%
-                config(displayModeBar = FALSE)
-      if (!is.null(value_at_peak)){
-        fig %>% add_trace(y = c(0,value_at_peak), 
-                  x = c(date_at_peak,date_at_peak),
-                  mode = "lines", 
-                  line = list(color = clrLight),
-                  name = i18n$t("Estimated peak"),
-                  hoverinfo = "text+name",
-                  text = format(date_at_peak, "%b, %d"))
-      } else {fig}
-    }
-  })
-
 ##### New cases ##### 
   output$newCases <- renderPlotly({
     if (input$countryFinder != '') {

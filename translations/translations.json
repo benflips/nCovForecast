@@ -359,6 +359,16 @@
  "de": "Abschnitt",
  "tr": "bölüm",
  "hi": "अनुभाग",
- "es": "sección"}
+ "es": "sección"},
+{"en": "Log scale",
+ "de": "Logarithmisch",
+ "tr": "Logaritmik ölçekte",
+ "hi": "लॉग स्केल",
+ "es": "Escala logarítmica"},
+{"en": "Linear scale",
+ "de": "Lineare Skala",
+ "tr": "Lineer ölçek",
+ "hi": "रैखिक पैमाने",
+ "es": "Escala lineal"}
   ]
 }
