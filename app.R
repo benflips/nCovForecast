@@ -200,7 +200,7 @@ server <- function(input, output, session) {
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
     list(yI = yI, yD = yD, yR = yR, yA = yA)
   })
-  
+
   projfCast <- reactive({ # projection for forecast
     projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
   })
@@ -223,7 +223,56 @@ server <- function(input, output, session) {
     }
     list(minDate, maxDate)
   })
+
+  deathsInCountries <- reactive({
+    subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+  })
+
   
+  ##### Days since last... Table #####
+  output$daysSinceLast <- renderTable({
+
+    countryNames       <- c()
+    daysOfZeroNewCases <- c()
+    daysOfZeroDeaths   <- c()
+
+    for (country in input$countryGrowthRate) {
+      countryNames <- append(countryNames, country)
+      yI <- subset(log100cases(),             log100cases()$Region == country)
+      yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
+
+      # remove column with name Region
+      yI <- yI[,-1]
+      yD <- yD[,-1]
+
+      dailyNewCases <- diff(as.numeric(yI))
+      dailyDeaths   <- diff(as.numeric(yD))
+
+      moreThanZeroNewCases <- which(dailyNewCases > 0)
+      moreThanZeroDeaths   <- which(dailyDeaths > 0)
+
+      if (length(moreThanZeroDeaths) == 0) {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,'N/A')
+      } else {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,  length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1)
+      }
+
+      if (length(moreThanZeroNewCases) == 0) {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases, 'N/A')
+      } else {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases,length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1)
+      }
+
+    }
+
+    out <- data.frame(countryNames, daysOfZeroNewCases, daysOfZeroDeaths)
+    colnames(out) <- c(i18n$t("Country/region"), i18n$t("Days since last new case"), i18n$t("Days since last death"))
+    format(out, big.mark = ",")
+
+  }, rownames = FALSE, align = "lcc")
+ 
+
+
   ##### Raw stats #####  
   output$rawStats <- renderTable({
     yA <- yfCast()$yA
