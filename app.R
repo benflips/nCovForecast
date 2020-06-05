@@ -33,7 +33,8 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
-
+  
+  ##### Set Language #####
   i18n <- Translator$new(translation_json_path = "translations/translations.json")
 
   observe({
@@ -52,11 +53,13 @@ server <- function(input, output, session) {
     }
   })
 
+  ##### Some useful variables #####
   please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
-
+  
+  ##### Flags #####
   output$flagAustralia <- renderImage({
     list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                height=50, alt = 'Australian site')
   }, deleteFile = FALSE)
@@ -79,6 +82,7 @@ server <- function(input, output, session) {
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
+  ##### Text to be translated #####
   ### the text is here rather than base.html so that it can easily be translated to other languages
   ## header (anything on a dark blue background)
   output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
@@ -135,7 +139,7 @@ server <- function(input, output, session) {
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
 #  output$<- renderText({i18n$t('')})
 
-# #### Observer function -- set country names from url ####
+  ##### Observer function -- set country names from url ####
    observe({
      cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
      if (cname == "au") {
@@ -156,7 +160,7 @@ server <- function(input, output, session) {
      } 
    })
   
-#### Observer function -- Global or Country level ####
+  #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     # change data inputs
@@ -198,7 +202,8 @@ server <- function(input, output, session) {
     yD <- tsSub(timeSeriesDeaths,timeSeriesDeaths$Region %in% input$countryFinder) 
     yR <- tsSub(timeSeriesRecoveries,timeSeriesRecoveries$Region %in% input$countryFinder)  
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
-    list(yI = yI, yD = yD, yR = yR, yA = yA)
+    yIplus <- tsSub(cumulative.infections,cumulative.infections$Region %in% input$countryFinder)
+    list(yI = yI, yD = yD, yR = yR, yA = yA, yIplus = yIplus)
   })
 
   projfCast <- reactive({ # projection for forecast
@@ -402,7 +407,38 @@ server <- function(input, output, session) {
         layout(legend = list(x=0))
     }
   })
-  
+
+##### Undiagnosed plot #####  
+  output$undiagPlot <- renderPlotly({
+    if (input$countryFinder != '') {
+    rawI <- yfCast()$yI # diagnosed infection totals at t
+    estI <- yfCast()$yIplus # estimated true infections at t (diagnosed + undiagnosed)
+    plotDat <- data.frame(dates = as.Date(names(rawI), format = "%m.%d.%y"), rawI, estI)
+    fig <- plot_ly(plotDat, type = "scatter", mode = "none") %>%
+      add_trace(y = ~rawI,
+                x = ~dates, 
+                mode = "lines+markers",
+                marker = list(color = clrLight), 
+                line = list(color = clrLight), 
+                name = i18n$t("Diagnosed"), 
+                hoverinfo = "text+name", 
+                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$rawI, big.mark = ","))) %>%
+      add_trace(y = ~estI,
+                x = ~dates, 
+                mode = "lines", 
+                line = list(color = clrDark), 
+                name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
+                hoverinfo = "text+name", 
+                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$estI, big.mark = ","))) %>%
+      layout(xaxis = list(range = plotRange(),
+                          title = list(text = i18n$t("Date"))),
+             yaxis = list(title = list(text = i18n$t("Total infections")), 
+                          side = 'left'),
+             legend = list(x = 0, y = 1.05)) %>%
+      config(displayModeBar = FALSE)
+    }
+  })
+    
 ##### Detection Plot #####   
   output$detPlot <- renderPlotly({
     if (input$countryFinder != '') {
