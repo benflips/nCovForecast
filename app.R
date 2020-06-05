@@ -33,7 +33,8 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
-
+  
+  ##### Set Language #####
   i18n <- Translator$new(translation_json_path = "translations/translations.json")
 
   observe({
@@ -52,11 +53,13 @@ server <- function(input, output, session) {
     }
   })
 
+  ##### Some useful variables #####
   please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
-
+  
+  ##### Flags #####
   output$flagAustralia <- renderImage({
     list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                height=50, alt = 'Australian site')
   }, deleteFile = FALSE)
@@ -79,6 +82,7 @@ server <- function(input, output, session) {
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
+  ##### Text to be translated #####
   ### the text is here rather than base.html so that it can easily be translated to other languages
   ## header (anything on a dark blue background)
   output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
@@ -135,7 +139,7 @@ server <- function(input, output, session) {
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
 #  output$<- renderText({i18n$t('')})
 
-# #### Observer function -- set country names from url ####
+  ##### Observer function -- set country names from url ####
    observe({
      cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
      if (cname == "au") {
@@ -156,7 +160,7 @@ server <- function(input, output, session) {
      } 
    })
   
-#### Observer function -- Global or Country level ####
+  #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     # change data inputs
