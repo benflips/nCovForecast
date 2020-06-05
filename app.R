@@ -420,19 +420,19 @@ server <- function(input, output, session) {
                 mode = "lines+markers",
                 marker = list(color = clrLight), 
                 line = list(color = clrLight), 
-                name = i18n$t("Diagnosed cases"), 
+                name = i18n$t("Diagnosed"), 
                 hoverinfo = "text+name", 
                 text = paste(format(plotDat$dates, "%b %d"), format(plotDat$rawI, big.mark = ","))) %>%
       add_trace(y = ~estI,
                 x = ~dates, 
                 mode = "lines", 
                 line = list(color = clrDark), 
-                name = i18n$t("Diagnosed + Undiagnosed"), 
+                name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
                 hoverinfo = "text+name", 
                 text = paste(format(plotDat$dates, "%b %d"), format(plotDat$estI, big.mark = ","))) %>%
       layout(xaxis = list(range = plotRange(),
                           title = list(text = i18n$t("Date"))),
-             yaxis = list(title = list(text = i18n$t("Total cases")), 
+             yaxis = list(title = list(text = i18n$t("Total infections")), 
                           side = 'left'),
              legend = list(x = 0, y = 1.05)) %>%
       config(displayModeBar = FALSE)
