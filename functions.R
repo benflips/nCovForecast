@@ -190,6 +190,7 @@ cfi <- function(active){
 detRate<-function(infd, deaths, caseFatalityRatio = 3.3, ttd=17, window=5, pointEst = TRUE){
   obs<-c(rep(NA, window), diff(infd, window)) # observed new cases
   deathDiff<-diff(deaths, window) # observed new deaths
+  deathDiff[deathDiff<0] <- 0 # catch negative deaths (which shouldn't exist, but...)
   expd<-deathDiff/(caseFatalityRatio/100) #expected new cases given caseFatalityRatio
   expd<-expd[-(1:(ttd-window))]
   expd<-c(expd, rep(NA, ttd))
