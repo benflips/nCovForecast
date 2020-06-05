@@ -208,7 +208,7 @@ server <- function(input, output, session) {
   # adjust slide input given model type
   observe({
     if (input$modelType){
-      updateSliderInput(session, "fitWinSlider", value = 18, min = 10, max = 30)
+      updateSliderInput(session, "fitWinSlider", value = 14, min = 6, max = 20)
     } else {
       updateSliderInput(session, "fitWinSlider", value = 7, min = 3, max = 10)
     }
