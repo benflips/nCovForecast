@@ -202,7 +202,8 @@ server <- function(input, output, session) {
     yD <- tsSub(timeSeriesDeaths,timeSeriesDeaths$Region %in% input$countryFinder) 
     yR <- tsSub(timeSeriesRecoveries,timeSeriesRecoveries$Region %in% input$countryFinder)  
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
-    list(yI = yI, yD = yD, yR = yR, yA = yA)
+    yIplus <- tsSub(cumulative.infections,cumulative.infections$Region %in% input$countryFinder)
+    list(yI = yI, yD = yD, yR = yR, yA = yA, yIplus = yIplus)
   })
 
   projfCast <- reactive({ # projection for forecast
@@ -406,7 +407,38 @@ server <- function(input, output, session) {
         layout(legend = list(x=0))
     }
   })
-  
+
+##### Undiagnosed plot #####  
+  output$undiagPlot <- renderPlotly({
+    if (input$countryFinder != '') {
+    rawI <- yfCast()$yI # diagnosed infection totals at t
+    estI <- yfCast()$yIplus # estimated true infections at t (diagnosed + undiagnosed)
+    plotDat <- data.frame(dates = as.Date(names(rawI), format = "%m.%d.%y"), rawI, estI)
+    fig <- plot_ly(plotDat, type = "scatter", mode = "none") %>%
+      add_trace(y = ~rawI,
+                x = ~dates, 
+                mode = "lines+markers",
+                marker = list(color = clrLight), 
+                line = list(color = clrLight), 
+                name = i18n$t("Diagnosed cases"), 
+                hoverinfo = "text+name", 
+                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$rawI, big.mark = ","))) %>%
+      add_trace(y = ~estI,
+                x = ~dates, 
+                mode = "lines", 
+                line = list(color = clrDark), 
+                name = i18n$t("Diagnosed + Undiagnosed"), 
+                hoverinfo = "text+name", 
+                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$estI, big.mark = ","))) %>%
+      layout(xaxis = list(range = plotRange(),
+                          title = list(text = i18n$t("Date"))),
+             yaxis = list(title = list(text = i18n$t("Total cases")), 
+                          side = 'left'),
+             legend = list(x = 0, y = 1.05)) %>%
+      config(displayModeBar = FALSE)
+    }
+  })
+    
 ##### Detection Plot #####   
   output$detPlot <- renderPlotly({
     if (input$countryFinder != '') {
