@@ -86,7 +86,7 @@ server <- function(input, output, session) {
   ### the text is here rather than base.html so that it can easily be translated to other languages
   ## header (anything on a dark blue background)
   output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
-  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
+  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by Johns Hopkins University')})
   output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
   output$growthRates      <- renderText({i18n$t('Growth rates')})
   output$about            <- renderText({i18n$t('About')})
