@@ -8,9 +8,11 @@ getDataGeneral <- function(countryName, inputConfirmed, inputDeaths){
 source('functions.R')
 
 cat("\n")
-print(      '-----------------------')
-print(paste('----',countryName,'----'))
-print(      '-----------------------')
+print('-----------------------')
+print('-----------------------')
+print(paste('      ',countryName))
+print('-----------------------')
+print('-----------------------')
 
 
 timeSeriesInfections <-loadData(inputConfirmed)
@@ -56,10 +58,12 @@ if (test1 & test2 & test3 & test4) {
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
   # report to console countries that have been recLagged within activeCases()
-  print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
-  print(std$failedRecovery)
+  if (nrow(std$failedRecovery)>0) {
+    print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
+    print(std$failedRecovery)
+    cat("\n\n")
+  }
 
-  cat("\n\n")
   
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
@@ -77,7 +81,7 @@ if (test1 & test2 & test3 & test4) {
   tsA <- std$tsA[cumSub,]
   rm(checkI, checkD, cumSub)
   
-  print("Organizing data...\n")
+  print("Organising data...")
   
   # aggregate to region
   tsI <- regionAgg(tsI, regionCol = tsI$Province.State)
@@ -100,7 +104,8 @@ if (test1 & test2 & test3 & test4) {
   dir.create(paste0("dat/", countryName), showWarnings = FALSE) # if the directory doesn't exist, create it.
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
-  
+
+  # un comment these lines to run deconvolution (SLOW!)  
   system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
   load(paste0("dat/",countryName,"/estDeconv.RData"))
   
@@ -121,7 +126,7 @@ if (test1 & test2 & test3 & test4) {
   
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
-  print("getData complete.\n")  
+  print("Complete")
 } else { stop(paste('there was an error!', test1, test2, test3, test4)) }  
 
 }
