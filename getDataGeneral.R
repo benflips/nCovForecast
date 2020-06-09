@@ -1,4 +1,4 @@
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, aggregateOverProvinceState){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, aggregateOverProvinceState){
 ## ---------------------------##
 ## Script name: getDataGeneral.R
 ##
@@ -14,11 +14,18 @@ print(paste('      ',countryName))
 print('-----------------------')
 print('-----------------------')
 
+noErrors <- TRUE
 
 timeSeriesInfections <-loadData(inputConfirmed)
 timeSeriesDeaths     <-loadData(inputDeaths)
-
 rm(inputConfirmed, inputDeaths)
+
+if (inputRecovered != '') {
+  timeSeriesRecovered <- loadData(inputRecovered)
+  rm(inputRecovered)
+}
+
+
 
 # aggregate data to Province.State
 if (aggregateOverProvinceState) {
@@ -53,8 +60,23 @@ if (!test4) {
   print("There are NAs somewhere in the death data\n")
 }
 
+noErrors <- noErrors & test1 & test2 & test3 & test4
 
-if (test1 & test2 & test3 & test4) {
+
+if (exists('timeSeriesRecovered')) {
+  test5 <- nrow(timeSeriesInfections)==nrow(timeSeriesRecovered)
+  if (!test5) {
+    print("Infection and recovered data DO NOT have an equal number of rows\n")
+  }
+
+  test6 <- nrow(timeSeriesInfections)==nrow(timeSeriesRecovered)
+  if (!test6) {
+    print("Infection and recovered data DO NOT have an equal number of columns")
+  }
+
+}
+
+if (noErrors) {
 
   # All tests passed successfully
   
