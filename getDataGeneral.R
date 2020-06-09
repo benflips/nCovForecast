@@ -39,44 +39,40 @@ if (aggregateOverProvinceState) {
 
 
 # test structural integrity of data
-test1 <- nrow(timeSeriesDeaths)==nrow(timeSeriesInfections)
-if (!test1) {
-  print("Death and infection data DO NOT have an equal number of rows\n")
-}
-
-test2 <- ncol(timeSeriesDeaths)==ncol(timeSeriesInfections)
-if (!test2) {
-  print("Death and infection data DO NOT have an equal number of columns\n")
-}
+test1 <- checkSameNumberOfRows(timeSeriesInfections, timeSeriesDeaths)
+test2 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesDeaths)
 
 # NAs anywhere in the data
 test3 <- sum(is.na(timeSeriesInfections))==0
 if (!test3) {
-  print("There are NAs somewhere in the infection data\n")
+  print("TEST 3: There are NAs somewhere in the infection data")
+  print(sum(is.na(timeSeriesInfections)))
 }
 
 test4 <- sum(is.na(timeSeriesDeaths))==0
 if (!test4) {
-  print("There are NAs somewhere in the death data\n")
+  print("TEST 4: There are NAs somewhere in the death data")
+  print(sum(is.na(timeSeriesDeaths)))
 }
 
 noErrors <- noErrors & test1 & test2 & test3 & test4
 
 
 if (exists('timeSeriesRecovered')) {
-  test5 <- nrow(timeSeriesInfections)==nrow(timeSeriesRecovered)
-  if (!test5) {
-    print("Infection and recovered data DO NOT have an equal number of rows\n")
+
+  test5 <- checkSameNumberOfRows(timeSeriesInfections, timeSeriesRecovered)
+  test6 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecovered)
+
+  test7 <- sum(is.na(timeSeriesRecovered))==0
+  if (!test7) {
+    print("TEST 7: There are NAs somewhere in the death data")
+    print(sum(is.na(timeSeriesRecovered)))
   }
 
-  test6 <- nrow(timeSeriesInfections)==nrow(timeSeriesRecovered)
-  if (!test6) {
-    print("Infection and recovered data DO NOT have an equal number of columns")
-  }
-
+  noErrors <- noErrors & test5 & test6 & test7
 }
 
-if (noErrors) {
+if (!noErrors) {
 
   # All tests passed successfully
   
@@ -104,7 +100,7 @@ if (noErrors) {
   cumSub <- checkI & checkD
   if (sum(!cumSub)>5) stop("More than five suspect regions in this dataset.")
   if (sum(!cumSub)>0) {
-    print(paste("States excluded through failed cumulants:", sum(!cumSub), "\n"))
+    print(paste("States excluded through failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
     print("\n\n")
   }
