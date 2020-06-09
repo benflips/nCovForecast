@@ -1,6 +1,5 @@
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths){
-## ---------------------------
-##
+## ---------------------------##
 ## Script name: getDataGeneral.R
 ##
 ## Purpose of script: to get data from a given set up confirmed cases, deaths, and (if it exists) recoveries.
@@ -8,10 +7,10 @@ getDataGeneral <- function(countryName, inputConfirmed, inputDeaths){
 ## load up our functions into memory
 source('functions.R')
 
-## ---------------------------
-message('-----------------------')
-message(paste('----',countryName,'----'))
-message('-----------------------')
+cat("\n")
+print(      '-----------------------')
+print(paste('----',countryName,'----'))
+print(      '-----------------------')
 
 
 timeSeriesInfections <-loadData(inputConfirmed)
@@ -44,37 +43,41 @@ if (!test4) {
 
 if (test1 & test2 & test3 & test4) {
 
-  print('All tests passed successfully')
+  # All tests passed successfully
   
-  ## get Date range 
+  ## get date range 
   dCols<-dateCols(timeSeriesInfections)
   dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
   
   ## generate recovery data
   timeSeriesRecoveries   <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
   
-  
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
   # report to console countries that have been recLagged within activeCases()
-  cat("States failing recovery data test and treated with recLag: ", nrow(std$failedRecovery), "\n", paste(std$failedRecovery[,1], std$failedRecovery[,2], "\n"), "\n\n")
+  print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
+  print(std$failedRecovery)
+
+  cat("\n\n")
   
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   cumSub <- checkI & checkD
   if (sum(!cumSub)>5) stop("More than five suspect regions in this dataset.")
-  cat(paste("States excluded through failed cumulants:", sum(!cumSub), "\n"))
-  print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
-  cat("\n\n")
+  if (sum(!cumSub)>0) {
+    print(paste("States excluded through failed cumulants:", sum(!cumSub), "\n"))
+    print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+    print("\n\n")
+  }
   tsI <- std$tsI[cumSub,]
   tsD <- std$tsD[cumSub,]
   tsR <- std$tsR[cumSub,]
   tsA <- std$tsA[cumSub,]
   rm(checkI, checkD, cumSub)
   
-  cat("Organizing data...\n")
+  print("Organizing data...\n")
   
   # aggregate to region
   tsI <- regionAgg(tsI, regionCol = tsI$Province.State)
@@ -118,7 +121,7 @@ if (test1 & test2 & test3 & test4) {
   
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
-  cat("getData complete.\n")  
+  print("getData complete.\n")  
 } else { stop(paste('there was an error!', test1, test2, test3, test4)) }  
 
 }
