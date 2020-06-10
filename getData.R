@@ -35,6 +35,12 @@
 #               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
 #               FALSE)
 
+getDataGeneral('China',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
+               FALSE,TRUE)
+
 getDataGeneral('US',
                'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv',
                'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv', 
@@ -45,6 +51,13 @@ getDataGeneral('Canada',
                'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
                'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv','',
                FALSE,TRUE)
+
+getDataGeneral('Australia',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
+               FALSE,TRUE)
+
 
 
 source('functions.R')
@@ -162,9 +175,9 @@ if (test1 & test2 & test3){
   # Make continent aggregates
   load("dat/Continents/continentData.RData")
   timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
-  timeSeriesDeaths <- continentAgg(timeSeriesDeaths, continentData)
+  timeSeriesDeaths     <- continentAgg(timeSeriesDeaths, continentData)
   timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
-  timeSeriesActive <- continentAgg(timeSeriesActive, continentData)
+  timeSeriesActive     <- continentAgg(timeSeriesActive, continentData)
   
   ## Define menus
   # get region names with 20 or more cases as of yesterday
@@ -221,9 +234,9 @@ if (test1 & test2 & test3){
     tsA <- regionAgg(tsA, regionCol = tsA$Province.State)
     
     timeSeriesInfections <- natAgg(tsI, aggName = paste("National aggregate -", focusCountry))
-    timeSeriesDeaths <- natAgg(tsD, aggName = paste("National aggregate -", focusCountry))
+    timeSeriesDeaths     <- natAgg(tsD, aggName = paste("National aggregate -", focusCountry))
     timeSeriesRecoveries <- natAgg(tsR, aggName = paste("National aggregate -", focusCountry))
-    timeSeriesActive <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
+    timeSeriesActive     <- natAgg(tsA, aggName = paste("National aggregate -", focusCountry))
     
     ## Define menus
     # get region names with 20 or more cases as of yesterday
