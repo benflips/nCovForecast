@@ -1,4 +1,4 @@
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, aggregateOverProvinceState){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, aggregateOverProvinceState, isThisAFocusCountry){
 ## ---------------------------##
 ## Script name: getDataGeneral.R
 ##
@@ -25,6 +25,13 @@ if (inputRecovered != '') {
   rm(inputRecovered)
 }
 
+if (isThisAFocusCountry) {
+  timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
+  timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
+  if (inputRecovered != '') {
+    timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
+  }
+}
 
 # aggregate data to Province.State
 if (aggregateOverProvinceState) {
@@ -49,12 +56,11 @@ noErrors <- noErrors & test1 & test2 & test3 & test4
 
 if (exists('timeSeriesRecoveries')) {
 
-  test5 <- checkSameNumberOfRows(timeSeriesInfections, timeSeriesRecoveries)
-  test6 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecoveries)
+  test5 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecoveries)
 
-  test7 <- checkNAs(timeSeriesRecoveries)
+  test6 <- checkNAs(timeSeriesRecoveries)
 
-  noErrors <- noErrors & test5 & test6 & test7
+  noErrors <- noErrors & test5 & test6
 
 }
 
@@ -66,7 +72,7 @@ if (noErrors) {
   dCols<-dateCols(timeSeriesInfections)
   dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
   
-  ## generate recovery data
+  ## generate recovery data if it doesn't already exist
   if (!exists('timeSeriesRecoveries')) {
     timeSeriesRecoveries <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
   }
@@ -139,7 +145,8 @@ if (noErrors) {
                                    ddNames = ddNames,
                                    cumulative.infections = cumulative.infections,
                                    undiagnosed.infections = undiagnosed.infections, 
-                                   active.projections = active.projections)
+                                   active.projections = active.projections,
+                                   timestampRan = Sys.time())
   
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
