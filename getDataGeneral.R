@@ -18,11 +18,9 @@ noErrors <- TRUE
 
 timeSeriesInfections <-loadData(inputConfirmed)
 timeSeriesDeaths     <-loadData(inputDeaths)
-rm(inputConfirmed, inputDeaths)
 
 if (inputRecovered != '') {
   timeSeriesRecoveries <- loadData(inputRecovered)
-  rm(inputRecovered)
 }
 
 if (isThisAFocusCountry) {
@@ -32,6 +30,8 @@ if (isThisAFocusCountry) {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
   }
 }
+
+rm(inputConfirmed, inputDeaths, inputRecovered)
 
 # aggregate data to Province.State
 if (aggregateOverProvinceState) {
@@ -96,7 +96,7 @@ if (noErrors) {
   if (sum(!cumSub)>0) {
     print(paste("States excluded through failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
-    print("\n\n")
+    cat("\n\n")
   }
   tsI <- std$tsI[cumSub,]
   tsD <- std$tsD[cumSub,]
@@ -112,11 +112,21 @@ if (noErrors) {
   tsR <- regionAgg(tsR, regionCol = tsR$Province.State)
   tsA <- regionAgg(tsA, regionCol = tsA$Province.State)
   
-  timeSeriesInfections <- natAgg(tsI, aggName = paste("National aggregate -", countryName))
-  timeSeriesDeaths     <- natAgg(tsD, aggName = paste("National aggregate -", countryName))
-  timeSeriesRecoveries <- natAgg(tsR, aggName = paste("National aggregate -", countryName))
-  timeSeriesActive     <- natAgg(tsA, aggName = paste("National aggregate -", countryName))
+  timeSeriesInfections <- natAgg(tsI, aggName = paste("Aggregate -", countryName))
+  timeSeriesDeaths     <- natAgg(tsD, aggName = paste("Aggregate -", countryName))
+  timeSeriesRecoveries <- natAgg(tsR, aggName = paste("Aggregate -", countryName))
+  timeSeriesActive     <- natAgg(tsA, aggName = paste("Aggregate -", countryName))
   
+  if (focusCountry == 'Global') {
+    # create global aggregate row
+    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
+    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
+    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
+    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
+  }
+
+
+
   ## Define menus
   # get region names with 20 or more cases as of yesterday
   ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
