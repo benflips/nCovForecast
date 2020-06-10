@@ -27,30 +27,38 @@
 ## ---------------------------
 ## load up functions
 
+#source('getDataGeneral.R')
+
+#getDataGeneral('Global',
+#               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
+#               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
+#               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
+#               FALSE)
+
+getDataGeneral('US',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv', 
+               '',
+               TRUE,FALSE)
+
+getDataGeneral('Canada',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
+               'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv','',
+               FALSE,TRUE)
+
+
 source('functions.R')
 
 ## ---------------------------
 
 ## Get data
-server <- FALSE ## if you are drawing data directly over internet, set this to FALSE to use url alternatives:
-if (server){
-  tsConf       <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-  tsConfUS     <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  tsDeath      <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-  tsDeathUS    <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  tsRec        <- "/srv/shiny-server/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv" 
-} else {  
   tsConf       <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-  tsConfUS     <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
   tsDeath      <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-  tsDeathUS    <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   tsRec        <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-}
+
 cat("Loading JHU data...\n\n")
 timeSeriesInfections      <-loadData(tsConf)
-timeSeriesInfectionsUS    <-loadData(tsConfUS)
 timeSeriesDeaths          <-loadData(tsDeath)
-timeSeriesDeathsUS        <-loadData(tsDeathUS)
 timeSeriesRecoveries      <-loadData(tsRec)
 
 ## get Date range from JHU
@@ -58,15 +66,7 @@ dCols<-dateCols(timeSeriesInfections)
 dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
 
 
-rm(tsConf, tsConfUS, tsDeath, tsDeathUS, tsRec) # tidy up
-
-#aggregate US data to Province.State
-timeSeriesInfectionsUS <-regionAgg(timeSeriesInfectionsUS, regionCol = timeSeriesInfectionsUS$Province.State, regionName = "Province.State")
-  timeSeriesInfectionsUS$Country.Region <- rep("US", nrow(timeSeriesInfectionsUS))
-  timeSeriesInfectionsUS <- timeSeriesInfectionsUS[c(ncol(timeSeriesInfectionsUS), 1:(ncol(timeSeriesInfectionsUS)-1))] 
-timeSeriesDeathsUS <-regionAgg(timeSeriesDeathsUS, regionCol = timeSeriesDeathsUS$Province.State, regionName = "Province.State")
-  timeSeriesDeathsUS$Country.Region <- rep("US", nrow(timeSeriesDeathsUS))
-  timeSeriesDeathsUS <- timeSeriesDeathsUS[c(ncol(timeSeriesDeathsUS), 1:(ncol(timeSeriesDeathsUS)-1))] 
+rm(tsConf, tsDeath,  tsRec) # tidy up
 
 
 # Test for structural irregularities in data before proceeding any further
@@ -154,9 +154,9 @@ if (test1 & test2 & test3){
   
   # create global aggregate row
   timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
-  timeSeriesDeaths <- natAgg(timeSeriesDeaths, aggName = "Global aggregate")
+  timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
   timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
-  timeSeriesActive <- natAgg(timeSeriesActive, aggName = "Global aggregate")
+  timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
   
   # Make continent aggregates
   load("dat/Continents/continentData.RData")
