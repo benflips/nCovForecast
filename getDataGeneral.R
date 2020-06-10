@@ -21,20 +21,20 @@ timeSeriesDeaths     <-loadData(inputDeaths)
 rm(inputConfirmed, inputDeaths)
 
 if (inputRecovered != '') {
-  timeSeriesRecovered <- loadData(inputRecovered)
+  timeSeriesRecoveries <- loadData(inputRecovered)
   rm(inputRecovered)
 }
-
 
 
 # aggregate data to Province.State
 if (aggregateOverProvinceState) {
   timeSeriesInfections <-regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State, regionName = "Province.State")
-    timeSeriesInfections$Country.Region <- rep(countryName, nrow(timeSeriesInfections))
-    timeSeriesInfections <- timeSeriesInfections[c(ncol(timeSeriesInfections), 1:(ncol(timeSeriesInfections)-1))]
+  timeSeriesInfections$Country.Region <- rep(countryName, nrow(timeSeriesInfections))
+  timeSeriesInfections <- timeSeriesInfections[c(ncol(timeSeriesInfections), 1:(ncol(timeSeriesInfections)-1))]
+
   timeSeriesDeaths <-regionAgg(timeSeriesDeaths, regionCol = timeSeriesDeaths$Province.State, regionName = "Province.State")
-    timeSeriesDeaths$Country.Region <- rep(countryName, nrow(timeSeriesDeaths))
-    timeSeriesDeaths <- timeSeriesDeaths[c(ncol(timeSeriesDeaths), 1:(ncol(timeSeriesDeaths)-1))]
+  timeSeriesDeaths$Country.Region <- rep(countryName, nrow(timeSeriesDeaths))
+  timeSeriesDeaths <- timeSeriesDeaths[c(ncol(timeSeriesDeaths), 1:(ncol(timeSeriesDeaths)-1))]
 }
 
 
@@ -47,17 +47,18 @@ test4 <- checkNAs(timeSeriesDeaths)
 
 noErrors <- noErrors & test1 & test2 & test3 & test4
 
-if (exists('timeSeriesRecovered')) {
+if (exists('timeSeriesRecoveries')) {
 
-  test5 <- checkSameNumberOfRows(timeSeriesInfections, timeSeriesRecovered)
-  test6 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecovered)
+  test5 <- checkSameNumberOfRows(timeSeriesInfections, timeSeriesRecoveries)
+  test6 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecoveries)
 
-  test7 <- checkNAs(timeSeriesRecovered)
+  test7 <- checkNAs(timeSeriesRecoveries)
 
   noErrors <- noErrors & test5 & test6 & test7
+
 }
 
-if (!noErrors) {
+if (noErrors) {
 
   # All tests passed successfully
   
@@ -66,8 +67,10 @@ if (!noErrors) {
   dates<-as.Date(colnames(timeSeriesInfections)[dCols], format = "%m.%d.%y")
   
   ## generate recovery data
-  timeSeriesRecoveries   <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
-  
+  if (!exists('timeSeriesRecoveries')) {
+    timeSeriesRecoveries <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
+  }
+
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
@@ -141,6 +144,8 @@ if (!noErrors) {
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
   print("Complete")
-} else { stop(paste('there was an error!', test1, test2, test3, test4)) }  
+} else {
+  print('No data was saved')
+}
 
 }
