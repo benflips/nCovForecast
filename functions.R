@@ -38,6 +38,13 @@ checkSameNumberOfRows <- function(a, b) {
   test
 }
 
+checkNAs <- function(a) {
+  test <- sum(is.na(a))==0
+  if (!test) {
+   print(paste0('ERROR: There are NAs somewhere in the ', deparse(substitute(a)), ' data: ', sum(is.na(a))))
+  }
+  test
+}
 
 
 # function to check that all data are (semi-strictly) increasing over time
