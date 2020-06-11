@@ -94,30 +94,34 @@ loadData <- function(path){
   # returns standardised dataframes
 activeCases <- function(infections, deaths, recoveries){
   ssCol <- dateCols(infections) # get date columns
-  inputTest <- !(nrow(infections) == nrow(deaths) & nrow(infections) == nrow(recoveries))
-  if (inputTest) stop("Input dataframes must have identical dimensions")
-  # Standardise order
-  infections <- infections[order(infections$Country.Region, infections$Province.State),]
-  deaths <- deaths[order(deaths$Country.Region, deaths$Province.State),]
-  recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
-  orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
-  if (orderTest) stop("Region labels do not align")
-  # check for countries with inadequate reporting of recoveries, and apply recLag estimation
-  recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
-  recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
-  # subset to case data
-  infMat <- infections[,ssCol]
-  deathMat <- deaths[,ssCol]
-  recMat <- recoveries[,ssCol]
-  # generate active case data frame
-  active <- infections
-  active[,ssCol] <- infMat - deathMat - recMat
-  # return standardised data frames
-  list(tsI = infections, 
-       tsD = deaths, 
-       tsR = recoveries, 
-       tsA = active, 
-       failedRecovery = infections[recCheck, 1:2])
+  test1 <- checkSameNumberOfRows(infections,deaths)
+  test2 <- checkSameNumberOfRows(infections,recoveries)
+  if (test1) {
+    # Standardise order
+    infections <- infections[order(infections$Country.Region, infections$Province.State),]
+    deaths     <- deaths[order(deaths$Country.Region, deaths$Province.State),]
+    recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
+    orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
+    if (orderTest) stop("Region labels do not align")
+    # check for countries with inadequate reporting of recoveries, and apply recLag estimation
+    recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
+    recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
+    # subset to case data
+    infMat <- infections[,ssCol]
+    deathMat <- deaths[,ssCol]
+    recMat <- recoveries[,ssCol]
+    # generate active case data frame
+    active <- infections
+    active[,ssCol] <- infMat - deathMat - recMat
+    # return standardised data frames
+    list(tsI = infections, 
+         tsD = deaths, 
+         tsR = recoveries, 
+         tsA = active, 
+         failedRecovery = infections[recCheck, 1:2])
+  } else {
+    stop('Error - activeCases failed')
+  }
 }
 
 # Adjusts cumulative infections to get active cases
