@@ -117,7 +117,7 @@ if (noErrors) {
   timeSeriesRecoveries <- natAgg(tsR, aggName = paste("Aggregate -", countryName))
   timeSeriesActive     <- natAgg(tsA, aggName = paste("Aggregate -", countryName))
   
-  if (focusCountry == 'Global') {
+  if (countryName == 'Global') {
     # create global aggregate row
     timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
     timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
