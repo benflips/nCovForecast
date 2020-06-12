@@ -1,3 +1,5 @@
+library(zipR)
+
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, aggregateOverProvinceState, isThisAFocusCountry, verbose){
 ## ---------------------------##
 ## Script name: getDataGeneral.R
@@ -45,7 +47,7 @@ if (inputRecovered != '') {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region != 'Canada')
     if (verbose) {
       print('')
-      print('After excluding those with a Province.State:')
+      print('After excluding those with a Province.State (and, temporarily, Canada):')
       print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
       print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
       print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
@@ -146,52 +148,79 @@ if (noErrors) {
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
-  cumSub <- checkI & checkD
+  checkR <- cumulantCheck(std$tsR, tolerance = 0.5)
+  cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>5) stop("More than five suspect regions in this dataset.")
   if (sum(!cumSub)>0) {
-    print(paste("States excluded through failed cumulants:", sum(!cumSub)))
-    print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub]))
+    print(paste("Regions excluded through failed cumulants:", sum(!cumSub)))
+    print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
     cat("\n\n")
   }
-  tsI <- std$tsI[cumSub,]
-  tsD <- std$tsD[cumSub,]
-  tsR <- std$tsR[cumSub,]
-  tsA <- std$tsA[cumSub,]
-  rm(checkI, checkD, cumSub)
-  
-  print("Organising data...")
-  
+  timeSeriesInfections <- std$tsI[cumSub,]
+  timeSeriesDeaths     <- std$tsD[cumSub,]
+  timeSeriesRecoveries <- std$tsR[cumSub,]
+  timeSeriesActive     <- std$tsA[cumSub,]
+  rm(checkI, checkD, checkR, cumSub)
+
+  if (verbose) {
+    print('')
+    print('After excluding regions which failed cumulants')
+    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+  }
+
 
 
   if (countryName == 'Global') {
-print('in global if')
-timeSeriesInfections <- tsI
-timeSeriesDeaths <- tsD
-timeSeriesRecoveries <- tsR
-timeSeriesActive <- tsA
     # create global aggregate row
-#    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
-#    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
-#    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
-#    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
+    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = "Global aggregate")
+    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
+    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
+    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
 
-  } else {
+    if (verbose) {
+      print('After aggregating to global')
+      print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+      print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+      print(paste(toString(dim(timeSeriesActive)),     '- dimensions of active cases'))
+      print(paste('First 5 headings of timeSeriesInfections:', toString(names(timeSeriesInfections)[1:5])))
+    }
+
+ } else {
+
     # aggregate to region
-    tsI <- regionAgg(tsI, regionCol = tsI$Province.State)
-    tsD <- regionAgg(tsD, regionCol = tsD$Province.State)
-    tsR <- regionAgg(tsR, regionCol = tsR$Province.State)
-    tsA <- regionAgg(tsA, regionCol = tsA$Province.State)
+    timeSeriesInfections <- regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State)
+    timeSeriesDeaths     <- regionAgg(timeSeriesDeaths,     regionCol = timeSeriesDeaths$Province.State)
+    timeSeriesRecoveries <- regionAgg(timeSeriesRecoveries, regionCol = timeSeriesRecoveries$Province.State)
+    timeSeriesActive     <- regionAgg(timeSeriesActive,     regionCol = timeSeriesActive$Province.State)
   
-    timeSeriesInfections <- natAgg(tsI, aggName = paste("National aggregate -", countryName))
-    timeSeriesDeaths     <- natAgg(tsD, aggName = paste("National aggregate -", countryName))
-    timeSeriesRecoveries <- natAgg(tsR, aggName = paste("National aggregate -", countryName))
-    timeSeriesActive     <- natAgg(tsA, aggName = paste("National aggregate -", countryName))
+    if (verbose) {
+      print('')
+      print('After aggregating to region')
+      print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+      print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+      print(paste(toString(dim(timeSeriesActive)),     '- dimensions of active cases'))
+      print(paste('First 5 headings of timeSeriesInfections', toString(names(timeSeriesInfections)[1:5])))
+   }
+
+    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = paste("National aggregate -", countryName))
+    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = paste("National aggregate -", countryName))
+    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = paste("National aggregate -", countryName))
+    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = paste("National aggregate -", countryName))
   }
 
 
   ## Define menus
   # get region names with 20 or more cases as of yesterday
   ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
+print('those with more than 19 infections')
+print(timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19)
+print(timeSeriesInfections$Country.timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19)
+  print('ddNames')
+  print(ddNames)
   ddReg        <- ddNames
   names(ddReg) <- ddNames
   
@@ -200,7 +229,7 @@ timeSeriesActive <- tsA
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
-  runDeconvolution <- FALSE
+  runDeconvolution <- TRUE
   if (runDeconvolution) {
     # un comment these lines to run deconvolution (SLOW!)  
     system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
