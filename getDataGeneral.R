@@ -30,6 +30,7 @@ timeSeriesInfections <-loadData(inputConfirmed)
 timeSeriesDeaths     <-loadData(inputDeaths)
 
 if (verbose) {
+  print(names(timeSeriesInfections)[1:4])
   print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
   print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
 }
@@ -40,14 +41,21 @@ if (inputRecovered != '') {
     print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
   }
   if (countryName == 'Global') {
-    # only include rows with empty string for Province.State
+    # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
     timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Province.State == '')
     timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Province.State     == '')
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Province.State == '')
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region != 'Canada')
+    timeSeriesInfections$Province.State <- NULL
+    timeSeriesDeaths$Province.State     <- NULL
+    timeSeriesRecoveries$Province.State <- NULL
+    names(timeSeriesInfections)[1] <- 'Region'
+    names(timeSeriesDeaths)[1]     <- 'Region'
+    names(timeSeriesRecoveries)[1] <- 'Region'
     if (verbose) {
       print('')
       print('After excluding those with a Province.State (and, temporarily, Canada):')
+      print(names(timeSeriesInfections)[1:4])
       print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
       print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
       print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
@@ -60,11 +68,18 @@ print('')
 if (isThisAFocusCountry) {
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
   timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
+  timeSeriesInfections$Country.Region <- NULL
+  timeSeriesDeaths$Country.Region     <- NULL
+  names(timeSeriesInfections)[1] <- 'Region'
+  names(timeSeriesDeaths)[1]     <- 'Region'
   if (inputRecovered != '') {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
+    timeSeriesRecoveries$Country.Region <- NULL
+    names(timeSeriesRecoveries)[1] <- 'Region'
   }
   if (verbose) {
     print('After limiting to the focus country')
+    print(names(timeSeriesInfections)[1:4])
     print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
     print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
     if (inputRecovered != '') {
@@ -191,10 +206,10 @@ if (noErrors) {
  } else {
 
     # aggregate to region
-    timeSeriesInfections <- regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State)
-    timeSeriesDeaths     <- regionAgg(timeSeriesDeaths,     regionCol = timeSeriesDeaths$Province.State)
-    timeSeriesRecoveries <- regionAgg(timeSeriesRecoveries, regionCol = timeSeriesRecoveries$Province.State)
-    timeSeriesActive     <- regionAgg(timeSeriesActive,     regionCol = timeSeriesActive$Province.State)
+#    timeSeriesInfections <- regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State)
+#    timeSeriesDeaths     <- regionAgg(timeSeriesDeaths,     regionCol = timeSeriesDeaths$Province.State)
+#    timeSeriesRecoveries <- regionAgg(timeSeriesRecoveries, regionCol = timeSeriesRecoveries$Province.State)
+#    timeSeriesActive     <- regionAgg(timeSeriesActive,     regionCol = timeSeriesActive$Province.State)
   
     if (verbose) {
       print('')
@@ -229,7 +244,7 @@ print(timeSeriesInfections$Country.timeSeriesInfections[[ncol(timeSeriesInfectio
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
-  runDeconvolution <- TRUE
+  runDeconvolution <- FALSE
   if (runDeconvolution) {
     # un comment these lines to run deconvolution (SLOW!)  
     system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
