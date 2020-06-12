@@ -17,7 +17,7 @@ if (verbose) {
   print('')
 
   print(paste('Confirmed csv:', inputConfirmed))
-  print(paste('Deaths csv:',    inputDeaths))
+  print(paste('Deaths csv:   ',    inputDeaths))
   print(paste('Recovered csv:', inputRecovered))
   print('')
 }
@@ -209,6 +209,12 @@ timeSeriesActive <- tsA
 
   # load dataList object
   load("dat/dataList.RData")
+
+  if (verbose) {
+    print('')
+    print(paste('These', length(ddNames), 'regions now have data:'))
+    print(ddNames)
+  }
   
   # append data to dataList
 
