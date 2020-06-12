@@ -177,7 +177,7 @@ growthRate <- function(cases, inWindow=10){
 }
 
 
-# aggregates results to relevant region (regionCol allows to specify whether Provinc.State, or COuntry.Region)
+# aggregates results to relevant region (regionCol allows to specify whether Province.State, or Country.Region)
 regionAgg<-function(x, regionCol, regionName = "Region"){
   xSelect<-x[, dateCols(x)]
   out <- aggregate(xSelect, by = list(regionCol), FUN = sum)
