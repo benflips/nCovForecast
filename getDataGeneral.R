@@ -132,6 +132,7 @@ if (noErrors) {
 
   # report to console countries that have been recLagged within activeCases()
   if (nrow(std$failedRecovery)>0) {
+    print('')
     print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
     print(std$failedRecovery)
     cat("\n\n")
@@ -179,11 +180,6 @@ if (noErrors) {
   ## Define menus
   # get region names with 20 or more cases as of yesterday
   ddNames <- timeSeriesInfections$Region[timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19]
-print('those with more than 19 infections')
-print(timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19)
-print(timeSeriesInfections$Country.timeSeriesInfections[[ncol(timeSeriesInfections)-1]]>19)
-  print('ddNames')
-  print(ddNames)
   ddReg        <- ddNames
   names(ddReg) <- ddNames
   
@@ -235,6 +231,7 @@ print(timeSeriesInfections$Country.timeSeriesInfections[[ncol(timeSeriesInfectio
 
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
+  print('')
   print("Complete")
 } else {
   print('No data was saved')
