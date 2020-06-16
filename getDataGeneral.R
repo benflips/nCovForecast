@@ -34,9 +34,7 @@ if (inputRecoveredSupplied) {
   timeSeriesRecoveries <- loadData(inputRecovered)
 }
 
-if (verbose) {
-  printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
-}
+printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 if (countryName == 'Global') {
   # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
@@ -51,9 +49,8 @@ if (countryName == 'Global') {
   names(timeSeriesDeaths)[1]     <- 'Region'
   names(timeSeriesRecoveries)[1] <- 'Region'
 
-  if (verbose) {
-    printVerbose('After excluding those with a Province.State (and, temporarily, Canada):',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
-  }
+  printVerbose('After excluding those with a Province.State (and, temporarily, Canada):',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+
 } else {
 
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
@@ -68,9 +65,7 @@ if (countryName == 'Global') {
     names(timeSeriesRecoveries)[1] <- 'Region'
   }
 
-  if (verbose) {
-    printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
-  }
+  printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 }
 
 rm(inputConfirmed, inputDeaths, inputRecovered)
@@ -83,9 +78,7 @@ if (inputRecoveredSupplied) {
   timeSeriesRecoveries <- regionAggregate(timeSeriesRecoveries)
 }
 
-if (verbose) {
-  printVerbose('After aggregating over Region column', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
-}
+printVerbose('After aggregating over Region column', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 
 
@@ -125,10 +118,7 @@ if (noErrors) {
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
-  if (verbose) {
-    print('')
-    printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
-  }
+  printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
   # report to console countries that have been recLagged within activeCases()
   if (nrow(std$failedRecovery)>0) {
@@ -156,9 +146,7 @@ if (noErrors) {
   timeSeriesActive     <- std$tsA[cumSub,]
   rm(checkI, checkD, checkR, cumSub)
 
-  if (verbose) {
-    printVerbose('After excluding regions which failed cumulants', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE)
-  }
+  printVerbose('After excluding regions which failed cumulants', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE, verbose)
 
   if (countryName == 'Global') {
     # create global aggregate row
@@ -166,6 +154,14 @@ if (noErrors) {
     timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
     timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
     timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
+
+    # Make continent aggregates
+    load("dat/Continents/continentData.RData")
+    timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
+    timeSeriesDeaths     <- continentAgg(timeSeriesDeaths, continentData)
+    timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
+    timeSeriesActive     <- continentAgg(timeSeriesActive, continentData)
+
   } else {
     timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = paste("National aggregate -", countryName))
     timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = paste("National aggregate -", countryName))
@@ -236,13 +232,15 @@ if (noErrors) {
 }
 
 
-printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied) {
-  print('')
-  print(initialMessage)
-  print(names(timeSeriesInfections)[1:4])
-  print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-  print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-  if (inputRecoveredSupplied) {
-    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose) {
+  if (verbose) {
+    print('')
+    print(initialMessage)
+    print(names(timeSeriesInfections)[1:4])
+    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+    if (inputRecoveredSupplied) {
+      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+    }
   }
 }
