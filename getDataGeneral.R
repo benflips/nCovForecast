@@ -1,6 +1,6 @@
 library(zipR)
 
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, aggregateOverProvinceState, isThisAFocusCountry, verbose){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
 ## ---------------------------##
 ## Script name: getDataGeneral.R
 ##
@@ -50,24 +50,24 @@ if (countryName == 'Global') {
   names(timeSeriesInfections)[1] <- 'Region'
   names(timeSeriesDeaths)[1]     <- 'Region'
   names(timeSeriesRecoveries)[1] <- 'Region'
+
   if (verbose) {
     printVerbose('After excluding those with a Province.State (and, temporarily, Canada):',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
   }
-}
+} else {
 
-
-if (isThisAFocusCountry) {
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
   timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
   timeSeriesInfections$Country.Region <- NULL
   timeSeriesDeaths$Country.Region     <- NULL
   names(timeSeriesInfections)[1] <- 'Region'
   names(timeSeriesDeaths)[1]     <- 'Region'
-  if (inputRecovered != '') {
+  if (inputRecoveredSupplied) {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
     timeSeriesRecoveries$Country.Region <- NULL
     names(timeSeriesRecoveries)[1] <- 'Region'
   }
+
   if (verbose) {
     printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
   }
@@ -118,7 +118,7 @@ if (noErrors) {
   
 
   ## generate recovery data if it doesn't already exist
-  if (!exists('timeSeriesRecoveries')) {
+  if (!inputRecoveredSupplied) {
     timeSeriesRecoveries <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
   }
 
@@ -157,14 +157,8 @@ if (noErrors) {
   rm(checkI, checkD, checkR, cumSub)
 
   if (verbose) {
-    print('')
-    print('After excluding regions which failed cumulants')
-    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+    printVerbose('After excluding regions which failed cumulants', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE)
   }
-
-
 
   if (countryName == 'Global') {
     # create global aggregate row
@@ -172,10 +166,12 @@ if (noErrors) {
     timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = "Global aggregate")
     timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
     timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
-
- } 
-
-
+  } else {
+    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = paste("National aggregate -", countryName))
+    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = paste("National aggregate -", countryName))
+    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = paste("National aggregate -", countryName))
+    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = paste("National aggregate -", countryName))
+  }
 
   ## Define menus
   # get region names with 20 or more cases as of yesterday
