@@ -9,6 +9,8 @@ getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecove
 ## load up our functions into memory
 source('functions.R')
 
+inputRecoveredSupplied <- (inputRecovered != '')
+
 if (verbose) {
  cat("\n")
   print('-----------------------')
@@ -28,42 +30,31 @@ noErrors <- TRUE
 
 timeSeriesInfections <-loadData(inputConfirmed)
 timeSeriesDeaths     <-loadData(inputDeaths)
+if (inputRecoveredSupplied) {
+  timeSeriesRecoveries <- loadData(inputRecovered)
+}
 
 if (verbose) {
-  print(names(timeSeriesInfections)[1:4])
-  print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-  print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+  printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
 }
 
-if (inputRecovered != '') {
-  timeSeriesRecoveries <- loadData(inputRecovered)
+if (countryName == 'Global') {
+  # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
+  timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Province.State == '')
+  timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Province.State     == '')
+  timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Province.State == '')
+  timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region != 'Canada')
+  timeSeriesInfections$Province.State <- NULL
+  timeSeriesDeaths$Province.State     <- NULL
+  timeSeriesRecoveries$Province.State <- NULL
+  names(timeSeriesInfections)[1] <- 'Region'
+  names(timeSeriesDeaths)[1]     <- 'Region'
+  names(timeSeriesRecoveries)[1] <- 'Region'
   if (verbose) {
-    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
-  }
-  if (countryName == 'Global') {
-    # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
-    timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Province.State == '')
-    timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Province.State     == '')
-    timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Province.State == '')
-    timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region != 'Canada')
-    timeSeriesInfections$Province.State <- NULL
-    timeSeriesDeaths$Province.State     <- NULL
-    timeSeriesRecoveries$Province.State <- NULL
-    names(timeSeriesInfections)[1] <- 'Region'
-    names(timeSeriesDeaths)[1]     <- 'Region'
-    names(timeSeriesRecoveries)[1] <- 'Region'
-    if (verbose) {
-      print('')
-      print('After excluding those with a Province.State (and, temporarily, Canada):')
-      print(names(timeSeriesInfections)[1:4])
-      print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-      print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
-    }
+    printVerbose('After excluding those with a Province.State (and, temporarily, Canada):',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
   }
 }
 
-print('')
 
 if (isThisAFocusCountry) {
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
@@ -78,34 +69,24 @@ if (isThisAFocusCountry) {
     names(timeSeriesRecoveries)[1] <- 'Region'
   }
   if (verbose) {
-    print('After limiting to the focus country')
-    print(names(timeSeriesInfections)[1:4])
-    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-    if (inputRecovered != '') {
-      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
-    }
+    printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
   }
 }
 
 rm(inputConfirmed, inputDeaths, inputRecovered)
 
-# aggregate data to Province.State - this is done for US
-if (aggregateOverProvinceState) {
-  timeSeriesInfections <-regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State, regionName = "Province.State")
-  timeSeriesInfections$Country.Region <- rep(countryName, nrow(timeSeriesInfections))
-  timeSeriesInfections <- timeSeriesInfections[c(ncol(timeSeriesInfections), 1:(ncol(timeSeriesInfections)-1))]
+# always aggregate over region column - sometimes this will do things, sometimes not.
 
-  timeSeriesDeaths <-regionAgg(timeSeriesDeaths, regionCol = timeSeriesDeaths$Province.State, regionName = "Province.State")
-  timeSeriesDeaths$Country.Region <- rep(countryName, nrow(timeSeriesDeaths))
-  timeSeriesDeaths <- timeSeriesDeaths[c(ncol(timeSeriesDeaths), 1:(ncol(timeSeriesDeaths)-1))]
-
-  if (verbose) {
-    print('After aggregating over Province.State')
-    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-  }
+timeSeriesInfections <- regionAggregate(timeSeriesInfections)
+timeSeriesDeaths     <- regionAggregate(timeSeriesDeaths)
+if (inputRecoveredSupplied) {
+  timeSeriesRecoveries <- regionAggregate(timeSeriesRecoveries)
 }
+
+if (verbose) {
+  printVerbose('After aggregating over Region column', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
+}
+
 
 
 # test structural integrity of data
@@ -146,10 +127,7 @@ if (noErrors) {
   
   if (verbose) {
     print('')
-    print('Function activeCases complete')
-    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+    printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied)
   }
 
   # report to console countries that have been recLagged within activeCases()
@@ -194,38 +172,8 @@ if (noErrors) {
     timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = "Global aggregate")
     timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = "Global aggregate")
 
-    if (verbose) {
-      print('After aggregating to global')
-      print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-      print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
-      print(paste(toString(dim(timeSeriesActive)),     '- dimensions of active cases'))
-      print(paste('First 5 headings of timeSeriesInfections:', toString(names(timeSeriesInfections)[1:5])))
-    }
+ } 
 
- } else {
-
-    # aggregate to region
-#    timeSeriesInfections <- regionAgg(timeSeriesInfections, regionCol = timeSeriesInfections$Province.State)
-#    timeSeriesDeaths     <- regionAgg(timeSeriesDeaths,     regionCol = timeSeriesDeaths$Province.State)
-#    timeSeriesRecoveries <- regionAgg(timeSeriesRecoveries, regionCol = timeSeriesRecoveries$Province.State)
-#    timeSeriesActive     <- regionAgg(timeSeriesActive,     regionCol = timeSeriesActive$Province.State)
-  
-    if (verbose) {
-      print('')
-      print('After aggregating to region')
-      print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-      print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
-      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
-      print(paste(toString(dim(timeSeriesActive)),     '- dimensions of active cases'))
-      print(paste('First 5 headings of timeSeriesInfections', toString(names(timeSeriesInfections)[1:5])))
-   }
-
-    timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = paste("National aggregate -", countryName))
-    timeSeriesDeaths     <- natAgg(timeSeriesDeaths,     aggName = paste("National aggregate -", countryName))
-    timeSeriesRecoveries <- natAgg(timeSeriesRecoveries, aggName = paste("National aggregate -", countryName))
-    timeSeriesActive     <- natAgg(timeSeriesActive,     aggName = paste("National aggregate -", countryName))
-  }
 
 
   ## Define menus
@@ -292,4 +240,16 @@ print(timeSeriesInfections$Country.timeSeriesInfections[[ncol(timeSeriesInfectio
   print('No data was saved')
 }
 
+}
+
+
+printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied) {
+  print('')
+  print(initialMessage)
+  print(names(timeSeriesInfections)[1:4])
+  print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+  print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+  if (inputRecoveredSupplied) {
+    print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+  }
 }
