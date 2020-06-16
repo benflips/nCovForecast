@@ -188,7 +188,7 @@ if (noErrors) {
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
-  runDeconvolution <- FALSE
+  runDeconvolution <- TRUE
   if (runDeconvolution) {
     # un comment these lines to run deconvolution (SLOW!)  
     system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
