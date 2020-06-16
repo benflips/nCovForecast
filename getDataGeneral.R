@@ -1,12 +1,7 @@
 library(zipR)
 
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
-## ---------------------------##
-## Script name: getDataGeneral.R
-##
-## Purpose of script: to get data from a given set up confirmed cases, deaths, and (if it exists) recoveries.
-##
-## load up our functions into memory
+
 source('functions.R')
 
 inputRecoveredSupplied <- (inputRecovered != '')
