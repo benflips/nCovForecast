@@ -98,10 +98,10 @@ activeCases <- function(infections, deaths, recoveries){
   test2 <- checkSameNumberOfRows(infections,recoveries)
   if (test1) {
     # Standardise order
-    infections <- infections[order(infections$Country.Region, infections$Province.State),]
-    deaths     <- deaths[order(deaths$Country.Region, deaths$Province.State),]
-    recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
-    orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
+    infections <- infections[order(infections$Region),]
+    deaths     <- deaths[order(deaths$Region),]
+    recoveries <- recoveries[order(recoveries$Region),]
+    orderTest <- sum(!(infections$Region == deaths$Region & infections$Region == recoveries$Region)) != 0
     if (orderTest) stop("Region labels do not align")
     # check for countries with inadequate reporting of recoveries, and apply recLag estimation
     recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
