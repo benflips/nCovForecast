@@ -2,6 +2,8 @@ library(zipR)
 
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
 
+t1 = Sys.time()
+
 source('functions.R')
 
 inputRecoveredSupplied <- (inputRecovered != '')
@@ -222,6 +224,12 @@ if (noErrors) {
   print("Complete")
 } else {
   print('No data was saved')
+}
+
+t2 = Sys.time()
+if (verbose) { 
+  print(paste('Time taken to complete', countryName, 'is: '))
+  print(t2 - t1)
 }
 
 }
