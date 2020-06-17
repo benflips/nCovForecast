@@ -73,6 +73,7 @@
             <select class="form-control" style="padding-bottom:6px;padding-top:6px;border-color:lightgray;background-color:white;border-radius:3px;" id="translationLanguage" onchange="window.location.href = '/?lang='.concat(this.value);">
               <option value="en">English</option>
               <option value="de">Deutsch</option>
+              <option value="ru">Russian</option>
               <option value="tr">Turkish</option>
               <option value="hi">Hindi</option>
               <option value="es">Español</option>
@@ -91,6 +92,8 @@
             $('#translationLanguage').val('de')
           } else if (urlLanguage == 'es') {
             $('#translationLanguage').val('es')
+          } else if (urlLanguage == 'ru') {
+            $('#translationLanguage').val('ru')
           } else {
             $('#translationLanguage').val('en')
           }
