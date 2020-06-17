@@ -230,7 +230,9 @@ if (noErrors) {
 printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose) {
   if (verbose) {
     print('')
+    print('----------------------------------')
     print(initialMessage)
+    print('----------------------------------')
     print(names(timeSeriesInfections)[1:4])
     print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
     print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
