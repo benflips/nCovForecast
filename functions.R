@@ -318,5 +318,6 @@ emancipate <- function(timeSeriesDataFrame, withHead = TRUE){
   } else {
     timeSeriesDataFrame$Country.Region[ss] <- timeSeriesDataFrame$Province.State[ss]
   }
+  timeSeriesDataFrame$Province.State[ss] <- ""
   timeSeriesDataFrame
 }
