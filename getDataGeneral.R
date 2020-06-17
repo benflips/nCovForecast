@@ -44,7 +44,7 @@ if (countryName == 'Global') {
   names(timeSeriesDeaths)[1]     <- 'Region'
   names(timeSeriesRecoveries)[1] <- 'Region'
 
-  printVerbose('After excluding those with a Province.State (and, temporarily, Canada):',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+  printVerbose('After excluding those with a Province.State:',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 } else {
 
@@ -153,9 +153,9 @@ if (noErrors) {
     # Make continent aggregates
     load("dat/Continents/continentData.RData")
     timeSeriesInfections <- continentAgg(timeSeriesInfections, continentData)
-    timeSeriesDeaths     <- continentAgg(timeSeriesDeaths, continentData)
+    timeSeriesDeaths     <- continentAgg(timeSeriesDeaths,     continentData)
     timeSeriesRecoveries <- continentAgg(timeSeriesRecoveries, continentData)
-    timeSeriesActive     <- continentAgg(timeSeriesActive, continentData)
+    timeSeriesActive     <- continentAgg(timeSeriesActive,     continentData)
 
   } else {
     timeSeriesInfections <- natAgg(timeSeriesInfections, aggName = paste("National aggregate -", countryName))
