@@ -297,11 +297,13 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
+      yAmax <- max(yA$yA, na.rm=TRUE)
       lDat <- projfCast()$lDat
       date_at_peak <- projfCast()$date_at_peak
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
+      yMax <- min(c(2*yAmax, yMax)) # twice the data ymax, or the fit max, whatever is smaller
       if (input$activeCasesPlotIsLinear) {
         plotType <- 'linear'
         theRange <- list(0, yMax)
