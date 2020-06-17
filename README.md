@@ -1,7 +1,7 @@
 # nCovForecast
 Code for nCov forecasting tool (Shiny app)
 
-Takes data from several sources (John Hopkins University, Indian Government), breaks it down by country/region and:
+Takes data from several sources (Johns Hopkins University, Indian Government), breaks it down by country/region and:
 
 1. gives simple projections of active confirmed cases for next ten days;
 2. estimates detection probability over time in each country and reports detection-corrected values
