@@ -35,10 +35,14 @@ printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRe
 
 if (countryName == 'Global') {
   # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
-  timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Province.State == '')
-  timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Province.State     == '')
-  timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Province.State == '')
-  timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region != 'Canada')
+  countriesToInclude <- c('Canada','China','Australia')
+  timeSeriesInfections <- subset(timeSeriesInfections, (timeSeriesInfections$Province.State == '') | (timeSeriesInfections$Country.Region %in% countriesToInclude))
+  timeSeriesDeaths     <- subset(timeSeriesDeaths,     (timeSeriesDeaths$Province.State     == '') | (timeSeriesDeaths$Country.Region     %in% countriesToInclude))
+  timeSeriesRecoveries <- subset(timeSeriesRecoveries, (timeSeriesRecoveries$Province.State == '') | (timeSeriesRecoveries$Country.Region %in% countriesToInclude))
+  countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada')
+  timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
+  timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
+                                                             subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag)))
   timeSeriesInfections$Province.State <- NULL
   timeSeriesDeaths$Province.State     <- NULL
   timeSeriesRecoveries$Province.State <- NULL
