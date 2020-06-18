@@ -129,13 +129,13 @@ if (noErrors) {
     cat("\n\n")
   }
 
-  
   # exclude data where there are large errors in the infection and death cumulants
   checkI <- cumulantCheck(std$tsI)
   checkD <- cumulantCheck(std$tsD)
   checkR <- cumulantCheck(std$tsR, tolerance = 0.5)
+
   cumSub <- checkI & checkD & checkR
-  if (sum(!cumSub)>5) stop("More than five suspect regions in this dataset.")
+  if (sum(!cumSub)>10) stop("More than five suspect regions in this dataset.")
   if (sum(!cumSub)>0) {
     print(paste("Regions excluded through failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
@@ -246,6 +246,8 @@ printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, 
     print(initialMessage)
     print('----------------------------------')
     print(names(timeSeriesInfections)[1:4])
+print('includes US?')
+print('US' %in% timeSeriesInfections$Region)
     print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
     print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
     if (inputRecoveredSupplied) {
