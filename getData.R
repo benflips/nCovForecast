@@ -178,7 +178,7 @@ if (test1 & test2 & test3){
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = "dat/Global/cacheData.RData")
   
   ## run deconvolution to estimate undiagnosed cases from cached data
-  system("Rscript detection/estGlobalV2.R 'Global'", wait = TRUE)
+  system("Rscript detection/deconvEst.R 'Global'", wait = TRUE)
   load("dat/Global/estDeconv.RData")
   
   dataList$Global <- list(timeSeriesInfections = timeSeriesInfections,
@@ -189,8 +189,7 @@ if (test1 & test2 & test3){
                           ddReg = ddReg,
                           ddNames = ddNames,
                           cumulative.infections = cumulative.infections,
-                          undiagnosed.infections = undiagnosed.infections, 
-                          active.projections = active.projections)
+                          undiagnosed.infections = undiagnosed.infections)
   
   ###### LOCAL ######
   
@@ -234,7 +233,7 @@ if (test1 & test2 & test3){
     save(ddReg, ddNames, file = paste0("dat/",focusCountry,"/menuData.RData"))
     save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",focusCountry,"/cacheData.RData"))
     
-    system(paste("Rscript detection/estGlobalV2.R", focusCountry), wait = TRUE)
+    system(paste("Rscript detection/deconvEst.R", focusCountry), wait = TRUE)
     load(paste0("dat/",focusCountry,"/estDeconv.RData"))
     dataList[[focusCountry]] <- list(timeSeriesInfections = timeSeriesInfections,
                                      timeSeriesDeaths = timeSeriesDeaths,
@@ -244,8 +243,7 @@ if (test1 & test2 & test3){
                                      ddReg = ddReg,
                                      ddNames = ddNames,
                                      cumulative.infections = cumulative.infections,
-                                     undiagnosed.infections = undiagnosed.infections, 
-                                     active.projections = active.projections)
+                                     undiagnosed.infections = undiagnosed.infections)
   }
   
   save(dataList, file = "dat/dataList.RData")
