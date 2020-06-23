@@ -35,8 +35,9 @@ orgLevel <- commandArgs()[6] # get relevant command line argument
 
 # load relevant dataset
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
-cases.all <- t(timeSeriesInfections)[-1,]
-
+cases.all <- t(timeSeriesInfections[,-1])
+cases.all <- as.data.frame(cases.all)
+names(cases.all) <- timeSeriesInfections[,1]
 # number of days of data
 T<-dim(cases.all)[1]
 
@@ -45,8 +46,9 @@ inc.dist <- incubation()
 
 # back projections
 cat("   Back projections...\n")
-backProjection <- apply(cases.all, 2, BackProj, dist = inc.dist)
+
+backProjection <- lapply(cases.all, BackProj, dist = inc.dist)
 
 # forward projections
 cat("   Forward projections...\n")
-forwardProjection <- apply(backProjection, 2, ForwardProj, dist = inc.dist, proj.days=10)
+forwardProjection <- lapply(backProjection, ForwardProjTrimmed, dist = inc.dist, proj.days=10)
