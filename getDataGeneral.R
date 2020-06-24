@@ -41,7 +41,7 @@ if (countryName == 'Global') {
   countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada')
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
   timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
-                                                             subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag)))
+                                                             subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE))
 
   timeSeriesInfections$Province.State <- NULL
   timeSeriesDeaths$Province.State     <- NULL
