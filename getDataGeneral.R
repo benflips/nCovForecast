@@ -31,26 +31,23 @@ if (inputRecoveredSupplied) {
   timeSeriesRecoveries <- loadData(inputRecovered)
 }
 
+
 printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
+
 if (countryName == 'Global') {
-  # only include rows with empty string for Province.State, and remove Province.State, and replace first column name with Region
-  countriesToInclude <- c('Canada','China','Australia')
-  timeSeriesInfections <- subset(timeSeriesInfections, (timeSeriesInfections$Province.State == '') | (timeSeriesInfections$Country.Region %in% countriesToInclude))
-  timeSeriesDeaths     <- subset(timeSeriesDeaths,     (timeSeriesDeaths$Province.State     == '') | (timeSeriesDeaths$Country.Region     %in% countriesToInclude))
-  timeSeriesRecoveries <- subset(timeSeriesRecoveries, (timeSeriesRecoveries$Province.State == '') | (timeSeriesRecoveries$Country.Region %in% countriesToInclude))
+  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
+
   countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada')
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
   timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
                                                              subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag)))
+
   timeSeriesInfections$Province.State <- NULL
   timeSeriesDeaths$Province.State     <- NULL
   timeSeriesRecoveries$Province.State <- NULL
-  names(timeSeriesInfections)[1] <- 'Region'
-  names(timeSeriesDeaths)[1]     <- 'Region'
-  names(timeSeriesRecoveries)[1] <- 'Region'
 
-  printVerbose('After excluding those with a Province.State:',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+  printVerbose(paste0('After excluding countries: (',toString(countriesToGenerateWithRecLag),') with known bad recovery data and using recLag to generate those instead'),timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 } else {
 
@@ -58,21 +55,25 @@ if (countryName == 'Global') {
   timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
   timeSeriesInfections$Country.Region <- NULL
   timeSeriesDeaths$Country.Region     <- NULL
-  names(timeSeriesInfections)[1] <- 'Region'
-  names(timeSeriesDeaths)[1]     <- 'Region'
   if (inputRecoveredSupplied) {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
     timeSeriesRecoveries$Country.Region <- NULL
-    names(timeSeriesRecoveries)[1] <- 'Region'
   }
 
   printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 }
 
+
+names(timeSeriesInfections)[1] <- 'Region'
+names(timeSeriesDeaths)[1]     <- 'Region'
+if (inputRecoveredSupplied) {
+  names(timeSeriesRecoveries)[1] <- 'Region'
+}
+printVerbose('Should always have one non-date column, and it should be simply called Region', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+
 rm(inputConfirmed, inputDeaths, inputRecovered)
 
 # always aggregate over region column - sometimes this will do things, sometimes not.
-
 timeSeriesInfections <- regionAggregate(timeSeriesInfections)
 timeSeriesDeaths     <- regionAggregate(timeSeriesDeaths)
 if (inputRecoveredSupplied) {
@@ -92,7 +93,7 @@ test4 <- checkNAs(timeSeriesDeaths)
 
 noErrors <- noErrors & test1 & test2 & test3 & test4
 
-if (exists('timeSeriesRecoveries')) {
+if (inputRecoveredSupplied) {
 
   test5 <- checkSameNumberOfCols(timeSeriesInfections, timeSeriesRecoveries)
   test6 <- checkNAs(timeSeriesRecoveries)
@@ -137,7 +138,7 @@ if (noErrors) {
   cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than five suspect regions in this dataset.")
   if (sum(!cumSub)>0) {
-    print(paste("Regions excluded through failed cumulants:", sum(!cumSub)))
+    print(paste("These regions will be completely excluded, due to failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
     cat("\n\n")
   }
@@ -246,8 +247,6 @@ printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, 
     print(initialMessage)
     print('----------------------------------')
     print(names(timeSeriesInfections)[1:4])
-print('includes US?')
-print('US' %in% timeSeriesInfections$Region)
     print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
     print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
     if (inputRecoveredSupplied) {
