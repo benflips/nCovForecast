@@ -31,12 +31,17 @@ if (inputRecoveredSupplied) {
   timeSeriesRecoveries <- loadData(inputRecovered)
 }
 
+if (verbose) {
+  print(paste('MOST RECENT DATE:',format(strptime(tail(names(timeSeriesInfections), n=1),'%m.%d.%y'), '%d %B %Y')))
+}
 
 printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 
 if (countryName == 'Global') {
-  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
+  if (verbose) {
+    print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
+  }
 
   countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada')
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
@@ -123,7 +128,7 @@ if (noErrors) {
   printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
   # report to console countries that have been recLagged within activeCases()
-  if (nrow(std$failedRecovery)>0) {
+  if (nrow(std$failedRecovery)>0 & verbose) {
     print('')
     print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
     print(std$failedRecovery)
@@ -137,7 +142,7 @@ if (noErrors) {
 
   cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than five suspect regions in this dataset.")
-  if (sum(!cumSub)>0) {
+  if (sum(!cumSub)>0 & verbose) {
     print(paste("These regions will be completely excluded, due to failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
     cat("\n\n")
@@ -182,12 +187,9 @@ if (noErrors) {
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
-  runDeconvolution <- TRUE
-  if (runDeconvolution) {
-    # un comment these lines to run deconvolution (SLOW!)  
-    system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
-    load(paste0("dat/",countryName,"/estDeconv.RData"))
-  }
+  # run deconvolution (SLOW!)
+  system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
+  load(paste0("dat/",countryName,"/estDeconv.RData"))
 
   # load dataList object
   load("dat/dataList.RData")
@@ -200,35 +202,27 @@ if (noErrors) {
   
   # append data to dataList
 
-  if (runDeconvolution) {
-    dataList[[countryName]] <- list(timeSeriesInfections = timeSeriesInfections,
-                                     timeSeriesDeaths = timeSeriesDeaths,
-                                     timeSeriesRecoveries = timeSeriesRecoveries,
-                                     timeSeriesActive = timeSeriesActive,
-                                     dates = dates,
-                                     ddReg = ddReg,
-                                     ddNames = ddNames,
-                                     cumulative.infections = cumulative.infections,
-                                     undiagnosed.infections = undiagnosed.infections, 
-                                     active.projections = active.projections,
-                                     timestampRan = Sys.time())
-  } else {
-    dataList[[countryName]] <- list(timeSeriesInfections = timeSeriesInfections,
-                                     timeSeriesDeaths = timeSeriesDeaths,
-                                     timeSeriesRecoveries = timeSeriesRecoveries,
-                                     timeSeriesActive = timeSeriesActive,
-                                     dates = dates,
-                                     ddReg = ddReg,
-                                     ddNames = ddNames,
-                                     timestampRan = Sys.time())
-  }
+  dataList[[countryName]] <- list(timeSeriesInfections = timeSeriesInfections,
+                                  timeSeriesDeaths = timeSeriesDeaths,
+                                  timeSeriesRecoveries = timeSeriesRecoveries,
+                                  timeSeriesActive = timeSeriesActive,
+                                  dates = dates,
+                                  ddReg = ddReg,
+                                  ddNames = ddNames,
+                                  cumulative.infections = cumulative.infections,
+                                  undiagnosed.infections = undiagnosed.infections, 
+                                  active.projections = active.projections)
 
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
-  print('')
-  print("Complete")
+  if (verbose) {
+    print('')
+    print("Complete")
+  }
 } else {
-  print('No data was saved')
+  if (verbose) {
+    print('No data was saved')
+  }
 }
 
 t2 = Sys.time()
