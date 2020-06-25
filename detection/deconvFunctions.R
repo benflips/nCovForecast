@@ -52,8 +52,12 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
   # linear Poisson fit (the initial estimates and control parameters are currently hardcoded) 
   res<-nnpois(Cases.fit,F,rep(1,T.days),rep(0,T.days),rep(100,(T.days-cf)),
               control=addreg.control(epsilon=1e-07,maxit=1000000))
-  if (res$conv==FALSE) stop("linear Poisson fit did not converge - may need more iterations")
-  infections.est<-res$coef
+  if (res$conv==FALSE) {
+    warning("linear Poisson fit did not converge - may need more iterations")
+    infections.est <- rep(0, T.days)
+  } else {
+    infections.est<-res$coef
+  }
   if (constr.final) {
     infections.est[T.days-1]<-infections.est[T.days-1]/2
     infections.est[T.days]<-infections.est[T.days-1]
