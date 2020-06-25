@@ -36,7 +36,8 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
   Cases<-c(rep(0,I.max),diff(c(0,as.numeric(cases)))) # daily new cases
   Cases[Cases<0]<-0 # just in case the data have negative diagnoses e.g. due to re-adjustments
   Cases.fit<-Cases
-  if (pre.smooth) {
+  test0 <- sum(Cases>0)>pre.df # don't fit gam if there is not the variance to do so.
+  if (pre.smooth & test0) {
     pre.fit <- suppressWarnings(gam(Cases~s(1:T.days,df=pre.df),
                                     family=poisson(link="log"))$fitted.values)
     Cases.fit <- round(pre.fit) #non-integers causes problems in nnpois
@@ -63,7 +64,8 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
     infections.est[T.days]<-infections.est[T.days-1]
   }
   infections.est<-round(infections.est)
-  if (post.smooth) infections.est <- suppressWarnings(gam(infections.est~s(1:T.days,df=post.df),
+  test1 <- sum(infections.est>0)>post.df # don't fit gam if there is not the variance to do so.
+  if (post.smooth & res$conv==TRUE & test1) infections.est <- suppressWarnings(gam(infections.est~s(1:T.days,df=post.df),
                                                           family=poisson(link="log"))$fitted.values)
   fits<-F.full%*%infections.est
   

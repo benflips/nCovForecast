@@ -215,8 +215,7 @@ if (noErrors) {
                                   ddReg = ddReg,
                                   ddNames = ddNames,
                                   cumulative.infections = cumulative.infections,
-                                  undiagnosed.infections = undiagnosed.infections, 
-                                  active.projections = active.projections)
+                                  undiagnosed.infections = undiagnosed.infections)
 
   # write datList back out
   save(dataList, file = "dat/dataList.RData")

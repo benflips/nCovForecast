@@ -33,7 +33,7 @@ source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
 
-cat("  Running deconvolutions for ", orgLevel, " using old method...\n")
+cat("  Running deconvolutions for", orgLevel, "using old method...\n")
 
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
 cases.all <- t(timeSeriesInfections)[-1,]

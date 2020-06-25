@@ -16,14 +16,20 @@
 ##   
 ##
 ## --------------------------
+# Make a cluster for parallelising the fitting task
+
 ## load up the packages we will need 
 suppressPackageStartupMessages(library("readr"))
 suppressPackageStartupMessages(library("addreg"))
 suppressPackageStartupMessages(library("turboEM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("SparseM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("gam"))
-suppressPackageStartupMessages(library("parallel"))
+#suppressPackageStartupMessages(library("parallel"))
 ## ---------------------------
+# # Calculate the number of cores
+# nCores <- 2
+# # Initiate cluster
+# cl <- makeCluster(nCores)
 
 ## load up our functions into memory
 source("detection/deconvFunctions.R")
@@ -32,7 +38,7 @@ source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
 
-cat("  Running deconvolutions for ", orgLevel, " using new method...\n")
+cat("  Running deconvolutions for", orgLevel, "using new method...\n")
 
 # load relevant dataset
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
@@ -47,18 +53,12 @@ R <- dim(cases.all)[2]
 # Assumed incubation distribution
 inc.dist <- incubation()
 
-# Make a cluster for parallelising the fitting task
-# Calculate the number of cores
-nCores <- 2
-# Initiate cluster
-cl <- makeCluster(nCores)
-
 # back projections
 cat("   Back projections...\n")
-backProjection <- parLapply(cl, cases.all, BackProj, dist = inc.dist)
+backProjection <- lapply(cases.all, BackProj, dist = inc.dist)
 
 # stop cluster
-stopCluster(cl)
+#stopCluster(cl)
 
 # extract estimated new infections by time
 infect.total <- matrix(NA, nrow = T, ncol = R)
