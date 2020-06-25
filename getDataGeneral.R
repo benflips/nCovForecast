@@ -1,5 +1,3 @@
-library(zipR)
-
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
 
 t1 = Sys.time()
