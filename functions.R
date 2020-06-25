@@ -22,6 +22,32 @@
 
 ## function definitions
 
+
+checkSameNumberOfCols <- function(a, b) {
+  test <- ncol(a)==ncol(b)
+  if (!test) {
+    print(paste0('ERROR: ', deparse(substitute(a)), ' and ', deparse(substitute(b)), ' do not have the same number of columns (', ncol(a), ' vs. ', ncol(b), ')'))
+  }
+  test
+}
+
+checkSameNumberOfRows <- function(a, b) {
+  test <- nrow(a)==nrow(b)
+  if (!test) {
+    print(paste0('ERROR: ', deparse(substitute(a)), ' and ', deparse(substitute(b)), ' do not have the same number of rows (', nrow(a), ' vs. ', nrow(b), ')'))
+  }
+  test
+}
+
+checkNAs <- function(a) {
+  test <- sum(is.na(a))==0
+  if (!test) {
+   print(paste0('ERROR: There are NAs somewhere in the ', deparse(substitute(a)), ' data: ', sum(is.na(a))))
+ }
+ test
+}
+
+
 # function to check that all data are (semi-strictly) increasing over time
   # x is dataframe in JHU format
   # tolerance is how large an error we can live with
@@ -61,6 +87,7 @@ loadData <- function(path){
   d <- subset(d, !(d$Country.Region %in% unwanted | d$Province.State %in% unwanted))
   # rename Burma
   d$Country.Region[d$Country.Region=="Burma"] <- "Myanmar"
+  d <- emancipate(d) # elevate semi-autonomous colonies to countries for reporting
   d
 }
 
@@ -69,30 +96,34 @@ loadData <- function(path){
   # returns standardised dataframes
 activeCases <- function(infections, deaths, recoveries){
   ssCol <- dateCols(infections) # get date columns
-  inputTest <- !(nrow(infections) == nrow(deaths) & nrow(infections) == nrow(recoveries))
-  if (inputTest) stop("Input dataframes must have identical dimensions")
-  # Standardise order
-  infections <- infections[order(infections$Country.Region, infections$Province.State),]
-  deaths <- deaths[order(deaths$Country.Region, deaths$Province.State),]
-  recoveries <- recoveries[order(recoveries$Country.Region, recoveries$Province.State),]
-  orderTest <- sum(!(infections$Country.Region == deaths$Country.Region & infections$Country.Region == recoveries$Country.Region)) != 0
-  if (orderTest) stop("Region labels do not align")
-  # check for countries with inadequate reporting of recoveries, and apply recLag estimation
-  recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
-  recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
-  # subset to case data
-  infMat <- infections[,ssCol]
-  deathMat <- deaths[,ssCol]
-  recMat <- recoveries[,ssCol]
-  # generate active case data frame
-  active <- infections
-  active[,ssCol] <- infMat - deathMat - recMat
-  # return standardised data frames
-  list(tsI = infections, 
-       tsD = deaths, 
-       tsR = recoveries, 
-       tsA = active, 
-       failedRecovery = infections[recCheck, 1:2])
+  test1 <- checkSameNumberOfRows(infections,deaths)
+  test2 <- checkSameNumberOfRows(infections,recoveries)
+  if (test1) {
+    # Standardise order
+    infections <- infections[order(infections$Region),]
+    deaths     <- deaths[order(deaths$Region),]
+    recoveries <- recoveries[order(recoveries$Region),]
+    orderTest <- sum(!(infections$Region == deaths$Region & infections$Region == recoveries$Region)) != 0
+    if (orderTest) stop("Region labels do not align")
+    # check for countries with inadequate reporting of recoveries, and apply recLag estimation
+    recCheck <- recoveryCheck(recoveries, infections, tolerance = 7)
+    recoveries[recCheck,] <- recLag(infections[recCheck,], deaths[recCheck,], active = FALSE)
+    # subset to case data
+    infMat <- infections[,ssCol]
+    deathMat <- deaths[,ssCol]
+    recMat <- recoveries[,ssCol]
+    # generate active case data frame
+    active <- infections
+    active[,ssCol] <- infMat - deathMat - recMat
+    # return standardised data frames
+    list(tsI = infections, 
+         tsD = deaths, 
+         tsR = recoveries, 
+         tsA = active, 
+         failedRecovery = infections[recCheck, 1:2])
+  } else {
+    stop('Error - activeCases failed')
+  }
 }
 
 # Adjusts cumulative infections to get active cases
@@ -148,11 +179,19 @@ growthRate <- function(cases, inWindow=10){
 }
 
 
+
 # aggregates results to relevant region (regionCol allows to specify whether Provinc.State, or COuntry.Region)
 regionAgg<-function(x, regionCol, regionName = "Region"){
   xSelect<-x[, dateCols(x)]
   out <- aggregate(xSelect, by = list(regionCol), FUN = sum)
   names(out)[1] <- regionName
+  out
+}
+
+# same as above but on column labelled 'Region'
+regionAggregate <- function(x) {
+  xSelect <- x[, dateCols(x)]
+  out <- aggregate(xSelect, by = list(Region = x$Region), sum)
   out
 }
 
@@ -272,3 +311,16 @@ tsSub <- function(x, subset){
   colSums(xSub)
 }
 
+# Elevates semi-autonomous colonies to countries for reporting
+emancipate <- function(timeSeriesDataFrame, withHead = TRUE){
+  colonials <- timeSeriesDataFrame$Country.Region %in% c("Netherlands", "United Kingdom", "France", "Denmark")
+  province <-  timeSeriesDataFrame$Province.State != ''
+  ss <- colonials & province
+  if (withHead) {
+    timeSeriesDataFrame$Country.Region[ss] <- paste0(timeSeriesDataFrame$Province.State[ss], " (", timeSeriesDataFrame$Country.Region[ss], ")")
+  } else {
+    timeSeriesDataFrame$Country.Region[ss] <- timeSeriesDataFrame$Province.State[ss]
+  }
+  timeSeriesDataFrame$Province.State[ss] <- ""
+  timeSeriesDataFrame
+}
