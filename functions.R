@@ -22,6 +22,32 @@
 
 ## function definitions
 
+
+checkSameNumberOfCols <- function(a, b) {
+  test <- ncol(a)==ncol(b)
+  if (!test) {
+    print(paste0('ERROR: ', deparse(substitute(a)), ' and ', deparse(substitute(b)), ' do not have the same number of columns (', ncol(a), ' vs. ', ncol(b), ')'))
+  }
+  test
+}
+
+checkSameNumberOfRows <- function(a, b) {
+  test <- nrow(a)==nrow(b)
+  if (!test) {
+    print(paste0('ERROR: ', deparse(substitute(a)), ' and ', deparse(substitute(b)), ' do not have the same number of rows (', nrow(a), ' vs. ', nrow(b), ')'))
+  }
+  test
+}
+
+checkNAs <- function(a) {
+  test <- sum(is.na(a))==0
+  if (!test) {
+   print(paste0('ERROR: There are NAs somewhere in the ', deparse(substitute(a)), ' data: ', sum(is.na(a))))
+ }
+ test
+}
+
+
 # function to check that all data are (semi-strictly) increasing over time
   # x is dataframe in JHU format
   # tolerance is how large an error we can live with
