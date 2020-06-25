@@ -22,6 +22,7 @@ suppressPackageStartupMessages(library("addreg"))
 suppressPackageStartupMessages(library("turboEM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("SparseM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("gam"))
+suppressPackageStartupMessages(library("parallel"))
 ## ---------------------------
 
 ## load up our functions into memory
@@ -46,9 +47,18 @@ R <- dim(cases.all)[2]
 # Assumed incubation distribution
 inc.dist <- incubation()
 
+# Make a cluster for parallelising the fitting task
+# Calculate the number of cores
+nCores <- 2
+# Initiate cluster
+cl <- makeCluster(nCores)
+
 # back projections
 cat("   Back projections...\n")
-backProjection <- lapply(cases.all, BackProj, dist = inc.dist)
+backProjection <- parLapply(cl, cases.all, BackProj, dist = inc.dist)
+
+# stop cluster
+stopCluster(cl)
 
 # extract estimated new infections by time
 infect.total <- matrix(NA, nrow = T, ncol = R)
