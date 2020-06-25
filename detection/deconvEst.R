@@ -30,9 +30,9 @@ source("detection/deconvFunctions.R")
 source("functions.R")
 ## ---------------------------
 
-cat("  Running deconvolutions...\n")
-
 orgLevel <- commandArgs()[6] # get relevant command line argument
+
+cat("  Running deconvolutions for ", orgLevel, "...\n")
 
 # load relevant dataset
 load(paste0("dat/",orgLevel,"/cacheData.RData"))

@@ -27,12 +27,13 @@ library("addreg", quietly = TRUE)
 suppressPackageStartupMessages(library("turboEM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("SparseM", quietly = TRUE, warn.conflicts = FALSE))
 
-cat("  Running deconvolutions...\n")
 #functions for estimation and projection
 source("detection/estFunctionsV3.R")
 source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
+
+cat("  Running deconvolutions for ", orgLevel, "...\n")
 
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
 cases.all <- t(timeSeriesInfections)[-1,]
