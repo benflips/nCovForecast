@@ -1,4 +1,4 @@
-
+library(zipR)
 
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose, deconvProcess = 1){
 
