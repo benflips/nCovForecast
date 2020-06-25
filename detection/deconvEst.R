@@ -32,7 +32,7 @@ source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
 
-cat("  Running deconvolutions for ", orgLevel, "...\n")
+cat("  Running deconvolutions for ", orgLevel, " using new method...\n")
 
 # load relevant dataset
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
