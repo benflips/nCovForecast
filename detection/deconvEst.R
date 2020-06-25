@@ -72,7 +72,9 @@ cumulative.infections <- apply(infect.total, 2, cumsum)
 undiagnosed.infections <- cumulative.infections - t(timeSeriesInfections[,-1])
 #express both in JHU layout
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(cumulative.infections))
+colnames(cumulative.infections)<-colnames(timeSeriesInfections)
 undiagnosed.infections<-data.frame(timeSeriesInfections[,1],t(undiagnosed.infections))
+colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
 
 # forward projections
 cat("   Forward projections...\n")
