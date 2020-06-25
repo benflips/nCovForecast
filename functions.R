@@ -87,6 +87,7 @@ loadData <- function(path){
   d <- subset(d, !(d$Country.Region %in% unwanted | d$Province.State %in% unwanted))
   # rename Burma
   d$Country.Region[d$Country.Region=="Burma"] <- "Myanmar"
+  d <- emancipate(d) # elevate semi-autonomous colonies to countries for reporting
   d
 }
 
@@ -298,3 +299,16 @@ tsSub <- function(x, subset){
   colSums(xSub)
 }
 
+# Elevates semi-autonomous colonies to countries for reporting
+emancipate <- function(timeSeriesDataFrame, withHead = TRUE){
+  colonials <- timeSeriesDataFrame$Country.Region %in% c("Netherlands", "United Kingdom", "France", "Denmark")
+  province <-  timeSeriesDataFrame$Province.State != ''
+  ss <- colonials & province
+  if (withHead) {
+    timeSeriesDataFrame$Country.Region[ss] <- paste0(timeSeriesDataFrame$Province.State[ss], " (", timeSeriesDataFrame$Country.Region[ss], ")")
+  } else {
+    timeSeriesDataFrame$Country.Region[ss] <- timeSeriesDataFrame$Province.State[ss]
+  }
+  timeSeriesDataFrame$Province.State[ss] <- ""
+  timeSeriesDataFrame
+}
