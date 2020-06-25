@@ -188,7 +188,7 @@ if (noErrors) {
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
   # run deconvolution (SLOW!)
-  system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
+  system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE)
   load(paste0("dat/",countryName,"/estDeconv.RData"))
 
   # load dataList object
