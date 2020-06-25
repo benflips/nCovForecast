@@ -80,6 +80,10 @@ server <- function(input, output, session) {
     list(src = normalizePath(file.path('./img/canada-flag-xs.png')),                   height=50, alt = 'Canadian site')
   }, deleteFile = FALSE)
 
+  output$flagGermany    <- renderImage({
+    list(src = normalizePath(file.path('./img/germany-flag-xs.png')),                  height=50, alt = 'German site')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ##### Text to be translated #####
@@ -150,6 +154,9 @@ server <- function(input, output, session) {
      } else if (cname == "ca") {
        output$country_name_in_header <- renderText({'Canada'})
        updateSelectizeInput(session, "global_or_country",  selected = "Canada")
+     } else if (cname == "de") {
+       output$country_name_in_header <- renderText({'Germany'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Germany")
      } else if (cname == "cn") {
        output$country_name_in_header <- renderText({'China'})
        updateSelectizeInput(session, "global_or_country",  selected = "China")
@@ -189,6 +196,9 @@ server <- function(input, output, session) {
       } else if (input$global_or_country == 'India') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
+      } else if (input$global_or_country == 'Germany') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bayern","Nordrhein-Westfalen","Baden-Württemberg"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
