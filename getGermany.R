@@ -5,4 +5,4 @@ getDataGeneral('Germany',
                '/srv/shiny-server/covid19_rki_data/deaths.csv',
                '',
                TRUE,
-               deconvProcess =2)
+               deconvProcess =1)
