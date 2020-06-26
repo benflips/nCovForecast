@@ -1,4 +1,5 @@
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose, deconvProcess = 1){
+
 
 t1 = Sys.time()
 
@@ -186,7 +187,12 @@ if (noErrors) {
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
 
   # run deconvolution (SLOW!)
-  system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE)
+  if (deconvProcess == 1){
+    system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE) # old process (faster)
+  } else {
+    system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE) # new process (slower, but better)
+  }
+  
   load(paste0("dat/",countryName,"/estDeconv.RData"))
 
   # load dataList object
@@ -208,8 +214,7 @@ if (noErrors) {
                                   ddReg = ddReg,
                                   ddNames = ddNames,
                                   cumulative.infections = cumulative.infections,
-                                  undiagnosed.infections = undiagnosed.infections, 
-                                  active.projections = active.projections)
+                                  undiagnosed.infections = undiagnosed.infections)
 
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
