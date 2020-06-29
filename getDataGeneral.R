@@ -7,20 +7,6 @@ source('functions.R')
 
 inputRecoveredSupplied <- (inputRecovered != '')
 
-if (verbose) {
- cat("\n")
-  print('-----------------------')
-  print('-----------------------')
-  print(paste('      ',countryName))
-  print('-----------------------')
-  print('-----------------------')
-  print('')
-
-  print(paste('Confirmed csv:', inputConfirmed))
-  print(paste('Deaths csv:   ',    inputDeaths))
-  print(paste('Recovered csv:', inputRecovered))
-  print('')
-}
 
 noErrors <- TRUE
 
@@ -31,16 +17,15 @@ if (inputRecoveredSupplied) {
 }
 
 if (verbose) {
-  print(paste('MOST RECENT DATE:',format(strptime(tail(names(timeSeriesInfections), n=1),'%m.%d.%y'), '%d %B %Y')))
+  message(paste0(countryName, ': ', format(strptime(tail(names(timeSeriesInfections), n=1),'%m.%d.%y'), '%d %B %Y')))
 }
 
 printVerbose('Initially...',timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
-
 if (countryName == 'Global') {
-  if (verbose) {
-    print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
-  }
+  #if (verbose) {
+  #  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
+  #}
 
   countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada')
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
@@ -51,7 +36,7 @@ if (countryName == 'Global') {
   timeSeriesDeaths$Province.State     <- NULL
   timeSeriesRecoveries$Province.State <- NULL
 
-  printVerbose(paste0('After excluding countries: (',toString(countriesToGenerateWithRecLag),') with known bad recovery data and using recLag to generate those instead'),timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+  #printVerbose(paste0('After excluding countries: (',toString(countriesToGenerateWithRecLag),') with known bad recovery data and using recLag to generate those instead'),timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 } else {
 
@@ -64,7 +49,7 @@ if (countryName == 'Global') {
     timeSeriesRecoveries$Country.Region <- NULL
   }
 
-  printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+  #printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 }
 
 
@@ -73,7 +58,7 @@ names(timeSeriesDeaths)[1]     <- 'Region'
 if (inputRecoveredSupplied) {
   names(timeSeriesRecoveries)[1] <- 'Region'
 }
-printVerbose('Should always have one non-date column, and it should be simply called Region', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+#printVerbose('Should always have one non-date column, and it should be simply called Region', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 rm(inputConfirmed, inputDeaths, inputRecovered)
 
@@ -84,7 +69,7 @@ if (inputRecoveredSupplied) {
   timeSeriesRecoveries <- regionAggregate(timeSeriesRecoveries)
 }
 
-printVerbose('After aggregating over Region column', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+#printVerbose('After aggregating over Region column', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
 
 
@@ -124,12 +109,12 @@ if (noErrors) {
   # Standardise dataframes and compute active cases
   std <- activeCases(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries)
   
-  printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
+  #printVerbose('Function activeCases complete', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
   # report to console countries that have been recLagged within activeCases()
   if (nrow(std$failedRecovery)>0 & verbose) {
-    print('')
-    print(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
+    message('')
+    message(paste("There are", nrow(std$failedRecovery), "region(s) failing recovery data test and treated with recLag: "))
     print(std$failedRecovery)
     cat("\n\n")
   }
@@ -142,7 +127,7 @@ if (noErrors) {
   cumSub <- checkI & checkD & checkR
   if (sum(!cumSub)>10) stop("More than five suspect regions in this dataset.")
   if (sum(!cumSub)>0 & verbose) {
-    print(paste("These regions will be completely excluded, due to failed cumulants:", sum(!cumSub)))
+    message(paste("These regions will be completely excluded, due to failed cumulants:", sum(!cumSub)))
     print(cbind(std$tsI[!cumSub, 1:2], checkI = checkI[!cumSub], checkD = checkD[!cumSub], checkR = checkR[!cumSub]))
     cat("\n\n")
   }
@@ -152,7 +137,8 @@ if (noErrors) {
   timeSeriesActive     <- std$tsA[cumSub,]
   rm(checkI, checkD, checkR, cumSub)
 
-  printVerbose('After excluding regions which failed cumulants', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE, verbose)
+  #printVerbose('After excluding regions which failed cumulants', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE, verbose)
+  printVerbose('Finally...', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, TRUE, verbose)
 
   if (countryName == 'Global') {
     # create global aggregate row
@@ -199,8 +185,8 @@ if (noErrors) {
   load("dat/dataList.RData")
 
   if (verbose) {
-    print('')
-    print(paste('These', length(ddNames), 'regions now have data:'))
+    message('')
+    message(paste('These', length(ddNames), 'regions now have data:'))
     print(ddNames)
   }
   
@@ -219,18 +205,17 @@ if (noErrors) {
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
   if (verbose) {
-    print('')
-    print("Complete")
+    message('')
+    message("Complete")
   }
 } else {
   if (verbose) {
-    print('No data was saved')
+    message('No data was saved')
   }
 }
 
 t2 = Sys.time()
 if (verbose) { 
-  print(paste('Time taken to complete', countryName, 'is: '))
   print(t2 - t1)
 }
 
@@ -239,15 +224,14 @@ if (verbose) {
 
 printVerbose <- function(initialMessage,timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose) {
   if (verbose) {
-    print('')
-    print('----------------------------------')
-    print(initialMessage)
-    print('----------------------------------')
+    message('')
+    message('----------------------------------')
+    message(initialMessage)
     print(names(timeSeriesInfections)[1:4])
-    print(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
-    print(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
+    message(paste(toString(dim(timeSeriesInfections)), '- dimensions of infections'))
+    message(paste(toString(dim(timeSeriesDeaths)),     '- dimensions of deaths'))
     if (inputRecoveredSupplied) {
-      print(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
+      message(paste(toString(dim(timeSeriesRecoveries)), '- dimensions of recoveries'))
     }
   }
 }
