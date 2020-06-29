@@ -1,4 +1,13 @@
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose, deconvProcess = 1){
+runDeconvolution <- function(countryName, deconvProcess = 1) {
+  if (deconvProcess == 1){
+    system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE) # old process (faster)
+  } else {
+    system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE) # new process (slower, but better)
+  }
+}
+
+
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
 
 
 t1 = Sys.time()
@@ -171,13 +180,6 @@ if (noErrors) {
   dir.create(paste0("dat/", countryName), showWarnings = FALSE) # if the directory doesn't exist, create it.
   save(ddReg, ddNames, file = paste0("dat/",countryName,"/menuData.RData"))
   save(timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, timeSeriesActive, dates, file = paste0("dat/",countryName,"/cacheData.RData"))
-
-  # run deconvolution (SLOW!)
-  if (deconvProcess == 1){
-    system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE) # old process (faster)
-  } else {
-    system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE) # new process (slower, but better)
-  }
   
   load(paste0("dat/",countryName,"/estDeconv.RData"))
 
@@ -192,14 +194,14 @@ if (noErrors) {
   
   # append data to dataList
 
-  dataList[[countryName]] <- list(timeSeriesInfections = timeSeriesInfections,
-                                  timeSeriesDeaths = timeSeriesDeaths,
-                                  timeSeriesRecoveries = timeSeriesRecoveries,
-                                  timeSeriesActive = timeSeriesActive,
-                                  dates = dates,
-                                  ddReg = ddReg,
-                                  ddNames = ddNames,
-                                  cumulative.infections = cumulative.infections,
+  dataList[[countryName]] <- list(timeSeriesInfections   = timeSeriesInfections,
+                                  timeSeriesDeaths       = timeSeriesDeaths,
+                                  timeSeriesRecoveries   = timeSeriesRecoveries,
+                                  timeSeriesActive       = timeSeriesActive,
+                                  dates                  = dates,
+                                  ddReg                  = ddReg,
+                                  ddNames                = ddNames,
+                                  cumulative.infections  = cumulative.infections,
                                   undiagnosed.infections = undiagnosed.infections)
 
   # write datList back out
