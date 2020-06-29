@@ -426,23 +426,24 @@ server <- function(input, output, session) {
     if (input$countryFinder != '') {
     rawI <- yfCast()$yI # diagnosed infection totals at t
     estI <- yfCast()$yIplus # estimated true infections at t (diagnosed + undiagnosed)
-    plotDat <- data.frame(dates = as.Date(names(rawI), format = "%m.%d.%y"), rawI, estI)
-    fig <- plot_ly(plotDat, type = "scatter", mode = "none") %>%
+    rawIdates <- as.Date(names(rawI), format = '%m.%d.%y')
+    estIdates <- as.Date(names(estI), format = '%m.%d.%y')
+    fig <- plot_ly(type = "scatter", mode = "none") %>%
       add_trace(y = ~rawI,
-                x = ~dates, 
+                x = rawIdates,
                 mode = "lines+markers",
                 marker = list(color = clrLight), 
                 line = list(color = clrLight), 
                 name = i18n$t("Diagnosed"), 
-                hoverinfo = "text+name", 
-                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$rawI, big.mark = ","))) %>%
+                hoverinfo = "text+name",
+                text = paste(format(rawIdates, "%b %d"), format(rawI, big.mark = ","))) %>%
       add_trace(y = ~estI,
-                x = ~dates, 
+                x = estIdates,
                 mode = "lines", 
                 line = list(color = clrDark), 
                 name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
-                hoverinfo = "text+name", 
-                text = paste(format(plotDat$dates, "%b %d"), format(plotDat$estI, big.mark = ","))) %>%
+                hoverinfo = "text+name",
+                text = paste(format(estIdates, "%b %d"), format(estI, big.mark = ","))) %>%
       layout(xaxis = list(range = plotRange(),
                           title = list(text = i18n$t("Date"))),
              yaxis = list(title = list(text = i18n$t("Total infections")), 
