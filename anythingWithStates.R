@@ -7,11 +7,6 @@ countries_with_state_data <- unique(covid19(level = 2)$administrative_area_level
 #[11] "China"          "Haiti"          "Switzerland"    "Netherlands"    "Sweden"        
 #[16] "India"          "United States"  "Australia"      "Belgium"        "Denmark" 
 
-#for (country in countries_with_state_data) {
-#  message(paste(toString(length(unique(covid19(c(country), level=2, verbose=FALSE)$deaths))), ',', country))
-#}
-
-
-print(unique(covid19(c('Italy'), level=2)$confirmed))
-print(unique(covid19(c('Italy'), level=2)$recovered))
-print(unique(covid19(c('Italy'), level=2)$deaths))
+for (country in countries_with_state_data) {
+  message(paste(toString(length(unique(covid19(c(country), level=2, verbose=FALSE)$deaths))), ',', country))
+}
