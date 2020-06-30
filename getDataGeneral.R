@@ -14,8 +14,8 @@ runDeconvolution <- function(countryName, deconvProcess = 1) {
   load("dat/dataList.RData")
 
   # append data to dataList
-  dataList$countryName$cumulative.infections  = cumulative.infections
-  dataList$countryName$undiagnosed.infections = undiagnosed.infections
+  dataList[[countryName]]$cumulative.infections  = cumulative.infections
+  dataList[[countryName]]$undiagnosed.infections = undiagnosed.infections
 
   # write datList back out
   save(dataList, file = "dat/dataList.RData")
