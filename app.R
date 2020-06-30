@@ -428,8 +428,19 @@ server <- function(input, output, session) {
     estI <- yfCast()$yIplus # estimated true infections at t (diagnosed + undiagnosed)
     rawIdates <- as.Date(names(rawI), format = '%m.%d.%y')
     estIdates <- as.Date(names(estI), format = '%m.%d.%y')
-    fig <- plot_ly(type = "scatter", mode = "none") %>%
-      add_trace(y = ~rawI,
+    fig <- plot_ly(type = "scatter", mode = "none")
+    if (sum(estI)>0){
+      fig <- add_trace(fig,
+                       y = ~estI,
+                       x = estIdates,
+                       mode = "lines", 
+                       line = list(color = clrDark), 
+                       name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
+                       hoverinfo = "text+name",
+                       text = paste(format(estIdates, "%b %d"), format(estI, big.mark = ",")))
+    }
+      fig <- add_trace(fig, 
+                y = ~rawI,
                 x = rawIdates,
                 mode = "lines+markers",
                 marker = list(color = clrLight), 
@@ -437,13 +448,6 @@ server <- function(input, output, session) {
                 name = i18n$t("Diagnosed"), 
                 hoverinfo = "text+name",
                 text = paste(format(rawIdates, "%b %d"), format(rawI, big.mark = ","))) %>%
-      add_trace(y = ~estI,
-                x = estIdates,
-                mode = "lines", 
-                line = list(color = clrDark), 
-                name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
-                hoverinfo = "text+name",
-                text = paste(format(estIdates, "%b %d"), format(estI, big.mark = ","))) %>%
       layout(xaxis = list(range = plotRange(),
                           title = list(text = i18n$t("Date"))),
              yaxis = list(title = list(text = i18n$t("Total infections")), 
