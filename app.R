@@ -165,6 +165,12 @@ server <- function(input, output, session) {
      } else if (cname == "de") {
        output$country_name_in_header <- renderText({'Germany'})
        updateSelectizeInput(session, "global_or_country",  selected = "Germany")
+     } else if (cname == "it") {
+       output$country_name_in_header <- renderText({'Italy'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Italy")
+     } else if (cname == "co") {
+       output$country_name_in_header <- renderText({'Colombia'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Colombia")
      } else if (cname == "cn") {
        output$country_name_in_header <- renderText({'China'})
        updateSelectizeInput(session, "global_or_country",  selected = "China")
@@ -207,6 +213,12 @@ server <- function(input, output, session) {
       } else if (input$global_or_country == 'Germany') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Bayern","Nordrhein-Westfalen","Baden-Württemberg"), choices = ddReg)
+      } else if (input$global_or_country == 'Italy') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Lombardia","Piemonte","Emilia-Romagna"), choices = ddReg)
+      } else if (input$global_or_country == 'Colombia') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bogotá","Barranquilla","Atlántico"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
