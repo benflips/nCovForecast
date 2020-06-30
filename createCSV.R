@@ -36,6 +36,8 @@ if (!updateCSV) {
 
 if (updateCSV) {
 
+  dir.create("csvData", showWarnings = FALSE) # if the directory doesn't exist, create it.
+
   #confirmed
   dataConfirmed <- originalData %>% select(administrative_area_level_2, date, confirmed)
   outputConfirmed <- data.frame('Province/State' = states, 'Country/Region' = replicate(length(states),countryName))
