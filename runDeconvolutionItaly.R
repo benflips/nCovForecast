@@ -1,3 +1,3 @@
 source('getDataGeneral.R')
 
-runDeconvolution('Italy', deconvProcess = 2)
+runDeconvolution('Italy', deconvProcess = 1)
