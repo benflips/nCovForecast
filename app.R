@@ -214,7 +214,8 @@ server <- function(input, output, session) {
     yR <- tsSub(timeSeriesRecoveries,timeSeriesRecoveries$Region %in% input$countryFinder)  
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
     yIplus <- tsSub(cumulative.infections,cumulative.infections$Region %in% input$countryFinder)
-    list(yI = yI, yD = yD, yR = yR, yA = yA, yIplus = yIplus)
+    yUndiag <- tsSub(undiagnosed.infections,undiagnosed.infections$Region %in% input$countryFinder)
+    list(yI = yI, yD = yD, yR = yR, yA = yA, yIplus = yIplus, yUndiag = yUndiag)
   })
 
   projfCast <- reactive({ # projection for forecast
@@ -594,11 +595,14 @@ server <- function(input, output, session) {
       yA <- yfCast()$yA
       yD <- yfCast()$yD
       yI <- yfCast()$yI
+      yUndiag <- yfCast()$yUndiag
+      yIplus <- yfCast()$yIplus
       dRate <- detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider)
       nowDiag <- tail(yA[!is.na(yA)], 1)
       nowUndet <- nowDiag/dRate - nowDiag
-      nowUndiag <- undiagnosed.infections[undiagnosed.infections$Region==input$countryFinder, ncol(undiagnosed.infections)]
+      nowUndiag <- yUndiag[length(yUndiag)]
       if (nowUndiag<0) nowUndiag <- 0
+      if (sum(yIplus)==0) nowUndiag <- NA
       nowTotal <- nowDiag+nowUndiag+nowUndet
       nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
       dim(nowTable) <- c(4, 1)
