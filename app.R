@@ -61,27 +61,35 @@ server <- function(input, output, session) {
   
   ##### Flags #####
   output$flagAustralia <- renderImage({
-    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                height=50, alt = 'Australian site')
+    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                height=50, alt = 'Australian site', title = 'Australian site')
   }, deleteFile = FALSE)
 
   output$flagUS        <- renderImage({
-    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')), height=50, alt = 'US site')
+    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')), height=50, alt = 'US site',         title = 'US site')
   }, deleteFile = FALSE)
 
   output$flagChina     <- renderImage({
-    list(src = normalizePath(file.path('./img/china-flag-xs.png')),                    height=50, alt = 'Chinese site')
+    list(src = normalizePath(file.path('./img/china-flag-xs.png')),                    height=50, alt = 'Chinese site',    title = 'Chinese site')
   }, deleteFile = FALSE)
 
   output$flagIndia     <- renderImage({
-    list(src = normalizePath(file.path('./img/india-flag-xs.png')),                    height=50, alt = 'Indian site')
+    list(src = normalizePath(file.path('./img/india-flag-xs.png')),                    height=50, alt = 'Indian site',     title = 'Indian site')
   }, deleteFile = FALSE)
 
   output$flagCanada    <- renderImage({
-    list(src = normalizePath(file.path('./img/canada-flag-xs.png')),                   height=50, alt = 'Canadian site')
+    list(src = normalizePath(file.path('./img/canada-flag-xs.png')),                   height=50, alt = 'Canadian site',   title = 'Canadian site')
   }, deleteFile = FALSE)
 
-  output$flagGermany    <- renderImage({
-    list(src = normalizePath(file.path('./img/germany-flag-xs.png')),                  height=50, alt = 'German site')
+  output$flagGermany   <- renderImage({
+    list(src = normalizePath(file.path('./img/germany-flag-xs.png')),                  height=50, alt = 'German site',     title = 'German site')
+  }, deleteFile = FALSE)
+
+  output$flagItaly     <- renderImage({
+    list(src = normalizePath(file.path('./img/italy-flag-xs.png')),                    height=50, alt = 'Italian site',    title = 'Italian site')
+  }, deleteFile = FALSE)
+
+  output$flagColombia   <- renderImage({
+    list(src = normalizePath(file.path('./img/colombia-flag-xs.png')),                 height=50, alt = 'Colombian site',  title = 'Colombian site')
   }, deleteFile = FALSE)
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
@@ -157,6 +165,12 @@ server <- function(input, output, session) {
      } else if (cname == "de") {
        output$country_name_in_header <- renderText({'Germany'})
        updateSelectizeInput(session, "global_or_country",  selected = "Germany")
+     } else if (cname == "it") {
+       output$country_name_in_header <- renderText({'Italy'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Italy")
+     } else if (cname == "co") {
+       output$country_name_in_header <- renderText({'Colombia'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Colombia")
      } else if (cname == "cn") {
        output$country_name_in_header <- renderText({'China'})
        updateSelectizeInput(session, "global_or_country",  selected = "China")
@@ -199,6 +213,12 @@ server <- function(input, output, session) {
       } else if (input$global_or_country == 'Germany') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("Bayern","Nordrhein-Westfalen","Baden-Württemberg"), choices = ddReg)
+      } else if (input$global_or_country == 'Italy') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Lombardia","Piemonte","Emilia-Romagna"), choices = ddReg)
+      } else if (input$global_or_country == 'Colombia') {
+        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
+        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bogotá","Barranquilla","Atlántico"), choices = ddReg)
       } else {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
