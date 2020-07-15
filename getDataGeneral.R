@@ -55,7 +55,7 @@ if (countryName == 'Global') {
   #  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
   #}
 
-  countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada','Belgium')
+  countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada','Belgium','Spain','Egypt')
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
   timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
                                                              subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE))
