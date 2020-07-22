@@ -58,6 +58,7 @@ server <- function(input, output, session) {
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
+  shortDateFormat <- "%d %b:"
   
   ##### Flags #####
   output$flagAustralia <- renderImage({
@@ -349,28 +350,28 @@ server <- function(input, output, session) {
                           line = list(color = clrDark), 
                           name = i18n$t("Best fit"), 
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr,
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
                           name = "CI lower bound",
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$lwr, 0), big.mark = ","))) %>%
                 add_trace(y = ~upr, 
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
                           name = "CI upper bound",
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$upr, 0), big.mark = ","))) %>%
                 add_trace(y = ~yA, 
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
                           name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
                        yaxis = list(type  = plotType,
                                     range = theRange,
@@ -414,7 +415,7 @@ server <- function(input, output, session) {
                  x = ~dates, 
                  name = i18n$t("New cases"), 
                  marker = list(color = clrOrange), 
-                 text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
+                 text = paste(format(newCases$dates, shortDateFormat),format(newCases$newCases, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(yaxis = list(title = list(text = i18n$t("New cases")))
@@ -426,7 +427,7 @@ server <- function(input, output, session) {
                  x = ~dates,
                  name = i18n$t("Daily deaths"),
                  marker = list(color = clrDark),
-                 text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
+                 text = paste(format(newCases$dates, shortDateFormat),format(dailyDeaths, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(xaxis = list(range = plotRange(),
@@ -458,7 +459,7 @@ server <- function(input, output, session) {
                        line = list(color = clrDark), 
                        name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
                        hoverinfo = "text+name",
-                       text = paste(format(estIdates, "%b %d"), format(estI, big.mark = ",")))
+                       text = paste(format(estIdates, shortDateFormat), format(round(estI), big.mark = ",")))
     }
       fig <- add_trace(fig, 
                 y = ~rawI,
@@ -468,7 +469,7 @@ server <- function(input, output, session) {
                 line = list(color = clrLight), 
                 name = i18n$t("Diagnosed"), 
                 hoverinfo = "text+name",
-                text = paste(format(rawIdates, "%b %d"), format(rawI, big.mark = ","))) %>%
+                text = paste(format(rawIdates, shortDateFormat), format(rawI, big.mark = ","))) %>%
       layout(xaxis = list(range = plotRange(),
                           title = list(text = i18n$t("Date"))),
              yaxis = list(title = list(text = i18n$t("Total infections")), 
@@ -498,7 +499,7 @@ server <- function(input, output, session) {
                                mode = "lines+markers", 
                                name = i18n$t("Detection"),
                                hoverinfo = "text+name", 
-                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
+                               text = paste(format(pDet$dates, shortDateFormat), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
                                          range = xRange),
                             yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
@@ -550,10 +551,13 @@ server <- function(input, output, session) {
         myY <- as.vector(t(myY))
         # only get values bigger than 100
         myY <- subset(myY, myY >= 100)
-
+        x   <- 0:(length(myY)-1)
         fig <- fig %>% add_trace(y    = myY,
+                                 x    = x,
                                  mode = "lines",
-                                 name = country)
+                                 name = country,
+                                 hoverinfo = "text+name",
+                                 text = paste(format(myY,big.mark=","), "total cases at", x, "days since 100 cases"))
       }
       fig
 })
@@ -658,7 +662,7 @@ server <- function(input, output, session) {
                                mode = "lines",
                                name = colnames(cfiDat)[cc],
                                hoverinfo = "text+name", 
-                               text = paste(format(cfiDat$dates, "%b %d"), round(cfiDat[,cc], 2)))
+                               text = paste(format(cfiDat$dates, shortDateFormat), round(cfiDat[,cc], 2)))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
                           yaxis = list(title = list(text = i18n$t("Curve-flattening index")),
@@ -688,7 +692,7 @@ server <- function(input, output, session) {
                                mode = "lines", 
                                name = colnames(gRateMA)[cc],
                                hoverinfo = "text+name", 
-                               text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
+                               text = paste(format(gRateMA$dates, shortDateFormat), round(gRateMA[,cc], 1), "%"))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
                           yaxis = list(title = list(text = i18n$t("Growth rate (% per day)")))
