@@ -551,10 +551,13 @@ server <- function(input, output, session) {
         myY <- as.vector(t(myY))
         # only get values bigger than 100
         myY <- subset(myY, myY >= 100)
-
+        x   <- 0:(length(myY)-1)
         fig <- fig %>% add_trace(y    = myY,
+                                 x    = x,
                                  mode = "lines",
-                                 name = country)
+                                 name = country,
+                                 hoverinfo = "text+name",
+                                 text = paste(format(myY,big.mark=","), "total cases at", x, "days since 100 cases"))
       }
       fig
 })
