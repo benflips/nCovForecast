@@ -98,7 +98,11 @@ server <- function(input, output, session) {
   }, deleteFile = FALSE)
 
   output$flagPeru   <- renderImage({
-    list(src = normalizePath(file.path('./img/peru-flag-xs.png')),                    height=50, alt = 'Peruvian site',  title = 'Peruvian site')
+    list(src = normalizePath(file.path('./img/peru-flag-xs.png')),                     height=50, alt = 'Peruvian site',  title = 'Peruvian site')
+  }, deleteFile = FALSE)
+
+  output$flagSwitzerland   <- renderImage({
+    list(src = normalizePath(file.path('./img/switzerland-flag-xs.png')),              height=50, alt = 'Swiss site',  title = 'Swiss site')
   }, deleteFile = FALSE)
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
