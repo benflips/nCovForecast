@@ -59,10 +59,7 @@ if (countryName == 'Global') {
   countriesToGenerateWithRecLag <- c('United Kingdom','Sweden','Netherlands','Serbia','Honduras','Namibia','Belgium','Central African Republic','Equatorial Guinea',
                                      'Greece','France','Egypt','US','Guinea-Bissau','Somalia','Mozambique','South Sudan','Kyrgyzstan','Libya','Bolivia','Congo (Brazzaville)',
                                      'Nigeria','Ecuador','Kazakhstan','Sudan','Philippines','Madagascar','Congo (Kinshasa)','Benin','Spain','Haiti','Guatemala','Gabon',
-                                     'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India','French Guiana (France)','Algeria',
-                                     'Eritrea','Bahrain','Morocco','Venezuela','Bangladesh','Dominican Republic','North Macedonia','Portugal','Rwanda','Croatia','Oman',
-                                     'Zimbabwe','Azerbaijan','Nicaragua','Brazil','Cyprus','Montenegro','Kosovo','Uzbekistan','El Salvador','West Bank and Gaza','Japan',
-                                     'Russia','Chile','Iran','Kuwait','Yemen','Mali','Saudi Arabia','Cameroon')
+                                     'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India')
 
 
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
