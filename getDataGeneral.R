@@ -55,7 +55,16 @@ if (countryName == 'Global') {
   #  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
   #}
 
-  countriesToGenerateWithRecLag <- c('France','Brazil','US','Canada','Belgium','Spain','Egypt')
+
+  countriesToGenerateWithRecLag <- c('United Kingdom','Sweden','Netherlands','Serbia','Honduras','Namibia','Belgium','Central African Republic','Equatorial Guinea',
+                                     'Greece','France','Egypt','US','Guinea-Bissau','Somalia','Mozambique','South Sudan','Kyrgyzstan','Libya','Bolivia','Congo (Brazzaville)',
+                                     'Nigeria','Ecuador','Kazakhstan','Sudan','Philippines','Madagascar','Congo (Kinshasa)','Benin','Spain','Haiti','Guatemala','Gabon',
+                                     'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India','French Guiana (France)','Algeria',
+                                     'Eritrea','Bahrain','Morocco','Venezuela','Bangladesh','Dominican Republic','North Macedonia','Portugal','Rwanda','Croatia','Oman',
+                                     'Zimbabwe','Azerbaijan','Nicaragua','Brazil','Cyprus','Montenegro','Kosovo','Uzbekistan','El Salvador','West Bank and Gaza','Japan',
+                                     'Russia','Chile','Iran','Kuwait','Yemen','Mali','Saudi Arabia','Cameroon')
+
+
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
   timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
                                                              subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE))
