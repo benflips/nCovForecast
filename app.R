@@ -93,6 +93,10 @@ server <- function(input, output, session) {
     list(src = normalizePath(file.path('./img/colombia-flag-xs.png')),                 height=50, alt = 'Colombian site',  title = 'Colombian site')
   }, deleteFile = FALSE)
 
+  output$flagJapan   <- renderImage({
+    list(src = normalizePath(file.path('./img/japan-flag-xs.png')),                    height=50, alt = 'Japanese site',  title = 'Japanese site')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ##### Text to be translated #####
