@@ -105,7 +105,7 @@
           <label class="control-label" for="global_or_country">{{ textOutput(outputId = "selectGlobal") }}</label>
           {{ selectizeInput(inputId = "global_or_country",
                             label   = "",
-                            choices = c("Global","China","India","US","Japan","Germany","Italy","Colombia","Canada","Australia"),
+                            choices = c("Global","China","India","US","Japan","Germany","Italy","Colombia","Canada","Peru","Australia"),
                             selected = "Global") }}
           <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
         </div>
@@ -126,6 +126,7 @@
             <a href="http://it.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagItaly",     inline = TRUE) }}</a>
             <a href="http://co.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagColombia",  inline = TRUE) }}</a>
             <a href="http://ca.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagCanada",    inline = TRUE) }}</a>
+            <a href="http://pe.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagPeru",      inline = TRUE) }}</a>
             <a href="http://au.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagAustralia", inline = TRUE) }}</a>
           </p>
         </div>
