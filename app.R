@@ -93,6 +93,26 @@ server <- function(input, output, session) {
     list(src = normalizePath(file.path('./img/colombia-flag-xs.png')),                 height=50, alt = 'Colombian site',  title = 'Colombian site')
   }, deleteFile = FALSE)
 
+  output$flagJapan   <- renderImage({
+    list(src = normalizePath(file.path('./img/japan-flag-xs.png')),                    height=50, alt = 'Japanese site',  title = 'Japanese site')
+  }, deleteFile = FALSE)
+
+  output$flagPeru   <- renderImage({
+    list(src = normalizePath(file.path('./img/peru-flag-xs.png')),                     height=50, alt = 'Peruvian site',  title = 'Peruvian site')
+  }, deleteFile = FALSE)
+
+  output$flagSwitzerland   <- renderImage({
+    list(src = normalizePath(file.path('./img/switzerland-flag-xs.png')),              height=50, alt = 'Swiss site',  title = 'Swiss site')
+  }, deleteFile = FALSE)
+
+  output$flagBelgium   <- renderImage({
+    list(src = normalizePath(file.path('./img/belgium-flag-xs.png')),                  height=50, alt = 'Belgian site',  title = 'Belgian site')
+  }, deleteFile = FALSE)
+
+  output$flagHaiti   <- renderImage({
+    list(src = normalizePath(file.path('./img/haiti-flag-xs.png')),                    height=50, alt = 'Haitian site',  title = 'Haitian site')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ##### Text to be translated #####
@@ -178,6 +198,21 @@ server <- function(input, output, session) {
      } else if (cname == "in") {
        output$country_name_in_header <- renderText({'India'})
        updateSelectizeInput(session, "global_or_country",  selected = "India")
+     } else if (cname == "jp") {
+       output$country_name_in_header <- renderText({'Japan'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Japan")
+     } else if (cname == "pe") {
+       output$country_name_in_header <- renderText({'Peru'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Peru")
+     } else if (cname == "ht") {
+       output$country_name_in_header <- renderText({'Haiti'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Haiti")
+     } else if (cname == "ch") {
+       output$country_name_in_header <- renderText({'Switzerland'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Switzerland")
+     } else if (cname == "be") {
+       output$country_name_in_header <- renderText({'Belgium'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Belgium")
      } 
    })
   

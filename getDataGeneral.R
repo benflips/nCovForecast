@@ -26,6 +26,18 @@ runDeconvolution <- function(countryName, deconvProcess = 1) {
 }
 
 
+getDataCovid19datahub <- function(countryName) {
+  getDataGeneral(countryName, paste0('./csvData/',countryName,'_confirmed.csv'),
+                                                     paste0('./csvData/',countryName,'_deaths.csv'),
+                                                     paste0('./csvData/',countryName,'_recovered.csv'), TRUE)
+}
+
+getDataCovid19datahubWithoutRecovered <- function(countryName) {
+  getDataGeneral(countryName, paste0('./csvData/',countryName,'_confirmed.csv'),
+                                                     paste0('./csvData/',countryName,'_deaths.csv'),
+                                                     '', TRUE)
+}
+
 getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
 
 
