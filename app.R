@@ -198,6 +198,21 @@ server <- function(input, output, session) {
      } else if (cname == "in") {
        output$country_name_in_header <- renderText({'India'})
        updateSelectizeInput(session, "global_or_country",  selected = "India")
+     } else if (cname == "jp") {
+       output$country_name_in_header <- renderText({'Japan'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Japan")
+     } else if (cname == "pe") {
+       output$country_name_in_header <- renderText({'Peru'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Peru")
+     } else if (cname == "ht") {
+       output$country_name_in_header <- renderText({'Haiti'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Haiti")
+     } else if (cname == "ch") {
+       output$country_name_in_header <- renderText({'Switzerland'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Switzerland")
+     } else if (cname == "be") {
+       output$country_name_in_header <- renderText({'Belgium'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Belgium")
      } 
    })
   
