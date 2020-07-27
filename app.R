@@ -228,6 +228,11 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "countryFinder",  choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
+
+      regionsWithFinalActiveCases <- cbind(regions = timeSeriesActive$Region,active = as.numeric(as.character(timeSeriesActive[,ncol(timeSeriesActive)])))
+
+      print(regionsWithFinalActiveCases[order(as.numeric(as.character(regionsWithFinalActiveCases[,2]))),])
+
       if (input$global_or_country == 'Australia') {
         updateSelectizeInput(session, "countryFinder",     choices = ddReg)
         updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg )
