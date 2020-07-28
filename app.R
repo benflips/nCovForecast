@@ -228,38 +228,25 @@ server <- function(input, output, session) {
       updateSelectizeInput(session, "countryFinder",  choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
-      if (input$global_or_country == 'Australia') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg )
-      } else if (input$global_or_country == 'Canada') {
+
+      regionsWithFinalInfectionsCases <- cbind(timeSeriesInfections$Region, timeSeriesInfections[,ncol(timeSeriesInfections)])
+      regionsWithFinalInfectionsCases <- regionsWithFinalInfectionsCases[order(as.numeric(as.character(regionsWithFinalInfectionsCases[,2]))),]
+
+      threeMostInfectionsRegions <- rev(as.vector(head(tail(regionsWithFinalInfectionsCases,n=4),n=3)[,1]))
+
+      if (input$global_or_country == 'Canada') {
         ddReg = ddReg[! ddReg %in% c('Diamond Princess','Recovered')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Ontario","Quebec"), choices = ddReg )
       } else if (input$global_or_country == 'China') {
         ddReg = ddReg[! ddReg %in% c('Anhui', 'Guangxi', 'Guizhou', 'Hainan', 'Ningxia', 'Qinghai', 'Tibet', 'Xinjiang')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Hubei","Henan","Heilongjiang"), choices = ddReg)
       } else if (input$global_or_country == 'US') {
         ddReg = ddReg[! ddReg %in% c('American Samoa')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Michigan","New Jersey","New York"), choices = ddReg)
-      } else if (input$global_or_country == 'India') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
-      } else if (input$global_or_country == 'Germany') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bayern","Nordrhein-Westfalen","Baden-Württemberg"), choices = ddReg)
-      } else if (input$global_or_country == 'Italy') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Lombardia","Piemonte","Emilia-Romagna"), choices = ddReg)
-      } else if (input$global_or_country == 'Colombia') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Bogotá","Barranquilla","Atlántico"), choices = ddReg)
-      } else {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
       }
-    }
+
+      updateSelectizeInput(session, "countryFinder", choices = ddReg)
+      updateSelectizeInput(session, "countryGrowthRate", selected = threeMostInfectionsRegions, choices = ddReg)
+
+    }  
+  
   })
 
 
