@@ -12,6 +12,8 @@ dat/estGlobal.RData
 dat/menuData.RData
 dat/dataList.RData
 
+csvData/
+
 dat/Global/*.*
 
 dat/Australia/*.*
@@ -27,5 +29,4 @@ dat/Peru/*.*
 dat/Switzerland/*.*
 dat/Belgium/*.*
 dat/Haiti/*.*
-
-csvData/
+dat/Brazil/*.*
