@@ -71,7 +71,7 @@ if (countryName == 'Global') {
   countriesToGenerateWithRecLag <- c('United Kingdom','Sweden','Netherlands','Serbia','Honduras','Namibia','Belgium','Central African Republic','Equatorial Guinea',
                                      'Greece','France','Egypt','US','Guinea-Bissau','Somalia','Mozambique','South Sudan','Kyrgyzstan','Libya','Bolivia','Congo (Brazzaville)',
                                      'Nigeria','Ecuador','Kazakhstan','Sudan','Philippines','Madagascar','Congo (Kinshasa)','Benin','Spain','Haiti','Guatemala','Gabon',
-                                     'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India','Canada')
+                                     'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India','Canada','Brazil')
 
 
   timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
