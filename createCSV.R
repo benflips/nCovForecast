@@ -27,6 +27,7 @@ if (libraryToSourceFrom == 'COVID19') { # covid19datahub.io
   library(covidregionaldata)
   originalData <- get_regional_data(countryName)
   states <- unique(originalData$state)
+  originalData[is.na(originalData)] <- 0 # replace NAs with 0
 }
 
 dates <- unique(originalData$date)
