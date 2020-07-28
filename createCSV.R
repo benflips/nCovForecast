@@ -19,13 +19,16 @@ if (libraryToSourceFrom == 'COVID19') { # covid19datahub.io
   library(COVID19)
   originalData <- covid19(c(countryName), level = 2, verbose=FALSE)
   states <- unique(originalData$administrative_area_level_2)
-  originalData %>% rename(administrative_area_level_2 = state,
-                          confirmed = cases_total,
-                          deaths    = deaths_total,
-                          recovered = recovered_total) # rename columns from COVID19 to have same format as covidregionaldata
+  originalData <- originalData %>% rename(state           = administrative_area_level_2,
+                                          cases_total     = confirmed,
+                                          deaths_total    = deaths,
+                                          recovered_total = recovered) # rename columns from COVID19 to have same format as covidregionaldata
 } else if (libraryToSourceFrom == 'covidregionaldata') { # https://cran.r-project.org/web/packages/covidregionaldata/
   library(covidregionaldata)
   originalData <- get_regional_data(countryName)
+  if (countryName == 'Russia') {
+    originalData <- originalData %>% rename(state = region)
+  }
   states <- unique(originalData$state)
   originalData[is.na(originalData)] <- 0 # replace NAs with 0
 }
