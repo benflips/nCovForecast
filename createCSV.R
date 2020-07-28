@@ -26,8 +26,17 @@ if (libraryToSourceFrom == 'COVID19') { # covid19datahub.io
 } else if (libraryToSourceFrom == 'covidregionaldata') { # https://cran.r-project.org/web/packages/covidregionaldata/
   library(covidregionaldata)
   originalData <- get_regional_data(countryName)
-  if (countryName == 'Russia') {
-    originalData <- originalData %>% rename(state = region)
+  if (countryName == 'Afghanistan') {
+    originalData <- originalData %>% rename(state = province)
+    # Afghanistan does a funny thing where there are sort of two rows for each Province - e.g. 'Baghlan' and 'Baghlan Province'.  The row without the word 'Province' appears to be more accurate.
+    # also artificially excluding Jawzjan  (apparent repeat of Jowzjan, with much less data)
+    # also artificially excluding Dykundi  (apparent repeat of Daykundi, with much less data)
+    # also artificially excluding Hirat    (apparent repeat of Herat, with much less data)
+    # also artificially excluding Nimroz   (apparent repeat of Nimruz, with much less data)    
+    # also artificially excluding Paktya   (apparent repeat of Paktia, with much less data)
+    # also artificially excluding Panjsher (apparent repeat of Panjshir, with much less data)
+    originalData <- subset(originalData, originalData$state %in% c('Badakhshan','Badghis','Baghlan','Balkh','Bamyan','Daykundi','Farah','Faryab','Ghazni','Ghor','Helmand','Herat','Jowzjan','Kabul','Kandahar','Kapisa','Khost','Kunar','Kunduz','Laghman','Logar','Nangarhar','Nimruz','Nuristan','Paktia','Paktika','Panjshir','Parwan','Samangan','Sar-e-Pul','Takhar','Urozgan','Wardak','Zabul'))
+    originalData$iso_3166_2 <- NULL
   }
   states <- unique(originalData$state)
   originalData[is.na(originalData)] <- 0 # replace NAs with 0
@@ -39,6 +48,8 @@ seq <- c(1:length(dates))
 
 
 if (!updateCSV) {
+
+  print('going to update!')
 
   mostRecentDateFromExistingCSV <- tail(names(existingCSV), n=1)
   mostRecentDateFromFreshData <- format(tail(dates, n=1), 'X%-m.%d.%y')

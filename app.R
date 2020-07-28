@@ -117,6 +117,10 @@ server <- function(input, output, session) {
     list(src = normalizePath(file.path('./img/brazil-flag-xs.png')),                    height=50, alt = 'Brazilian site',  title = 'Brazilian site')
   }, deleteFile = FALSE)
 
+  output$flagAfghanistan   <- renderImage({
+    list(src = normalizePath(file.path('./img/afghanistan-flag-xs.png')),                    height=50, alt = 'Afghan site',  title = 'Afghan site')
+  }, deleteFile = FALSE)
+
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
   ##### Text to be translated #####
@@ -220,6 +224,9 @@ server <- function(input, output, session) {
      } else if (cname == "br") {
        output$country_name_in_header <- renderText({'Brazil'})
        updateSelectizeInput(session, "global_or_country",  selected = "Brazil")
+     } else if (cname == "af") {
+       output$country_name_in_header <- renderText({'Afghanistan'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Afghanistan")
      } 
    })
   
