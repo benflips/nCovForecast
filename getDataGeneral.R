@@ -93,7 +93,6 @@ if (countryName == 'Global') {
   timeSeriesDeaths$Country.Region     <- NULL
   if (inputRecoveredSupplied) {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
-    if (countryName == 'Australia') {timeSeriesRecoveries <- fixNSW(timeSeriesRecoveries)}
     timeSeriesRecoveries$Country.Region <- NULL
   }
 
