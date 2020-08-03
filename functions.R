@@ -324,3 +324,11 @@ emancipate <- function(timeSeriesDataFrame, withHead = TRUE){
   timeSeriesDataFrame$Province.State[ss] <- ""
   timeSeriesDataFrame
 }
+
+# Removes the Ruby Princess accounting that drops 189 cases into NSW on 3rd July
+fixNSW <- function(timeSeriesDataFrame){
+  rr <- timeSeriesDataFrame$Country.Region=="Australia" & timeSeriesDataFrame$Province.State=="New South Wales"
+  getJumpCol <- which(names(timeSeriesDataFrame)=="7.3.20")
+  timeSeriesDataFrame[rr,(getJumpCol):ncol(timeSeriesDataFrame)] <- timeSeriesDataFrame[rr,(getJumpCol):ncol(timeSeriesDataFrame)]-189
+  timeSeriesDataFrame
+}
