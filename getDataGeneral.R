@@ -87,6 +87,7 @@ if (countryName == 'Global') {
 } else {
 
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
+  if (countryName == 'Australia') {timeSeriesInfections <- fixNSW(timeSeriesInfections)}
   timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
   timeSeriesInfections$Country.Region <- NULL
   timeSeriesDeaths$Country.Region     <- NULL
