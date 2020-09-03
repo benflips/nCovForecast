@@ -33,7 +33,8 @@ options(scipen=9)
 
 # Define server logic 
 server <- function(input, output, session) {
-
+  
+  ##### Set Language #####
   i18n <- Translator$new(translation_json_path = "translations/translations.json")
 
   observe({
@@ -52,21 +53,84 @@ server <- function(input, output, session) {
     }
   })
 
+  ##### Some useful variables #####
   please_select_a_country <- i18n$t('Please select a country or region...')
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
+  shortDateFormat <- "%d %b:"
+  
+  ##### Flags #####
+  output$flagAustralia <- renderImage({
+    list(src = normalizePath(file.path('./img/australia-flag-xs.png')),                height=50, alt = 'Australian site', title = 'Australian site')
+  }, deleteFile = FALSE)
+
+  output$flagUS        <- renderImage({
+    list(src = normalizePath(file.path('./img/united-states-of-america-flag-xs.png')), height=50, alt = 'US site',         title = 'US site')
+  }, deleteFile = FALSE)
+
+  output$flagChina     <- renderImage({
+    list(src = normalizePath(file.path('./img/china-flag-xs.png')),                    height=50, alt = 'Chinese site',    title = 'Chinese site')
+  }, deleteFile = FALSE)
+
+  output$flagIndia     <- renderImage({
+    list(src = normalizePath(file.path('./img/india-flag-xs.png')),                    height=50, alt = 'Indian site',     title = 'Indian site')
+  }, deleteFile = FALSE)
+
+  output$flagCanada    <- renderImage({
+    list(src = normalizePath(file.path('./img/canada-flag-xs.png')),                   height=50, alt = 'Canadian site',   title = 'Canadian site')
+  }, deleteFile = FALSE)
+
+  output$flagGermany   <- renderImage({
+    list(src = normalizePath(file.path('./img/germany-flag-xs.png')),                  height=50, alt = 'German site',     title = 'German site')
+  }, deleteFile = FALSE)
+
+  output$flagItaly     <- renderImage({
+    list(src = normalizePath(file.path('./img/italy-flag-xs.png')),                    height=50, alt = 'Italian site',    title = 'Italian site')
+  }, deleteFile = FALSE)
+
+  output$flagColombia   <- renderImage({
+    list(src = normalizePath(file.path('./img/colombia-flag-xs.png')),                 height=50, alt = 'Colombian site',  title = 'Colombian site')
+  }, deleteFile = FALSE)
+
+  output$flagJapan   <- renderImage({
+    list(src = normalizePath(file.path('./img/japan-flag-xs.png')),                    height=50, alt = 'Japanese site',  title = 'Japanese site')
+  }, deleteFile = FALSE)
+
+  output$flagPeru   <- renderImage({
+    list(src = normalizePath(file.path('./img/peru-flag-xs.png')),                     height=50, alt = 'Peruvian site',  title = 'Peruvian site')
+  }, deleteFile = FALSE)
+
+  output$flagSwitzerland   <- renderImage({
+    list(src = normalizePath(file.path('./img/switzerland-flag-xs.png')),              height=50, alt = 'Swiss site',  title = 'Swiss site')
+  }, deleteFile = FALSE)
+
+  output$flagBelgium   <- renderImage({
+    list(src = normalizePath(file.path('./img/belgium-flag-xs.png')),                  height=50, alt = 'Belgian site',  title = 'Belgian site')
+  }, deleteFile = FALSE)
+
+  output$flagHaiti   <- renderImage({
+    list(src = normalizePath(file.path('./img/haiti-flag-xs.png')),                    height=50, alt = 'Haitian site',  title = 'Haitian site')
+  }, deleteFile = FALSE)
+
+  output$flagBrazil   <- renderImage({
+    list(src = normalizePath(file.path('./img/brazil-flag-xs.png')),                    height=50, alt = 'Brazilian site',  title = 'Brazilian site')
+  }, deleteFile = FALSE)
+
+  output$flagAfghanistan   <- renderImage({
+    list(src = normalizePath(file.path('./img/afghanistan-flag-xs.png')),                    height=50, alt = 'Afghan site',  title = 'Afghan site')
+  }, deleteFile = FALSE)
 
   list2env(dataList[["Global"]], envir = environment()) # make global data available to session
 
+  ##### Text to be translated #####
   ### the text is here rather than base.html so that it can easily be translated to other languages
   ## header (anything on a dark blue background)
   output$siteName         <- renderText({i18n$t('Coronavirus 10-day forecast')})
-  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University')})
+  output$byline           <- renderText({i18n$t('Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by Johns Hopkins University')})
   output$TenDayForecasts  <- renderText({i18n$t('10-day forecasts')})
   output$growthRates      <- renderText({i18n$t('Growth rates')})
   output$about            <- renderText({i18n$t('About')})
-  output$asOf             <- renderText({paste(i18n$t('As of'),format(dates[length(dates)], "%d %B %Y"))})
 
   ## skip to (can't reuse these unfortunately)
   output$skipTo1          <- renderText({i18n$t('Skip to:')})
@@ -98,6 +162,8 @@ server <- function(input, output, session) {
   output$takeTheseLast     <- renderText({i18n$t('Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).')})
   output$theLastPlot       <- renderText({i18n$t('The last plot is the percentage of new cases that are successfully detected, and how this has changed over time.  Values near 100% are good, indicating that most cases are being detected/reported.  Unexpected outbreaks cause temporary reductions in detection.')})
   output$detectionCanOnly  <- renderText({i18n$t('Detection can only be calculated up to 17 days in the past, and estimates are often patchy in countries/regions with few deaths.')})
+  output$logScale          <- renderText({i18n$t('Log scale')})
+  output$linearScale       <- renderText({i18n$t('Linear scale')})
 
   ## section 2
   output$locationH2       <- renderText({i18n$t('Location')})
@@ -113,7 +179,7 @@ server <- function(input, output, session) {
   output$noteThisLast     <- renderText({i18n$t('Note, this last plot covers the entire time period of the pandemic, not just the last twenty days.')})
 #  output$<- renderText({i18n$t('')})
 
-# #### Observer function -- set country names from url ####
+  ##### Observer function -- set country names from url ####
    observe({
      cname <- strsplit(session$clientData$url_hostname, '\\.')[[1]][1]
      if (cname == "au") {
@@ -125,48 +191,76 @@ server <- function(input, output, session) {
      } else if (cname == "ca") {
        output$country_name_in_header <- renderText({'Canada'})
        updateSelectizeInput(session, "global_or_country",  selected = "Canada")
+     } else if (cname == "de") {
+       output$country_name_in_header <- renderText({'Germany'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Germany")
+     } else if (cname == "it") {
+       output$country_name_in_header <- renderText({'Italy'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Italy")
+     } else if (cname == "co") {
+       output$country_name_in_header <- renderText({'Colombia'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Colombia")
      } else if (cname == "cn") {
        output$country_name_in_header <- renderText({'China'})
        updateSelectizeInput(session, "global_or_country",  selected = "China")
      } else if (cname == "in") {
        output$country_name_in_header <- renderText({'India'})
        updateSelectizeInput(session, "global_or_country",  selected = "India")
+     } else if (cname == "jp") {
+       output$country_name_in_header <- renderText({'Japan'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Japan")
+     } else if (cname == "pe") {
+       output$country_name_in_header <- renderText({'Peru'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Peru")
+     } else if (cname == "ht") {
+       output$country_name_in_header <- renderText({'Haiti'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Haiti")
+     } else if (cname == "ch") {
+       output$country_name_in_header <- renderText({'Switzerland'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Switzerland")
+     } else if (cname == "be") {
+       output$country_name_in_header <- renderText({'Belgium'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Belgium")
+     } else if (cname == "br") {
+       output$country_name_in_header <- renderText({'Brazil'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Brazil")
+     } else if (cname == "af") {
+       output$country_name_in_header <- renderText({'Afghanistan'})
+       updateSelectizeInput(session, "global_or_country",  selected = "Afghanistan")
      } 
    })
   
-#### Observer function -- Global or Country level ####
+  #### Observer function -- Global or Country level ####
   # if we observe that global_or_country is changing, then update the choices in countryFinder
   observe({
     # change data inputs
     list2env(dataList[[input$global_or_country]], envir = parent.env(environment()))
 
+    output$asOf           <- renderText({paste(i18n$t('As of'),format(dates[length(dates)], "%d %B %Y"))})
+
     if (input$global_or_country == 'Global') {
       updateSelectizeInput(session, "countryFinder",  choices = ddReg)
       updateSelectizeInput(session, "countryGrowthRate", selected = c("US", "Italy", "Australia", "China"), choices = ddReg)
     } else {
-      if (input$global_or_country == 'Australia') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("New South Wales","Victoria"), choices = ddReg )
-      } else if (input$global_or_country == 'Canada') {
+
+      regionsWithFinalInfectionsCases <- cbind(timeSeriesInfections$Region, timeSeriesInfections[,ncol(timeSeriesInfections)])
+      regionsWithFinalInfectionsCases <- regionsWithFinalInfectionsCases[order(as.numeric(as.character(regionsWithFinalInfectionsCases[,2]))),]
+
+      threeMostInfectionsRegions <- rev(as.vector(head(tail(regionsWithFinalInfectionsCases,n=4),n=3)[,1]))
+
+      if (input$global_or_country == 'Canada') {
         ddReg = ddReg[! ddReg %in% c('Diamond Princess','Recovered')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Ontario","Quebec"), choices = ddReg )
       } else if (input$global_or_country == 'China') {
         ddReg = ddReg[! ddReg %in% c('Anhui', 'Guangxi', 'Guizhou', 'Hainan', 'Ningxia', 'Qinghai', 'Tibet', 'Xinjiang')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Hubei","Henan","Heilongjiang"), choices = ddReg)
       } else if (input$global_or_country == 'US') {
         ddReg = ddReg[! ddReg %in% c('American Samoa')] # for some reason, these states do not work.  TOFIX.
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Michigan","New Jersey","New York"), choices = ddReg)
-      } else if (input$global_or_country == 'India') {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", selected = c("Maharashtra","Gujarat","Delhi"), choices = ddReg)
-      } else {
-        updateSelectizeInput(session, "countryFinder",     choices = ddReg)
-        updateSelectizeInput(session, "countryGrowthRate", choices = ddReg)
       }
-    }
+
+      updateSelectizeInput(session, "countryFinder", choices = ddReg)
+      updateSelectizeInput(session, "countryGrowthRate", selected = threeMostInfectionsRegions, choices = ddReg)
+
+    }  
+  
   })
 
 
@@ -176,9 +270,11 @@ server <- function(input, output, session) {
     yD <- tsSub(timeSeriesDeaths,timeSeriesDeaths$Region %in% input$countryFinder) 
     yR <- tsSub(timeSeriesRecoveries,timeSeriesRecoveries$Region %in% input$countryFinder)  
     yA <- tsSub(timeSeriesActive,timeSeriesActive$Region %in% input$countryFinder)
-    list(yI = yI, yD = yD, yR = yR, yA = yA)
+    yIplus <- tsSub(cumulative.infections,cumulative.infections$Region %in% input$countryFinder)
+    yUndiag <- tsSub(undiagnosed.infections,undiagnosed.infections$Region %in% input$countryFinder)
+    list(yI = yI, yD = yD, yR = yR, yA = yA, yIplus = yIplus, yUndiag = yUndiag)
   })
-  
+
   projfCast <- reactive({ # projection for forecast
     projSimple(yfCast()$yA, dates, inWindow = input$fitWinSlider, timeVaryingGrowth = input$modelType)
   })
@@ -186,7 +282,7 @@ server <- function(input, output, session) {
   # adjust slide input given model type
   observe({
     if (input$modelType){
-      updateSliderInput(session, "fitWinSlider", value = 18, min = 10, max = 30)
+      updateSliderInput(session, "fitWinSlider", value = 14, min = 6, max = 20)
     } else {
       updateSliderInput(session, "fitWinSlider", value = 7, min = 3, max = 10)
     }
@@ -201,7 +297,56 @@ server <- function(input, output, session) {
     }
     list(minDate, maxDate)
   })
+
+  deathsInCountries <- reactive({
+    subset(timeSeriesDeaths, timeSeriesDeaths$Region %in% input$countryGrowthRate)
+  })
+
   
+  ##### Days since last... Table #####
+  output$daysSinceLast <- renderTable({
+
+    countryNames       <- c()
+    daysOfZeroNewCases <- c()
+    daysOfZeroDeaths   <- c()
+
+    for (country in input$countryGrowthRate) {
+      countryNames <- append(countryNames, country)
+      yI <- subset(log100cases(),             log100cases()$Region == country)
+      yD <- subset(deathsInCountries(), deathsInCountries()$Region == country)
+
+      # remove column with name Region
+      yI <- yI[,-1]
+      yD <- yD[,-1]
+
+      dailyNewCases <- diff(as.numeric(yI))
+      dailyDeaths   <- diff(as.numeric(yD))
+
+      moreThanZeroNewCases <- which(dailyNewCases > 0)
+      moreThanZeroDeaths   <- which(dailyDeaths > 0)
+
+      if (length(moreThanZeroDeaths) == 0) {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,'N/A')
+      } else {
+        daysOfZeroDeaths   <- append(daysOfZeroDeaths,  length(yD) - moreThanZeroDeaths[length(moreThanZeroDeaths)]     - 1)
+      }
+
+      if (length(moreThanZeroNewCases) == 0) {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases, 'N/A')
+      } else {
+        daysOfZeroNewCases <- append(daysOfZeroNewCases,length(yI) - moreThanZeroNewCases[length(moreThanZeroNewCases)] - 1)
+      }
+
+    }
+
+    out <- data.frame(countryNames, daysOfZeroNewCases, daysOfZeroDeaths)
+    colnames(out) <- c(i18n$t("Country/region"), i18n$t("Days since last new case"), i18n$t("Days since last death"))
+    format(out, big.mark = ",")
+
+  }, rownames = FALSE, align = "lcc")
+ 
+
+
   ##### Raw stats #####  
   output$rawStats <- renderTable({
     yA <- yfCast()$yA
@@ -216,16 +361,24 @@ server <- function(input, output, session) {
   }, rownames = FALSE)
   
 ##### Raw plot #####
-  output$rawPlot <- renderPlotly({
+  output$activeCasesPlot <- renderPlotly({
     if (input$countryFinder != '') {
       yA <- yfCast()$yA
       yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
+      yAmax <- max(yA$yA, na.rm=TRUE)
       lDat <- projfCast()$lDat
       date_at_peak <- projfCast()$date_at_peak
       value_at_peak <- projfCast()$value_at_peak
       pDat <- merge(yA, lDat, all = TRUE)
       yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      #yTxt <- "Confirmed active cases"
+      yMax <- min(c(2*yAmax, yMax)) # twice the data ymax, or the fit max, whatever is smaller
+      if (input$activeCasesPlotIsLinear) {
+        plotType <- 'linear'
+        theRange <- list(0, yMax)
+      } else {
+        plotType <- 'log'
+        theRange <- list(log10(1), log10(yMax))
+      }
       fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
                 add_trace(y = ~fit,
                           x = ~dates, 
@@ -233,30 +386,31 @@ server <- function(input, output, session) {
                           line = list(color = clrDark), 
                           name = i18n$t("Best fit"), 
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$fit, 0), big.mark = ","))) %>%
                 add_trace(y = ~lwr,
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
                           name = "CI lower bound",
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$lwr, 0), big.mark = ","))) %>%
                 add_trace(y = ~upr, 
                           x = ~dates,
                           mode = "lines", 
                           line = list(color = clrDark, dash = "dash"), 
                           name = "CI upper bound",
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$upr, 0), big.mark = ","))) %>%
                 add_trace(y = ~yA, 
                           x = ~dates,
                           mode = "markers", 
                           marker = list(color = clrLight), 
                           name = i18n$t("Active cases"),
                           hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
+                          text = paste(format(pDat$dates, shortDateFormat), format(round(pDat$yA, 0), big.mark = ","))) %>%
                 layout(showlegend = FALSE, 
-                       yaxis = list(range = list(0, yMax),
+                       yaxis = list(type  = plotType,
+                                    range = theRange,
                                     title = list(text = i18n$t("Confirmed active cases")),
                                     fixedrange = TRUE),
                        xaxis = list(range = plotRange(),
@@ -277,67 +431,6 @@ server <- function(input, output, session) {
     }
   })
   
-##### Log plot #####
-  output$logPlot <- renderPlotly({
-    if (input$countryFinder != '') {
-      yA <- yfCast()$yA
-      yA <- data.frame(dates = as.Date(names(yA), format = "%m.%d.%y"), yA)
-      lDat <- projfCast()$lDat
-      value_at_peak <- projfCast()$value_at_peak
-      date_at_peak <- projfCast()$date_at_peak
-      pDat <- merge(yA, lDat, all = TRUE)
-      yMax <- max(c(lDat$fit, yA$yA), na.rm = TRUE)*1.05
-      fig <- plot_ly(pDat, type = "scatter", mode = "none") %>%
-                add_trace(y = ~fit,
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark), 
-                          name = i18n$t("Best fit"),
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$fit, 0), big.mark = ","))) %>%
-                add_trace(y = ~lwr, 
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark, dash = "dash"), 
-                          name = "CI lower bound",
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$lwr, 0), big.mark = ","))) %>%
-                add_trace(y = ~upr, 
-                          x = ~dates,
-                          mode = "lines", 
-                          line = list(color = clrDark, dash = "dash"), 
-                          name = "CI upper bound",
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$upr, 0), big.mark = ","))) %>%
-                add_trace(y = ~yA, 
-                          x = ~dates,
-                          mode = "markers", 
-                          marker = list(color = clrLight), 
-                          name = i18n$t("Active cases"),
-                          hoverinfo = "text+name", 
-                          text = paste(format(pDat$dates, "%b %d"), format(round(pDat$yA, 0), big.mark = ","))) %>%
-                layout(showlegend = FALSE, 
-                       yaxis = list(type = "log",
-                                    range = list(log10(0.1), log10(yMax)),
-                                    title = list(text = paste(i18n$t("Confirmed active cases"), "(log scale)")),
-                                    fixedrange = TRUE),
-                       xaxis = list(range = plotRange(),
-                                    title = list(text = ""),
-                                    fixedrange = TRUE)
-                ) %>%
-                config(displayModeBar = FALSE)
-      if (!is.null(value_at_peak)){
-        fig %>% add_trace(y = c(0,value_at_peak), 
-                  x = c(date_at_peak,date_at_peak),
-                  mode = "lines", 
-                  line = list(color = clrLight),
-                  name = i18n$t("Estimated peak"),
-                  hoverinfo = "text+name",
-                  text = format(date_at_peak, "%b, %d"))
-      } else {fig}
-    }
-  })
-
 ##### New cases ##### 
   output$newCases <- renderPlotly({
     if (input$countryFinder != '') {
@@ -358,7 +451,7 @@ server <- function(input, output, session) {
                  x = ~dates, 
                  name = i18n$t("New cases"), 
                  marker = list(color = clrOrange), 
-                 text = paste(format(newCases$dates, "%b %d"),format(newCases$newCases, big.mark = ",")),
+                 text = paste(format(newCases$dates, shortDateFormat),format(newCases$newCases, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(yaxis = list(title = list(text = i18n$t("New cases")))
@@ -370,7 +463,7 @@ server <- function(input, output, session) {
                  x = ~dates,
                  name = i18n$t("Daily deaths"),
                  marker = list(color = clrDark),
-                 text = paste(format(newCases$dates, "%b %d"),format(dailyDeaths, big.mark = ",")),
+                 text = paste(format(newCases$dates, shortDateFormat),format(dailyDeaths, big.mark = ",")),
                  hoverinfo = "text+name"
         ) %>%
         layout(xaxis = list(range = plotRange(),
@@ -385,7 +478,43 @@ server <- function(input, output, session) {
         layout(legend = list(x=0))
     }
   })
-  
+
+##### Undiagnosed plot #####  
+  output$undiagPlot <- renderPlotly({
+    if (input$countryFinder != '') {
+    rawI <- yfCast()$yI # diagnosed infection totals at t
+    estI <- yfCast()$yIplus # estimated true infections at t (diagnosed + undiagnosed)
+    rawIdates <- as.Date(names(rawI), format = '%m.%d.%y')
+    estIdates <- as.Date(names(estI), format = '%m.%d.%y')
+    fig <- plot_ly(type = "scatter", mode = "none")
+    if (sum(estI)>0){
+      fig <- add_trace(fig,
+                       y = ~estI,
+                       x = estIdates,
+                       mode = "lines", 
+                       line = list(color = clrDark), 
+                       name = paste(i18n$t("Diagnosed"), " + ", i18n$t("Undiagnosed")), 
+                       hoverinfo = "text+name",
+                       text = paste(format(estIdates, shortDateFormat), format(round(estI), big.mark = ",")))
+    }
+      fig <- add_trace(fig, 
+                y = ~rawI,
+                x = rawIdates,
+                mode = "lines+markers",
+                marker = list(color = clrLight), 
+                line = list(color = clrLight), 
+                name = i18n$t("Diagnosed"), 
+                hoverinfo = "text+name",
+                text = paste(format(rawIdates, shortDateFormat), format(rawI, big.mark = ","))) %>%
+      layout(xaxis = list(range = plotRange(),
+                          title = list(text = i18n$t("Date"))),
+             yaxis = list(title = list(text = i18n$t("Total infections")), 
+                          side = 'left'),
+             legend = list(x = 0, y = 1.05)) %>%
+      config(displayModeBar = FALSE)
+    }
+  })
+    
 ##### Detection Plot #####   
   output$detPlot <- renderPlotly({
     if (input$countryFinder != '') {
@@ -406,7 +535,7 @@ server <- function(input, output, session) {
                                mode = "lines+markers", 
                                name = i18n$t("Detection"),
                                hoverinfo = "text+name", 
-                               text = paste(format(pDet$dates, "%b %d"), round(pDet$detVec, 1), "%"))
+                               text = paste(format(pDet$dates, shortDateFormat), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
                                          range = xRange),
                             yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
@@ -458,10 +587,13 @@ server <- function(input, output, session) {
         myY <- as.vector(t(myY))
         # only get values bigger than 100
         myY <- subset(myY, myY >= 100)
-
+        x   <- 0:(length(myY)-1)
         fig <- fig %>% add_trace(y    = myY,
+                                 x    = x,
                                  mode = "lines",
-                                 name = country)
+                                 name = country,
+                                 hoverinfo = "text+name",
+                                 text = paste(format(myY,big.mark=","), "total cases at", x, "days since 100 cases"))
       }
       fig
 })
@@ -523,11 +655,14 @@ server <- function(input, output, session) {
       yA <- yfCast()$yA
       yD <- yfCast()$yD
       yI <- yfCast()$yI
+      yUndiag <- yfCast()$yUndiag
+      yIplus <- yfCast()$yIplus
       dRate <- detRate(yI, yD, caseFatalityRatio = input$fatalityRatioSlider)
       nowDiag <- tail(yA[!is.na(yA)], 1)
       nowUndet <- nowDiag/dRate - nowDiag
-      nowUndiag <- undiagnosed.infections[undiagnosed.infections$Region==input$countryFinder, ncol(undiagnosed.infections)]
+      nowUndiag <- yUndiag[length(yUndiag)]
       if (nowUndiag<0) nowUndiag <- 0
+      if (sum(yIplus)==0) nowUndiag <- NA
       nowTotal <- nowDiag+nowUndiag+nowUndet
       nowTable <- format(round(c(nowDiag, nowUndiag, nowUndet, nowTotal), 0), big.mark = ",")
       dim(nowTable) <- c(4, 1)
@@ -563,7 +698,7 @@ server <- function(input, output, session) {
                                mode = "lines",
                                name = colnames(cfiDat)[cc],
                                hoverinfo = "text+name", 
-                               text = paste(format(cfiDat$dates, "%b %d"), round(cfiDat[,cc], 2)))
+                               text = paste(format(cfiDat$dates, shortDateFormat), round(cfiDat[,cc], 2)))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
                           yaxis = list(title = list(text = i18n$t("Curve-flattening index")),
@@ -593,7 +728,7 @@ server <- function(input, output, session) {
                                mode = "lines", 
                                name = colnames(gRateMA)[cc],
                                hoverinfo = "text+name", 
-                               text = paste(format(gRateMA$dates, "%b %d"), round(gRateMA[,cc], 1), "%"))
+                               text = paste(format(gRateMA$dates, shortDateFormat), round(gRateMA[,cc], 1), "%"))
     }
     fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date"))),
                           yaxis = list(title = list(text = i18n$t("Growth rate (% per day)")))

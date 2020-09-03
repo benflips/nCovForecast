@@ -27,12 +27,13 @@ library("addreg", quietly = TRUE)
 suppressPackageStartupMessages(library("turboEM", quietly = TRUE, warn.conflicts = FALSE))
 suppressPackageStartupMessages(library("SparseM", quietly = TRUE, warn.conflicts = FALSE))
 
-cat("  Running deconvolutions...\n")
 #functions for estimation and projection
 source("detection/estFunctionsV3.R")
 source("functions.R")
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
+
+cat("  Running deconvolutions for", orgLevel, "using old method...\n")
 
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
 cases.all <- t(timeSeriesInfections)[-1,]
@@ -73,13 +74,14 @@ colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
 
 #Produce projections of active cases  -- aggregate undiagnosed cases onto future times
 projectTo <- 5 # days to project forward
-projections<-apply(infect.total, 2, project, inc.dist, designF, proj.days = projectTo, inf.extrap = 7) #daily new cases over projection period
+projections<-apply(infect.total, 2, project, inc.dist, designF, proj.days = projectTo, inf.extrap = 10) #cumulative new cases over projection period
 projections<-timeSeriesActive[,T]+t(projections) #add projected new cases on to active cases
 
 # produce death projections and subtract from projection
   # assumes 17 days from diagnosis to death and 2.5% case fatality ratio in diagnosed cohort
 newCasesMat <- infMat - cbind(rep(0, nrow(infMat)), infMat[,-ncol(infMat)])
 deathProj <- round(newCasesMat[, (ncol(newCasesMat)-(17+projectTo-1)):(ncol(newCasesMat)-17)]*0.025, 0)
+deathProj <- t(apply(deathProj, 1, cumsum)) # cumulative deaths
 projections <- projections - deathProj # subtract deaths
 
 # produce recovery projections and subtract from projection
@@ -97,6 +99,8 @@ for (rr in 1:length(recTime)){
 }
 recProj <- recProj - cbind(rep(0, nrow(recProj)), recProj[,-ncol(recProj)]) # recoveries on each day
 recProj <- recProj[,(ncol(recProj)-projectTo+1):ncol(recProj)] # at projected times
+recProj <- t(apply(recProj, 1, cumsum))
+recProj[recProj<0] <- 0
 projections <- projections - recProj # subtract recoveries
 projections[projections < 0] <- 0 #bound results
 

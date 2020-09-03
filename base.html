@@ -73,8 +73,10 @@
             <select class="form-control" style="padding-bottom:6px;padding-top:6px;border-color:lightgray;background-color:white;border-radius:3px;" id="translationLanguage" onchange="window.location.href = '/?lang='.concat(this.value);">
               <option value="en">English</option>
               <option value="de">Deutsch</option>
+              <option value="ru">Russian</option>
               <option value="tr">Turkish</option>
               <option value="hi">Hindi</option>
+              <option value="es">Español</option>
             </select>
           </fieldset>
         </div>
@@ -88,6 +90,10 @@
             $('#translationLanguage').val('hi')
           } else if (urlLanguage == 'de') {
             $('#translationLanguage').val('de')
+          } else if (urlLanguage == 'es') {
+            $('#translationLanguage').val('es')
+          } else if (urlLanguage == 'ru') {
+            $('#translationLanguage').val('ru')
           } else {
             $('#translationLanguage').val('en')
           }
@@ -99,7 +105,7 @@
           <label class="control-label" for="global_or_country">{{ textOutput(outputId = "selectGlobal") }}</label>
           {{ selectizeInput(inputId = "global_or_country",
                             label   = "",
-                            choices = c("Global","Australia","Canada","China", "India", "US"),
+                            choices = c("Global","Afghanistan","Australia","Belgium","Brazil","Canada","China","Colombia","Germany","Haiti","Italy","India","Japan","Peru","Switzerland","US"),
                             selected = "Global") }}
           <script type="application/json" data-for="global_or_country" data-nonempty="">{}</script>
         </div>
@@ -112,11 +118,21 @@
         <div class="center">
           <p>
             {{ textOutput(outputId = "specificSites") }}
-            <a href="http://us.covid19forecast.science.unimelb.edu.au">our US site</a>,
-            <a href="http://au.covid19forecast.science.unimelb.edu.au">our Australian site</a>,
-            <a href="http://ca.covid19forecast.science.unimelb.edu.au">our Canadian site</a>,
-            <a href="http://cn.covid19forecast.science.unimelb.edu.au">our Chinese site</a>, or
-            <a href="http://in.covid19forecast.science.unimelb.edu.au">our Indian site</a>.
+            <a href="http://cn.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagChina",       inline = TRUE) }}</a><!-- pop: 1.4 billion -->
+            <a href="http://in.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagIndia",       inline = TRUE) }}</a><!-- pop: 1.3 billion -->
+            <a href="http://us.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagUS",          inline = TRUE) }}</a><!-- pop: 328 million -->
+            <a href="http://br.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagBrazil",      inline = TRUE) }}</a><!-- pop: 209 million -->
+            <a href="http://jp.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagJapan",       inline = TRUE) }}</a><!-- pop: 126 million -->
+            <a href="http://de.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagGermany",     inline = TRUE) }}</a><!-- pop: 83 million -->
+            <a href="http://it.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagItaly",       inline = TRUE) }}</a><!-- pop: 60 million -->
+            <a href="http://co.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagColombia",    inline = TRUE) }}</a><!-- pop: 49 million -->
+            <a href="http://ca.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagCanada",      inline = TRUE) }}</a><!-- pop: 37.59 million -->
+            <a href="http://af.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagAfghanistan", inline = TRUE) }}</a><!-- pop: 37.17 million -->
+            <a href="http://pe.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagPeru",        inline = TRUE) }}</a><!-- pop: 32 million -->
+            <a href="http://au.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagAustralia",   inline = TRUE) }}</a><!-- pop: 25 million -->
+            <a href="http://be.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagBelgium",     inline = TRUE) }}</a><!-- pop: 11.46 million -->
+            <a href="http://ht.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagHaiti",       inline = TRUE) }}</a><!-- pop: 11.12 million -->
+            <a href="http://ch.covid19forecast.science.unimelb.edu.au">{{ imageOutput("flagSwitzerland", inline = TRUE) }}</a><!-- pop: 8.6 million -->
           </p>
         </div>
 
@@ -165,15 +181,15 @@
           <label class="control-label" for="modelType"></label>
           <div class="shiny-options-group">
             <div class="radio">
-              <input type="radio" name="modelType" value="True" checked="checked"/>
               <label>
                 {{ textOutput(outputId = "timeVaryingGrowth") }}
+                <input type="radio" name="modelType" value="True"/>
               </label>
             </div>
             <div class="radio">
-              <input type="radio" name="modelType" value="False"/>
               <label>
                 {{ textOutput(outputId = "constantGrowth") }}
+                <input type="radio" name="modelType" value="False" checked="checked"/>
               </label>
             </div>
           </div>
@@ -192,7 +208,7 @@
         <p>{{ textOutput(outputId = "possibleNumberOf") }} {{ tableOutput(outputId = "tablePredTrue") }}</p>
 
         <label class="control-label" for="fatalityRatioSlider">{{ textOutput(outputId = "caseFatalityRatio") }}</label>
-         {{ sliderInput(inputId = "fatalityRatioSlider", min=1, max=4, value=3.3, step=0.1, label = "", post="%") }}
+         {{ sliderInput(inputId = "fatalityRatioSlider", min=0.5, max=3.5, value=2.5, step=0.1, label = "", post="%") }}
         <p>{{ textOutput(outputId = "toSeeHowThe") }}</p>
         <p>{{ textOutput(outputId = "takeTheseLast") }}</p>
 
@@ -202,9 +218,27 @@
       </div>
 
       <div class="right-panel">
-        {{ plotlyOutput("rawPlot") }}
+        {{ plotlyOutput("activeCasesPlot") }}
+        <div id="activeCasesPlotIsLinear" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="activeCasesPlotIsLinear"></label>
+          <div class="shiny-options-group">
+            <div class="radio">
+              <label>
+                {{ textOutput("linearScale") }}
+                <input type="radio" name="activeCasesPlotIsLinear" value="True" checked="checked"/>
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                {{ textOutput("logScale") }}
+                <input type="radio" name="activeCasesPlotIsLinear" value="False"/>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <p></p>
-        {{ plotlyOutput("logPlot") }}
+        {{ plotlyOutput("undiagPlot") }}
         <p></p>
         {{ plotlyOutput("newCases") }}
         <p></p>
@@ -229,7 +263,9 @@
                             multiple = TRUE) }}
           <script type="application/json" data-for="countryGrowthRate">{}</script>
         </div>
-        <p><p>
+        <br>
+        {{ tableOutput(outputId = "daysSinceLast") }}
+        <p></p>
         <div class="center">
           {{ textOutput(outputId = "skipTo2") }} <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#10-day-forecast').offset().top}, 1000);">10 day forecasts</a>
                                                  <a class="button-small" onclick="jQuery('html,body').animate({scrollTop: jQuery('#growth-rates').offset().top},    1000);">Growth rates</a>
