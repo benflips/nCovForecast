@@ -114,7 +114,7 @@
  "ru": "Дата"
 },
 {"en": "Detection",
- "de": "Entdeckung",
+ "de": "Detektion",
  "tr": "Tespit",
  "hi": "खोज",
  "es": "Detección",
@@ -267,9 +267,9 @@
  "es": "COVID-19 proyección de 10 días",
  "ru": "Прогноз COVID-19 на ближайшие 10 дней"
 },
-{"en": "Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by Johns Hopkins University",
- "de": "Prognose von COVID-19 Wachstum, Entdeckung und Fallzahlen in der nahen Zukunft je nach Land, täglich aktualisert, basierend auf den Daten von der Johns Hopkins Universität",
- "tr": "COVID-19 için üreme katsayısı tahminleri, vaka tespiti, ve her ülke için yakın zamanlı vaka sayısı sunar. Günlük güncellenen veriler Johns Hopkins Üniversitesi tarafından oluşturulan global veri setine dayanmaktadır.",
+{"en": "Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University",
+ "de": "Prognose von COVID-19 Wachstum, Detektion und Fallzahlen in der nahen Zukunft je nach Land, täglich aktualisert, basierend auf den Daten von der John Hopkins Universität",
+ "tr": "COVID-19 için üreme katsayısı tahminleri, vaka tespiti, ve her ülke için yakın zamanlı vaka sayısı sunar. Günlük güncellenen veriler John Hopkins Üniversitesi tarafından oluşturulan global veri setine dayanmaktadır.",
  "hi": "जॉन हॉपकिंस विश्वविद्यालय द्वारा वैश्विक आंकड़ों के आधार पर COVID-19 विकास दर, पता लगाने और प्रत्येक देश में निकट भविष्य के मामले के भार का अनुमान प्रदान करता है।",
  "es": "Brinda proyecciones del COVID-19 ratio de crecimiento, detección y casos en los próximos días para cada país, actualizado diariamente, utiliza datos coleccionados por Johns Hopkins University",
  "ru": "Прогноз роста, обнаружения и количества случаев заболевания COVID-19 в ближайшем будущем по странам, ежедневно обновляемый на основе данных из Университета Джона Хопкинса"
@@ -400,14 +400,14 @@
  "ru": "Возможное число активных случаев, принимая во внимание неполное обнаружение"
 },
 {"en": "To see how the assumed case fatality ratio affects detection (and so possible true case numbers) adjust the slider.",
- "de": "Um die Auswirkung der angenommenen Sterblichkeitsrate auf die Entdeckung (und damit die wirklichen Fallzahlen) zu sehen, bitte den Schieber regulieren.",
+ "de": "Um die Auswirkung der angenommenen Sterblichkeitsrate auf die Detektion (und damit die wirklichen Fallzahlen) zu sehen, bitte den Schieber regulieren.",
  "tr": "Varsayılan ölüm oranlarının tespit değerlerini (ve olası doğru vaka sayılarını) nasıl etkilediğini görmek için çubuğu ayarlayınız.",
  "hi": "यह देखने के लिए कि ग्रहण किए गए मामले के घातक अनुपात का पता लगाने को कैसे प्रभावित करता है (और इसलिए संभव है कि सही केस संख्या) स्लाइडर को समायोजित करें",
  "es": "Para ver como la tasa de mortalidad asumida afecta el número de diagnosticados y posiblemente el número real de nuevos casos, ajuste el indicador.",
  "ru": "Чтобы увидеть, как предположенный коэффициент летальности влияет на обнаружение (и тем самым на возможное истинное числщ случаев), настройте ползунок"
 },
 {"en": "Take these last numbers with a grain of salt; they are rough.  Undiagnosed cases are current infections yet to develop symptoms and be diagnosed.  Undetected cases are current infections that will not be diagnosed.  Large numbers of undetected cases indicate that there are many more deaths in the region than there should be given reported case numbers (so there are many undetected cases or a large number of imported cases).",
- "de": "Bitte diese Zahlen mit Vorsicht geniesen, sie könnten ein bisschen ungenau sein. Nicht diagnostizierte Fälle sind aktuell Infizierte, die noch Symtome entwickeln und diagnostiziert werden müssen. Nicht entdeckte Fälle sind aktuelle Infizierte, die niemals diagnostiziert werden. Viele nicht entdeckte Fälle deuten darauf hin, dass es mehr viel Todesfälle in der Region gibt, als es eigentlich geben sollte basiered anf den registrierten Fallzahlen.",
+ "de": "Bitte diese Zahlen mit Vorsicht genießen, sie könnten ein bisschen ungenau sein. Nicht diagnostizierte Fälle sind aktuell Infizierte, die noch Symtome entwickeln und diagnostiziert werden müssen. Nicht entdeckte Fälle sind aktuelle Infizierte, die niemals diagnostiziert werden. Viele nicht entdeckte Fälle deuten darauf hin, dass es viel mehr Todesfälle in der Region gibt, als es eigentlich geben sollte basiered auf den registrierten Fallzahlen.",
  "tr": "Buradaki son sayılar yaklaşık olarak verilmiştir. Tanısı konulmamış vakalar, semptomları geliştirmesi ve tanı konulması beklenen güncel vakaları ifade eder. Tespit edilememiş vakalar tanısı konulamayacak güncel vakaları ifade eder. Tespit edilememiş vakaların sayısının fazla olması bölgede raporlanan vaka sayıları göz önüne alındığında olması gerekenden daha fazla vefat vakası olduğunu gösterir (yani çok sayıda tespit edilememiş veya ithal vaka).",
  "hi": "नमक के एक दाने के साथ इन अंतिम संख्याओं को लें; वे अपरिष्कृत हैं । लक्षणों को विकसित करने और निदान करने के लिए अभी तक असंक्रमित मामले मौजूदा संक्रमण हैं । पूर्व अनपेक्षित मामले वर्तमान संक्रमण हैं जिनका निदान नहीं किया जाएगा। बड़ी संख्या में अनिर्धारित मामलों से संकेत मिलता है कि इस क्षेत्र में रिपोर्ट की गई संख्याओं की तुलना में कई अधिक मौतें हैं(इसलिए कई अनडेटेड मामले या बड़ी संख्या में आयातित मामले हैं)",
  "es": "Tome estos números de manera ligera son basados en promedios. Casos sin diagnóstico son personas asintomáticas que aún no han sido diagnosticadas. Casos no detectados son personas infectadas que no serán diagnosticadas. Un número alto de casos no detectados indica que hay muchos más fallecidos en el lugar que los que han sido reportados es decir muchos casos no diagnosticados o son casos importados.",
