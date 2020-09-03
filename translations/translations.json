@@ -267,9 +267,9 @@
  "es": "COVID-19 proyección de 10 días",
  "ru": "Прогноз COVID-19 на ближайшие 10 дней"
 },
-{"en": "Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by John Hopkins University",
- "de": "Prognose von COVID-19 Wachstum, Detektion und Fallzahlen in der nahen Zukunft je nach Land, täglich aktualisert, basierend auf den Daten von der John Hopkins Universität",
- "tr": "COVID-19 için üreme katsayısı tahminleri, vaka tespiti, ve her ülke için yakın zamanlı vaka sayısı sunar. Günlük güncellenen veriler John Hopkins Üniversitesi tarafından oluşturulan global veri setine dayanmaktadır.",
+{"en": "Provides estimates of COVID-19 growth rate, detection, and near-future case load in each country, updated daily, based on global data collated by Johns Hopkins University",
+ "de": "Prognose von COVID-19 Wachstum, Detektion und Fallzahlen in der nahen Zukunft je nach Land, täglich aktualisert, basierend auf den Daten von der Johns Hopkins Universität",
+ "tr": "COVID-19 için üreme katsayısı tahminleri, vaka tespiti, ve her ülke için yakın zamanlı vaka sayısı sunar. Günlük güncellenen veriler Johns Hopkins Üniversitesi tarafından oluşturulan global veri setine dayanmaktadır.",
  "hi": "जॉन हॉपकिंस विश्वविद्यालय द्वारा वैश्विक आंकड़ों के आधार पर COVID-19 विकास दर, पता लगाने और प्रत्येक देश में निकट भविष्य के मामले के भार का अनुमान प्रदान करता है।",
  "es": "Brinda proyecciones del COVID-19 ratio de crecimiento, detección y casos en los próximos días para cada país, actualizado diariamente, utiliza datos coleccionados por Johns Hopkins University",
  "ru": "Прогноз роста, обнаружения и количества случаев заболевания COVID-19 в ближайшем будущем по странам, ежедневно обновляемый на основе данных из Университета Джона Хопкинса"
