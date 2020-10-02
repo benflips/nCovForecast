@@ -89,13 +89,17 @@ if (countryName == 'Global') {
   timeSeriesInfections <- subset(timeSeriesInfections, timeSeriesInfections$Country.Region == countryName)
   if (countryName == 'Australia') {timeSeriesInfections <- fixNSW(timeSeriesInfections)}
   timeSeriesDeaths     <- subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     == countryName)
-  timeSeriesInfections$Country.Region <- NULL
-  timeSeriesDeaths$Country.Region     <- NULL
   if (inputRecoveredSupplied) {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
-    if (countryName == 'Australia') {timeSeriesRecoveries <- fixNSW(timeSeriesRecoveries)}
+    if (countryName == 'Australia') {# fix the ruby princess issue and hard code ignore NSW recovery data
+      timeSeriesRecoveries <- fixNSW(timeSeriesRecoveries) 
+      tempRec <- recLag(infections = timeSeriesInfections, deaths = timeSeriesDeaths, active = FALSE)
+      timeSeriesRecoveries[timeSeriesRecoveries$Province.State == "New South Wales",] <- tempRec[tempRec$Province.State=="New South Wales",]
+    }
     timeSeriesRecoveries$Country.Region <- NULL
   }
+  timeSeriesInfections$Country.Region <- NULL
+  timeSeriesDeaths$Country.Region     <- NULL
 
   #printVerbose('After limiting to the focus country', timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 }
