@@ -1,3 +1,3 @@
 source('getDataGeneral.R')
 
-getDataCovid19datahub('Japan')
+getDataCovid19datahubWithoutRecovered('Japan')
