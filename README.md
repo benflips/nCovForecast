@@ -24,6 +24,13 @@ install.packages('curl')
 install.packages('addreg')
 install.packages('plotly')
 install.packages('shiny.i18n')
+install.packages('quantreg')
+install.packages('gam')
+install.packages('COVID19')
+install.packages('broom')
+install.packages('lubridate')
+install.packages('rvest')
+install.packages('covidregionaldata')
 ```
 6. Generate cached data (see below)
 7. `library(shiny)`
