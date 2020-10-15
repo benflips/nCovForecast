@@ -152,6 +152,8 @@ server <- function(input, output, session) {
   output$forecastMetricsH  <- renderText({i18n$t('Forecast metrics:')})
   output$timeVaryingGrowth <- renderText({i18n$t('Time-varying growth')})
   output$constantGrowth    <- renderText({i18n$t('Constant growth')})
+  output$recentTime        <- renderText({i18n$t('Recent time')})
+  output$allTime           <- renderText({i18n$t('All time')})
   output$fitWindow         <- renderText({i18n$t('Fit window:')})
   output$growthRatesP      <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
   output$detection         <- renderText({i18n$t('Detection')})

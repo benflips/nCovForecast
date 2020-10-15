@@ -194,6 +194,26 @@
             </div>
           </div>
         </div>
+        
+        <div id="timeRange" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="timeRange"></label>
+          <div class="shiny-options-group">
+            <div class="radio">
+              <label>
+                <span>
+                  {{ textOutput(outputId = "allTime", inline = TRUE) }}
+                  <input type="radio" name="timeRange" value="False"/>
+                </span>
+              </label>
+            
+              <label>
+                {{ textOutput(outputId = "recentTime", inline = TRUE) }}
+                <input type="radio" name="timeRange" value="True" checked="checked"/>
+              </label>
+            </div>
+          </div>
+        </div>
+
 
         <br>
         <label class="control-label" for="fitWinSlider">{{ textOutput(outputId = "fitWindow") }}</label>
