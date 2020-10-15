@@ -540,7 +540,7 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, shortDateFormat), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
-                                         range = xRange),
+                                         range = plotRange()),
                             yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
       ) %>%
         config(displayModeBar = FALSE)
