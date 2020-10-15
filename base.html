@@ -182,13 +182,11 @@
           <div class="shiny-options-group">
             <div class="radio">
               <label>
-                {{ textOutput(outputId = "timeVaryingGrowth") }}
+                {{ textOutput(outputId = "timeVaryingGrowth", inline = TRUE) }}
                 <input type="radio" name="modelType" value="True"/>
               </label>
-            </div>
-            <div class="radio">
               <label>
-                {{ textOutput(outputId = "constantGrowth") }}
+                {{ textOutput(outputId = "constantGrowth", inline = TRUE) }}
                 <input type="radio" name="modelType" value="False" checked="checked"/>
               </label>
             </div>
@@ -200,12 +198,9 @@
           <div class="shiny-options-group">
             <div class="radio">
               <label>
-                <span>
-                  {{ textOutput(outputId = "allTime", inline = TRUE) }}
+                   {{ textOutput(outputId = "allTime", inline = TRUE) }}
                   <input type="radio" name="timeRange" value="False"/>
-                </span>
               </label>
-            
               <label>
                 {{ textOutput(outputId = "recentTime", inline = TRUE) }}
                 <input type="radio" name="timeRange" value="True" checked="checked"/>

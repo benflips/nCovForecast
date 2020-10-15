@@ -297,7 +297,7 @@ server <- function(input, output, session) {
     if (max(dFrame_without_na)>200) {minDate <- min(dFrame$dates[dFrame_without_na>20]); maxDate <- max(dFrame$dates)+10} else {
       minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
     }
-    if (input$timeRange) minDate <- maxDate - 90 # recent time is last 3 months
+    if (input$timeRange) minDate <- maxDate - 120 # recent time is last 4 months
     list(minDate, maxDate)
   })
 
