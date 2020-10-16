@@ -150,8 +150,10 @@ server <- function(input, output, session) {
   output$activeCases       <- renderText({i18n$t('Active cases:')})
   output$activeCasesP      <- renderText({i18n$t('Active cases are total number of infections minus deaths and recoveries.')})
   output$forecastMetricsH  <- renderText({i18n$t('Forecast metrics:')})
-  output$timeVaryingGrowth <- renderText({i18n$t('Time-varying growth')})
-  output$constantGrowth    <- renderText({i18n$t('Constant growth')})
+  output$timeVaryingGrowth <- renderText({i18n$t('Time-varying')})
+  output$constantGrowth    <- renderText({i18n$t('Constant')})
+  output$recentTime        <- renderText({i18n$t('Past 4 months')})
+  output$allTime           <- renderText({i18n$t('All')})
   output$fitWindow         <- renderText({i18n$t('Fit window:')})
   output$growthRatesP      <- renderText({i18n$t('When growth rates are changing fast, reduce the fit window to average growth over more recent history')})
   output$detection         <- renderText({i18n$t('Detection')})
@@ -295,6 +297,7 @@ server <- function(input, output, session) {
     if (max(dFrame_without_na)>200) {minDate <- min(dFrame$dates[dFrame_without_na>20]); maxDate <- max(dFrame$dates)+10} else {
       minDate <- min(dFrame$dates); maxDate <- max(dFrame$dates)+10
     }
+    if (input$timeRange) minDate <- maxDate - 120 # recent time is last 4 months
     list(minDate, maxDate)
   })
 
@@ -537,7 +540,7 @@ server <- function(input, output, session) {
                                hoverinfo = "text+name", 
                                text = paste(format(pDet$dates, shortDateFormat), round(pDet$detVec, 1), "%"))
       fig <- fig %>% layout(xaxis = list(title = list(text = i18n$t("Date")),
-                                         range = xRange),
+                                         range = plotRange()),
                             yaxis = list(title = list(text = i18n$t("Cases successfully detected %")))
       ) %>%
         config(displayModeBar = FALSE)

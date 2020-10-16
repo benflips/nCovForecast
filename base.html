@@ -177,23 +177,40 @@
         <h5>{{ textOutput(outputId = "forecastMetricsH") }}</h5>
         <div class="center" style="padding-bottom: 10px">{{ textOutput(outputId = "forecastMetrics") }}</div>
 
+        <br>
+
         <div id="modelType" class="form-group shiny-input-radiogroup shiny-input-container">
           <label class="control-label" for="modelType"></label>
           <div class="shiny-options-group">
-            <div class="radio">
-              <label>
-                {{ textOutput(outputId = "timeVaryingGrowth") }}
-                <input type="radio" name="modelType" value="True"/>
-              </label>
-            </div>
-            <div class="radio">
-              <label>
-                {{ textOutput(outputId = "constantGrowth") }}
-                <input type="radio" name="modelType" value="False" checked="checked"/>
-              </label>
-            </div>
+            <legend>Growth</legend>
+            <input type="radio" name="modelType" value="True" id="growthTrue"/>
+            <label for="growthTrue">
+              {{ textOutput(outputId = "timeVaryingGrowth", inline=TRUE) }}
+            </label>
+            <input type="radio" name="modelType" value="False" checked="checked" id="growthFalse"/>
+            <label for="growthFalse">
+              {{ textOutput(outputId = "constantGrowth", inline=TRUE) }}
+            </label>
           </div>
         </div>
+
+        <br>
+
+        <div id="timeRange" class="form-group shiny-input-radiogroup shiny-input-container">
+          <label class="control-label" for="timeRange"></label>
+          <div class="shiny-options-group">
+            <legend>Time</legend>
+            <input type="radio" name="timeRange" value="False" id="timeRangeFalse"/>
+            <label for="timeRangeFalse">
+              {{ textOutput(outputId = "allTime", inline = TRUE) }}
+            </label>
+            <input type="radio" name="timeRange" value="True" checked="checked" id="timeRangeTrue"/>
+            <label for="timeRangeTrue">
+              {{ textOutput(outputId = "recentTime", inline = TRUE) }}
+            </label>
+          </div>
+        </div>
+
 
         <br>
         <label class="control-label" for="fitWinSlider">{{ textOutput(outputId = "fitWindow") }}</label>
