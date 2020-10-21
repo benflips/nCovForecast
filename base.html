@@ -182,7 +182,9 @@
         <div id="modelType" class="form-group shiny-input-radiogroup shiny-input-container">
           <label class="control-label" for="modelType"></label>
           <div class="shiny-options-group">
-            <legend>Growth</legend>
+            <legend>
+              {{ textOutput(outputId = "growthLegend", inline = TRUE) }}
+            </legend>
             <input type="radio" name="modelType" value="True" id="growthTrue"/>
             <label for="growthTrue">
               {{ textOutput(outputId = "timeVaryingGrowth", inline=TRUE) }}
@@ -199,7 +201,9 @@
         <div id="timeRange" class="form-group shiny-input-radiogroup shiny-input-container">
           <label class="control-label" for="timeRange"></label>
           <div class="shiny-options-group">
-            <legend>Time</legend>
+            <legend>
+              {{ textOutput(outputId = "timeLegend", inline = TRUE) }}
+            </legend>
             <input type="radio" name="timeRange" value="False" id="timeRangeFalse"/>
             <label for="timeRangeFalse">
               {{ textOutput(outputId = "allTime", inline = TRUE) }}

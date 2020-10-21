@@ -537,7 +537,50 @@
  "tr": "Lineer ölçek",
  "hi": "रैखिक पैमाने",
  "es": "Escala lineal",
- "ru": "Линейная шкала"}
+ "ru": "Линейная шкала"
+},
+{"en": "Growth",
+  "de": "Wachstum",
+  "tr": "Büyüme",
+  "hi": "विकास",
+  "es": "Crecimiento",
+  "ru": "Рост"
+ },
+ {"en": "Time-varying",
+  "de": "Zeitlich variierend",
+  "tr": "Zamanla değişen",
+  "hi": "समय-परिवर्तनीय",
+  "es": "Variable en el tiempo",
+  "ru": "Изменяющийся во времени"
+ },
+ {"en": "Constant",
+  "de": "Konstante",
+  "tr": "Sabit",
+  "hi": "स्थिर",
+  "es": "Constante",
+  "ru": "Постоянный"
+ },
+ {"en": "Time",
+  "de": "Zeit",
+  "tr": "Zaman",
+  "hi": "समय",
+  "es": "Hora",
+  "ru": "Время"
+ },
+ {"en": "All",
+  "de": "Alle",
+  "tr": "Herşey",
+  "hi": "सब",
+  "es": "Todos",
+  "ru": "Все"
+ },
+ {"en": "Past 4 months",
+  "de": "Letzte 4 Monate",
+  "tr": "Son 4 ay",
+  "hi": "पिछले 4 महीने",
+  "es": "Últimos 4 meses",
+  "ru": "Последние 4 месяца"
+ }
   ]
 }
 

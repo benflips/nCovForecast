@@ -54,7 +54,7 @@ server <- function(input, output, session) {
   })
 
   ##### Some useful variables #####
-  please_select_a_country <- i18n$t('Please select a country or region...')
+  please_select_a_country <- reactive({please_select_a_country <- i18n$t('Please select a country or region...')})
   clrDark   <- "#273D6E"
   clrLight  <- "#B2C3D5"
   clrOrange <- "#FF7F0E"  
@@ -150,8 +150,10 @@ server <- function(input, output, session) {
   output$activeCases       <- renderText({i18n$t('Active cases:')})
   output$activeCasesP      <- renderText({i18n$t('Active cases are total number of infections minus deaths and recoveries.')})
   output$forecastMetricsH  <- renderText({i18n$t('Forecast metrics:')})
+  output$growthLegend      <- renderText({i18n$t('Growth')})
   output$timeVaryingGrowth <- renderText({i18n$t('Time-varying')})
   output$constantGrowth    <- renderText({i18n$t('Constant')})
+  output$timeLegend        <- renderText({i18n$t('Time')})
   output$recentTime        <- renderText({i18n$t('Past 4 months')})
   output$allTime           <- renderText({i18n$t('All')})
   output$fitWindow         <- renderText({i18n$t('Fit window:')})
