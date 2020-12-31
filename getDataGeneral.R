@@ -38,7 +38,7 @@ getDataCovid19datahubWithoutRecovered <- function(countryName) {
                                                      '', TRUE)
 }
 
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered, verbose){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered = '', verbose){
 
 
 t1 = Sys.time()
@@ -66,21 +66,23 @@ if (countryName == 'Global') {
   #if (verbose) {
   #  print('The main reason for difference here is that Canada has many lines in infections, but only one line in recoveries')
   #}
+  timeSeriesInfections$Province.State <- NULL
+  timeSeriesDeaths$Province.State     <- NULL
 
-
-  countriesToGenerateWithRecLag <- c('United Kingdom','Sweden','Netherlands','Serbia','Honduras','Namibia','Belgium','Central African Republic','Equatorial Guinea',
+  if (inputRecoveredSupplied) {
+     
+    countriesToGenerateWithRecLag <- c('United Kingdom','Sweden','Netherlands','Serbia','Honduras','Namibia','Belgium','Central African Republic','Equatorial Guinea',
                                      'Greece','France','Egypt','US','Guinea-Bissau','Somalia','Mozambique','South Sudan','Kyrgyzstan','Libya','Bolivia','Congo (Brazzaville)',
                                      'Nigeria','Ecuador','Kazakhstan','Sudan','Philippines','Madagascar','Congo (Kinshasa)','Benin','Spain','Haiti','Guatemala','Gabon',
                                      'Ghana','South Africa','Suriname','Ukraine','Iraq','Afghanistan','Czechia','Liberia','Mexico','India','Canada','Brazil')
 
 
-  timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
-  timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
+    timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
+    timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
                                                              subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE))
 
-  timeSeriesInfections$Province.State <- NULL
-  timeSeriesDeaths$Province.State     <- NULL
-  timeSeriesRecoveries$Province.State <- NULL
+    timeSeriesRecoveries$Province.State <- NULL
+  }  
 
   #printVerbose(paste0('After excluding countries: (',toString(countriesToGenerateWithRecLag),') with known bad recovery data and using recLag to generate those instead'),timeSeriesInfections, timeSeriesDeaths, timeSeriesRecoveries, inputRecoveredSupplied, verbose)
 
