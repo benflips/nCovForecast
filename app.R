@@ -250,8 +250,12 @@ server <- function(input, output, session) {
       regionsWithFinalInfectionsCases <- cbind(timeSeriesInfections$Region, timeSeriesInfections[,ncol(timeSeriesInfections)])
       regionsWithFinalInfectionsCases <- regionsWithFinalInfectionsCases[order(as.numeric(as.character(regionsWithFinalInfectionsCases[,2]))),]
 
-      threeMostInfectionsRegions <- rev(as.vector(head(tail(regionsWithFinalInfectionsCases,n=4),n=3)[,1]))
-
+      threeMostInfectionsRegions <- head(tail(regionsWithFinalInfectionsCases,n=4),n=3)
+      if (is.vector(threeMostInfectionsRegions)) {
+        dim(threeMostInfectionsRegions) <- c(1,2)
+      }
+      threeMostInfectionsRegions <- rev(as.vector(threeMostInfectionsRegions[,1]))
+      
       if (input$global_or_country == 'Canada') {
         ddReg = ddReg[! ddReg %in% c('Diamond Princess','Recovered')] # for some reason, these states do not work.  TOFIX.
       } else if (input$global_or_country == 'China') {
