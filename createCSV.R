@@ -23,6 +23,16 @@ if (libraryToSourceFrom == 'COVID19') { # covid19datahub.io
                                           cases_total     = confirmed,
                                           deaths_total    = deaths,
                                           recovered_total = recovered) # rename columns from COVID19 to have same format as covidregionaldata
+  #Fill in missing/NA values
+  if (sum(is.na(originalData$cases_total)) > 0) {
+    originalData$cases_total <- popNA(originalData$cases_total,originalData$state)
+  }
+  if (sum(is.na(originalData$deaths_total)) > 0) {
+    originalData$deaths_total <- popNA(originalData$deaths_total,originalData$state)
+  }
+  if (sum(is.na(originalData$recovered_total)) > 0) {
+    originalData$recovered_total <- popNA(originalData$recovered_total,originalData$state)
+  }
 } else if (libraryToSourceFrom == 'covidregionaldata') { # https://cran.r-project.org/web/packages/covidregionaldata/
   library(covidregionaldata)
   originalData <- get_regional_data(countryName)
@@ -93,5 +103,23 @@ if (updateCSV) {
 
 }
 
+}
 
+# Fill any NA values in src data with copy of value from previous day
+# NAs at start of timeline are filled with 0.
+popNA <- function(fullData, states) {
+  state_list <- unique(states)
+  for (s in state_list) {
+    timeSeries <- fullData[states == s]
+    if (is.na(timeSeries[1])) {
+      timeSeries[1] <- 0
+    }
+    for (i in 2:length(timeSeries)) {
+      if (is.na(timeSeries[i])) {
+        timeSeries[i] <- timeSeries[i-1]
+      }
+    }
+    fullData[states == s] <- timeSeries
+  }
+  fullData
 }

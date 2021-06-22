@@ -1,3 +1,3 @@
 source('getDataGeneral.R')
 
-getDataCovid19datahub('Colombia')
+getDataCovid19datahubWithoutRecovered('Colombia')
