@@ -26,19 +26,19 @@ runDeconvolution <- function(countryName, deconvProcess = 1) {
 }
 
 
-getDataCovid19datahub <- function(countryName) {
+getDataCovid19datahub <- function(countryName, ignore.deaths=FALSE) {
   getDataGeneral(countryName, paste0('./csvData/',countryName,'_confirmed.csv'),
                                                      paste0('./csvData/',countryName,'_deaths.csv'),
-                                                     paste0('./csvData/',countryName,'_recovered.csv'), TRUE)
+                                                     paste0('./csvData/',countryName,'_recovered.csv'), TRUE, ignore.deaths=ignore.deaths)
 }
 
-getDataCovid19datahubWithoutRecovered <- function(countryName) {
+getDataCovid19datahubWithoutRecovered <- function(countryName, ignore.deaths=FALSE) {
   getDataGeneral(countryName, paste0('./csvData/',countryName,'_confirmed.csv'),
                                                      paste0('./csvData/',countryName,'_deaths.csv'),
-                                                     '', TRUE)
+                                                     '', TRUE, ignore.deaths=ignore.deaths)
 }
 
-getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered = '', verbose){
+getDataGeneral <- function(countryName, inputConfirmed, inputDeaths, inputRecovered = '', verbose, ignore.deaths=FALSE){
 
 
 t1 = Sys.time()
@@ -79,7 +79,7 @@ if (countryName == 'Global') {
 
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, !(timeSeriesRecoveries$Country.Region %in% countriesToGenerateWithRecLag))
     timeSeriesRecoveries <- rbind(timeSeriesRecoveries, recLag(subset(timeSeriesInfections, timeSeriesInfections$Country.Region %in% countriesToGenerateWithRecLag),
-                                                             subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE))
+                                                             subset(timeSeriesDeaths,     timeSeriesDeaths$Country.Region     %in% countriesToGenerateWithRecLag), active=FALSE, ignore.deaths=ignore.deaths))
 
     timeSeriesRecoveries$Province.State <- NULL
   }  
@@ -95,7 +95,7 @@ if (countryName == 'Global') {
     timeSeriesRecoveries <- subset(timeSeriesRecoveries, timeSeriesRecoveries$Country.Region == countryName)
     if (countryName == 'Australia') {# fix the ruby princess issue and hard code ignore NSW recovery data
       timeSeriesRecoveries <- fixNSW(timeSeriesRecoveries) 
-      tempRec <- recLag(infections = timeSeriesInfections, deaths = timeSeriesDeaths, active = FALSE)
+      tempRec <- recLag(infections = timeSeriesInfections, deaths = timeSeriesDeaths, active = FALSE, ignore.deaths=ignore.deaths)
       timeSeriesRecoveries[timeSeriesRecoveries$Province.State == "New South Wales",] <- tempRec[tempRec$Province.State=="New South Wales",]
     }
     timeSeriesRecoveries$Country.Region <- NULL
@@ -157,7 +157,7 @@ if (noErrors) {
 
   ## generate recovery data if it doesn't already exist
   if (!inputRecoveredSupplied) {
-    timeSeriesRecoveries <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE)
+    timeSeriesRecoveries <- recLag(timeSeriesInfections, timeSeriesDeaths, active = FALSE, ignore.deaths=ignore.deaths)
   }
 
   # Standardise dataframes and compute active cases

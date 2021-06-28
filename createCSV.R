@@ -52,7 +52,8 @@ if (libraryToSourceFrom == 'COVID19') { # covid19datahub.io
   originalData[is.na(originalData)] <- 0 # replace NAs with 0
 }
 
-dates <- unique(originalData$date)
+# some missing values can put the dates out of order.
+dates <- sort(unique(originalData$date))
 seq <- c(1:length(dates))
 
 
@@ -78,26 +79,47 @@ if (updateCSV) {
   dir.create("csvData", showWarnings = FALSE) # if the directory doesn't exist, create it.
 
   #confirmed
+  currentConfirmed <- numeric(length(states))
   dataConfirmed <- originalData %>% select(state, date, cases_total)
   outputConfirmed <- data.frame('Province/State' = states, 'Country/Region' = replicate(length(states),countryName))
   for (value in seq) {
-    outputConfirmed[[format(dates[value], '%-m/%d/%y')]] <- subset(dataConfirmed, dataConfirmed$date == dates[value])$cases_total
+    src_set <- subset(dataConfirmed, dataConfirmed$date == dates[value])
+    if (length(src_set$cases_total) == length(currentConfirmed)) {
+      currentConfirmed <- src_set$cases_total
+    } else {
+      currentConfirmed[(outputConfirmed$state %in% src_set$state)] <- src_set$cases_total
+    }
+    outputConfirmed[[format(dates[value], '%-m/%d/%y')]] <- currentConfirmed
   }
   write.csv(outputConfirmed, paste0('csvData/',countryName, '_confirmed.csv'), quote=FALSE, row.names=FALSE)
 
   #deaths
+  currentDeaths <- numeric(length(states))
   dataDeaths <- originalData %>% select(state, date, deaths_total)
   outputDeaths <- data.frame('Province/State' = states, 'Country/Region' = replicate(length(states),countryName))
   for (value in seq) {
-    outputDeaths[[format(dates[value], '%-m/%d/%y')]] <- subset(dataDeaths, dataDeaths$date == dates[value])$deaths_total
+    src_set <- subset(dataDeaths, dataDeaths$date == dates[value])
+    if (length(src_set$deaths_total) == length(currentDeaths)) {
+      currentDeaths <- src_set$deaths_total
+    } else {
+      currentDeaths[(outputDeaths$state %in% src_set$state)] <- src_set$deaths_total
+    }
+    outputDeaths[[format(dates[value], '%-m/%d/%y')]] <- currentDeaths
   }
   write.csv(outputDeaths, paste0('csvData/',countryName, '_deaths.csv'), quote=FALSE, row.names=FALSE)
 
   #recovered
+  currentRecovered <- numeric(length(states))
   dataRecovered <- originalData %>% select(state, date, recovered_total)
   outputRecovered <- data.frame('Province/State' = states, 'Country/Region' = replicate(length(states),countryName))
   for (value in seq) {
-    outputRecovered[[format(dates[value], '%-m/%d/%y')]] <- subset(dataRecovered, dataRecovered$date == dates[value])$recovered_total
+    src_set <- subset(dataRecovered, dataRecovered$date == dates[value])
+    if (length(src_set$recovered_total) == length(currentRecovered)) {
+      currentRecovered <- src_set$recovered_total
+    } else {
+      currentRecovered[(outputRecovered$state %in% src_set$state)] <- src_set$recovered_total
+    }
+    outputRecovered[[format(dates[value], '%-m/%d/%y')]] <- currentRecovered
   }
   write.csv(outputRecovered, paste0('csvData/',countryName, '_recovered.csv'), quote=FALSE, row.names=FALSE)
 
