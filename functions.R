@@ -129,10 +129,14 @@ activeCases <- function(infections, deaths, recoveries){
 # Adjusts cumulative infections to get active cases
   # cumulative infections and deaths, ttr = time to recovery
   # if active = false, returns recoveries rather than active cases
-recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22, active = TRUE){
+recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22, active = TRUE, ignore.deaths=FALSE){
   matI<-as.matrix(infections[, datCols])
   matD<-as.matrix(deaths[, datCols])
-  matA<-matI-matD #remove deaths
+  if (ignore.deaths) {
+    matA <- matI #calculate 'removed' instead of 'recovered'
+  } else {
+    matA<-matI-matD #remove deaths
+  }
   if (length(ttr)==1){
     matR <- cbind(matrix(0, nrow = nrow(matA), ncol = 22), matA[, -((ncol(matA)-21):ncol(matA)), drop = FALSE]) # "recovered"
   } else {
@@ -143,6 +147,9 @@ recLag <- function(infections, deaths, datCols = dateCols(infections), ttr = 22,
     }
   }
   matA <- matA - matR
+  if (ignore.deaths) {
+    matR <- matR - matD #recovered = 'removed' minus deaths
+  }
   if (active) {
     out <- data.frame(infections[,!datCols], matA) # "active" cases
   } else {
