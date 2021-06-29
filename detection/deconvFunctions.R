@@ -33,7 +33,9 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
   T<-length(cases)
   I.max<-length(prob)-1
   T.days<-T+I.max
-  Cases<-c(rep(0,I.max),diff(c(0,as.numeric(cases)))) # daily new cases
+  i.val <- max(0,cases[2]-cases[1]) #can't use 0 as starting point for short version.
+  #Cases<-c(rep(0,I.max),diff(c(0,as.numeric(cases)))) # daily new cases
+  Cases<-c(rep(i.val,I.max+1),diff(c(as.numeric(cases)))) # daily new cases
   Cases[Cases<0]<-0 # just in case the data have negative diagnoses e.g. due to re-adjustments
   Cases.fit<-Cases
   test0 <- sum(Cases>0)>pre.df # don't fit gam if there is not the variance to do so.
@@ -55,7 +57,7 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
               control=addreg.control(epsilon=1e-07,maxit=1000000))
   if (res$conv==FALSE) {
     warning("linear Poisson fit did not converge - may need more iterations")
-    infections.est <- rep(0, T.days)
+    infections.est <- rep(NA, T.days)
   } else {
     infections.est<-res$coef
   }

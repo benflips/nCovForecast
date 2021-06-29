@@ -37,12 +37,27 @@ source("functions.R")
 ## ---------------------------
 
 orgLevel <- commandArgs()[6] # get relevant command line argument
+short.arg <- commandArgs()[7] # get relevant command line argument
+if( (!is.na(short.arg))&(tolower(short.arg) == "short") ) {
+  run.short <- TRUE
+} else{
+  run.short <- FALSE
+}
 
+if( run.short ){
+  cat("  Only running deconvolutions for last 4 months\n")
+}
 cat("  Running deconvolutions for", orgLevel, "using new method...\n")
 
 # load relevant dataset
 load(paste0("dat/",orgLevel,"/cacheData.RData"))
-cases.all <- t(timeSeriesInfections[,-1])
+if( run.short ) {
+  T.end <- dim(timeSeriesInfections)[2]
+  T.start <- max(1,T.end-(31*4)) #at least 4 months worth of days
+  cases.all <- t(timeSeriesInfections[,T.start:T.end])
+} else {
+  cases.all <- t(timeSeriesInfections[,-1])
+}
 cases.all <- as.data.frame(cases.all)
 names(cases.all) <- timeSeriesInfections[,1]
 # number of days of data
@@ -63,18 +78,41 @@ backProjection <- lapply(cases.all, BackProj, dist = inc.dist)
 # extract estimated new infections by time
 infect.total <- matrix(NA, nrow = T, ncol = R)
 for (rr in 1:R){
-  infect.total[,rr] <- backProjection[[rr]][,"infections"]
+  src_vec <- backProjection[[rr]][,"infections"]
+  if (any(is.na(src_vec))) {
+    src_vec[] <- 0
+  } else if (run.short) {
+    #SPT hack soln, need to add the infections from before 4-month starting point
+    src_vec[1] <- src_vec[1] + timeSeriesInfections[rr,T.start]
+  }
+  infect.total[,rr] <- src_vec
 }
 
 # express as cumulant and in JHU layout
 cumulative.infections <- apply(infect.total, 2, cumsum)
 # get undiagnosed cases
-undiagnosed.infections <- cumulative.infections - t(timeSeriesInfections[,-1])
+if( run.short ) {
+  undiagnosed.infections <- cumulative.infections - t(timeSeriesInfections[,T.start:T.end])
+} else {
+  undiagnosed.infections <- cumulative.infections - t(timeSeriesInfections[,-1])
+}
 #express both in JHU layout
 cumulative.infections<-data.frame(timeSeriesInfections[,1],t(cumulative.infections))
-colnames(cumulative.infections)<-colnames(timeSeriesInfections)
+if( run.short ) {
+  c.names <- colnames(timeSeriesInfections[,T.start:T.end])
+  c.names[1] <- colnames(timeSeriesInfections)[1]
+  colnames(cumulative.infections)<-c.names
+} else {
+  colnames(cumulative.infections)<-colnames(timeSeriesInfections)
+}
 undiagnosed.infections<-data.frame(timeSeriesInfections[,1],t(undiagnosed.infections))
-colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
+if( run.short ) {
+  c.names <- colnames(timeSeriesInfections[,T.start:T.end])
+  c.names[1] <- colnames(timeSeriesInfections)[1]
+  colnames(undiagnosed.infections)<-c.names
+} else {
+  colnames(undiagnosed.infections)<-colnames(timeSeriesInfections)
+}
 
 # forward projections
 cat("   Forward projections...\n")
