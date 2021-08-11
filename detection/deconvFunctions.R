@@ -28,12 +28,11 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
   # plot.results determines whether a plot of the analyses is produced
   # plot.start is the time point to start the plots
   
-  F<-design.BP(length(cases),dist)
   prob<-dist[,2]
-  T<-length(cases)
+  T<-length(cases)-1
   I.max<-length(prob)-1
-  T.days<-T+I.max
-  Cases<-c(rep(0,I.max),diff(c(0,as.numeric(cases)))) # daily new cases
+  T.days<-T
+  Cases<-c(diff(c(as.numeric(cases)))) # daily new cases
   Cases[Cases<0]<-0 # just in case the data have negative diagnoses e.g. due to re-adjustments
   Cases.fit<-Cases
   test0 <- sum(Cases>0)>pre.df # don't fit gam if there is not the variance to do so.
@@ -41,8 +40,9 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
     pre.fit <- suppressWarnings(gam(Cases~s(1:T.days,df=pre.df),
                                     family=poisson(link="log"))$fitted.values)
     Cases.fit <- round(pre.fit) #non-integers causes problems in nnpois
-  }  
-  
+  }
+
+  F<-design.BP(length(Cases),dist)
   F.full<-F
   if (constr.final) {
     F[,(T.days-1)]<-F[,(T.days-1)]+F[,T.days]
@@ -55,7 +55,7 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
               control=addreg.control(epsilon=1e-07,maxit=1000000))
   if (res$conv==FALSE) {
     warning("linear Poisson fit did not converge - may need more iterations")
-    infections.est <- rep(0, T.days)
+    infections.est <- rep(NA, T.days)
   } else {
     infections.est<-res$coef
   }
@@ -68,20 +68,21 @@ BackProj <- function(cases,dist,pre.smooth=TRUE,post.smooth=TRUE,
   if (post.smooth & res$conv==TRUE & test1) infections.est <- suppressWarnings(gam(infections.est~s(1:T.days,df=post.df),
                                                           family=poisson(link="log"))$fitted.values)
   fits<-F.full%*%infections.est
-  
+
+  #plotting is no longer fully supported
   if (plot.results) {
     par(mfrow=c(2,1))
     ymax1<-sum(infections.est)
     ymax2<-max(c(infections.est,Cases.fit,Cases))
-    plot(plot.start:T,cumsum(infections.est)[-c(1:I.max)][plot.start:T],type="l",xlab="day",ylab="cumumlative",lwd=2,main="diagnosed (black) and all (red) infections",col=50,ylim=c(0,ymax1))
+    plot(plot.start:T,cumsum(infections.est)[plot.start:T],type="l",xlab="day",ylab="cumumlative",lwd=2,main="diagnosed (black) and all (red) infections",col=50,ylim=c(0,ymax1))
     points(plot.start:T,cases[plot.start:T],pch=16)
-    plot(plot.start:T,infections.est[-c(1:I.max)][plot.start:T],type="l",lwd=2,xlab="day",ylab="daily",col=50,ylim=c(0,ymax2))
-    lines(plot.start:T,Cases.fit[-c(1:I.max)][plot.start:T],lwd=2)
-    points(plot.start:T,Cases[-c(1:I.max)][plot.start:T],lwd=2,pch=16)
+    plot(plot.start:T,infections.est[plot.start:T],type="l",lwd=2,xlab="day",ylab="daily",col=50,ylim=c(0,ymax2))
+    lines(plot.start:T,Cases.fit[plot.start:T],lwd=2)
+    points(plot.start:T,Cases[plot.start:T],lwd=2,pch=16)
   }
   
   # output the smoothed daily case series and the estimated daily infections 
-  out<-cbind(1:T,Cases[-c(1:I.max)],Cases.fit[-c(1:I.max)],fits[-c(1:I.max)],infections.est[-c(1:I.max)])
+  out<-cbind(1:T,Cases,Cases.fit,fits,infections.est)
   colnames(out)<-c("day","observed","smoothed","fitted","infections")
   out
 }
@@ -105,11 +106,11 @@ ForwardProj <- function(BP,dist,proj.days=5,extrap.method="last",extrap.user=NUL
   
   I.max<-length(dist[,1])-1
   T<-length(BP[,1])
-  T.days<-T+I.max
+  T.days<-T
   if (extrap.method=="last") extrap.inf<-rep(BP[T,5],proj.days)
   if (extrap.method=="lower") extrap.inf<-rep(0,proj.days)
   if (extrap.method=="user") extrap.inf<-extrap.user
-  infections<-c(rep(0,I.max),BP[,5],extrap.inf)
+  infections<-c(BP[,5],extrap.inf)
   F<-design.BP(T+proj.days,dist)
   cases<-F%*%infections
   projs<-cbind(c((T+1):(T+proj.days)),cases[-c(1:T.days)])
@@ -194,9 +195,8 @@ design.BP <- function(T,dist) {
   
   prob<-dist[,2]
   I.max<-length(prob)-1
-  T.days<-T+I.max # to allow for incubation period of first cases
-  F<-matrix(0,T.days,T.days)
-  for (d in 1:T.days) {
+  F<-matrix(0,T,T)
+  for (d in 1:T) {
     start<-max(0,(d-I.max))+1
     length.f<-length(c(start:d))
     F[d,c(start:d)]<-prob[length.f:1]
