@@ -1,11 +1,15 @@
-runDeconvolution <- function(countryName, deconvProcess = 1) {
+runDeconvolution <- function(countryName, deconvProcess = 1, runShort=FALSE) {
 
   t1 = Sys.time()
 
   if (deconvProcess == 1){
     system(paste("Rscript detection/estGlobalV2.R", countryName), wait = TRUE) # old process (faster)
   } else {
-    system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE) # new process (slower, but better)
+    if (runShort) {
+      system(paste("Rscript detection/deconvEst.R", countryName, "short"), wait = TRUE) # new process (slower, but better)
+    } else {
+      system(paste("Rscript detection/deconvEst.R", countryName), wait = TRUE) # new process (slower, but better)
+    }
   }
 
   load(paste0("dat/",countryName,"/estDeconv.RData"))
