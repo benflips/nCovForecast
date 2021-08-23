@@ -155,7 +155,7 @@ for (rr in 1:R){
 calc.cumsum <- apply(infect.total, 2, cumsum)
 if( run.short ) {
   if (T.start > 2) {
-    prev.cumulative <- t(cumulative.infections[,2:last_ind])
+    prev.cumulative <- t(cumulative.infections[,2:T.start])
     cumulative.infections <- rbind( prev.cumulative, calc.cumsum )
   } else {
     cumulative.infections <- calc.cumsum
